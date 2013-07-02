@@ -47,10 +47,22 @@ fresh freshshell/fresh contrib/completion/fresh-completion.bash
 ### CONFIG FILE LINKING
 # Alternatively, copy manually along with this file,
 # instead of symlinking with fresh.
-# Comment out the two lines below.
+# Comment out the lines below.
 ###	
-fresh .bash_profile --file
+fresh-options --file=~/.bash_profile
+	# Start with some simple defaults.
+	fresh bash/profile.start.bash
+	# path,bash_prompt,exports,aliases,functions,extra
+	fresh bash/mathias.dotfiles.bash
+	# source fresh
+	fresh freshshell/fresh contrib/source-build.sh
+	# theme obscures working dir from terminal; this fixes it
+	fresh bash/apple.terminal.working-dir.bash
+fresh-options
+# Simply call .bash_profile
 fresh .bashrc --file
+
+### end config file linking
 
 # BIN management
 
