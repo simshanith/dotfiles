@@ -28,8 +28,8 @@ I have yet to write a proper bootstrap script to get a new machine up and runnin
 
     bash -c "`curl -sL get.freshshell.com`"
 
-### Run Fresh 
-##### (may need to backup current .bash_profile & .bashrc)
+### Backup configs & run `fresh`
+    mv -vf ~/.{bash_profile,bashrc} ~/.dotfiles/backups/ 
     fresh
 
 ### Open a new Terminal & enjoy, or keep the same terminal:
