@@ -1,0 +1,55 @@
+# freshshell.com
+#
+# Examples:
+#
+#   fresh twe4ked/dotfiles shell/functions.sh
+#   fresh jasoncodes/dotfiles aliases/rails.sh
+#   fresh jasoncodes/dotfiles config/tmux.conf --file
+#
+# See http://freshshell.com/readme for documentation.
+
+# Meta: handles updating fresh
+fresh freshshell/fresh bin/fresh --bin
+
+### ~/.bash_profile setup
+
+# inspired by mathiasbynens/dotfiles
+for dotfile in path exports aliases functions; do
+	fresh bash/$dotfile.bash --file=~/.$dotfile
+done
+unset dotfile
+
+fresh-options --file=~/.bash_prompt
+	# bash-it theme: doubletime with custom extension
+	# load colors, base prompt setup
+	fresh revans/bash-it themes/colors.theme.bash
+	fresh revans/bash-it themes/base.theme.bash
+	# Customizations based on Bash-It theme
+	fresh bash/doubletime.setup.bash
+	# Original (`source`d in extensions)
+	# fresh revans/bash-it themes/doubletime/doubletime.theme.bash
+	# Model Extension
+	# fresh revans/bash-it themes/doubletime_multiline_pyonly/doubletime_multiline_pyonly.theme.bash
+fresh-options
+
+# composure shell scripting
+fresh erichs/composure composure.sh --bin
+fresh erichs/composure c_extras.sh --bin
+
+# FASD
+fresh clvv/fasd fasd --bin
+fresh bash/fasd.setup.bash
+
+# Node Version Manager
+fresh creationix/nvm nvm.sh
+
+# todo.txt: simple todo list
+fresh ginatrapani/todo.txt-cli todo.sh --bin=~/bin/todo
+fresh todo.cfg --file=~/.todo/config
+
+# bash-it completions
+# brew gem git git_flow pip ssh todo
+for completion in brew gem git git_flow pip ssh todo; do
+	fresh revans/bash-it completion/available/$completion.completion.bash
+done
+unset completion
