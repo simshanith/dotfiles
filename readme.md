@@ -28,6 +28,12 @@ I have yet to write a proper bootstrap script to get a new machine up and runnin
 ### Copy files:
     cp -vf ~/.dotfiles/.{bash_profile,bashrc,freshrc} ~
 
+### Run Fresh
+    fresh
+
+### Open a new Terminal & enjoy, or keep the same terminal:
+    source ~/.bash_profile
+
 Footnote: I think Sam Stephenson said it best when discussing his move from zsh to bash in his blog post ["On Configuration"](http://sstephenson.us/posts/on-configuration).
 
 > What I discovered is that in many cases, my ability to adapt to a foreign environment without frustration is more important than the benefits of configuring a local environment to suit my whims. And that being able to quickly recreate my environment from scratch is an asset.
