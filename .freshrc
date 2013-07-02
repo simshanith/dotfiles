@@ -42,8 +42,12 @@ unset completion
 ### end ~/.bash_profile setup
 
 ### CONFIG FILE LINKING
-fresh .bash_profile --file
-fresh .bashrc --file
+# Currently suggesting that these are copied
+# manually along with this file,
+# instead of symlinking with fresh
+###
+#fresh .bash_profile --file
+#fresh .bashrc --file
 
 # BIN management
 
