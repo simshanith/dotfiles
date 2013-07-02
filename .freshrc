@@ -32,6 +32,27 @@ fresh-options --file=~/.bash_prompt
 	# fresh revans/bash-it themes/doubletime_multiline_pyonly/doubletime_multiline_pyonly.theme.bash
 fresh-options
 
+# bash-it completions
+# brew gem git git_flow pip ssh todo
+for completion in brew gem git git_flow pip ssh todo; do
+	fresh revans/bash-it completion/available/$completion.completion.bash
+done
+unset completion
+
+### end ~/.bash_profile setup
+
+### CONFIG FILE LINKING
+fresh .bash_profile --file
+fresh .bashrc --file
+
+# BIN management
+
+# git friendly
+for gitHelper in branch merge pull push; do
+	fresh jamiew/git-friendly $gitHelper --bin
+done
+unset gitHelper
+
 # composure shell scripting
 fresh erichs/composure composure.sh --bin
 fresh erichs/composure c_extras.sh --bin
@@ -46,10 +67,3 @@ fresh creationix/nvm nvm.sh
 # todo.txt: simple todo list
 fresh ginatrapani/todo.txt-cli todo.sh --bin=~/bin/todo
 fresh todo.cfg --file=~/.todo/config
-
-# bash-it completions
-# brew gem git git_flow pip ssh todo
-for completion in brew gem git git_flow pip ssh todo; do
-	fresh revans/bash-it completion/available/$completion.completion.bash
-done
-unset completion
