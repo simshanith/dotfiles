@@ -9,10 +9,28 @@ sim_scm_prompt() {
   if [ "$SCM" == "$SCM_NONE" ]; then
     return
   elif [ "$SCM" == "$SCM_GIT" ]; then
-    echo "$(git_prompt_status)"
+    echo "${blue}$SCM_GIT${normal}$(git_prompt_status)"
+  elif [ "$SCM" == "$SCM_SVN" ]; then
+    echo "${blue}$SCM_SVN${normal}$(svn_prompt_status)"
   else
     echo "[$(scm_prompt_info)]"
   fi
+}
+
+svn_prompt_status() {
+  local svn_status_output
+  svn_status_output=$(svn status --xml 2> /dev/null )
+  if [ -n "$(echo $svn_status_output | grep 'item=\"modified\"')" ]; then
+     svn_status="${bold_yellow}^"
+  elif [ -n "$(echo $svn_status_output | grep 'item=\"unversioned\"')" ]; then
+     svn_status="${bold_cyan}+"
+  elif [ -n "$(echo $svn_status_output | grep '/status')" ]; then
+     svn_status="${green}✓"
+  else
+    svn_status="$(scm_prompt_info)"
+  fi
+  echo "[$svn_status${normal}]"
+
 }
 
 function prompt_setter() {
