@@ -39,15 +39,18 @@ for completion in brew gem git git_flow pip ssh todo; do
 done
 unset completion
 
+# fresh completion (how meta)
+fresh freshshell/fresh contrib/completion/fresh-completion.bash
+
 ### end ~/.bash_profile setup
 
 ### CONFIG FILE LINKING
-# Currently suggesting that these are copied
-# manually along with this file,
-# instead of symlinking with fresh
-###
-#fresh .bash_profile --file
-#fresh .bashrc --file
+# Alternatively, copy manually along with this file,
+# instead of symlinking with fresh.
+# Comment out the two lines below.
+###	
+fresh .bash_profile --file
+fresh .bashrc --file
 
 # BIN management
 
