@@ -12,9 +12,11 @@ unset dotfile
 # copy .freshrc to ~
 cp -vf ~/.dotfiles/.freshrc ~
 
-# install fresh
+# install fresh or run for re-fresh
 if [[ -z `which fresh` ]]; then
 	bash -c "`curl -sL get.freshshell.com`"
+else
+	fresh
 fi
 
 # source it
