@@ -18,22 +18,13 @@ While Bash-It provides a nifty framework for bootstrapping its set of customizat
 
 I have yet to write a proper bootstrap script to get a new machine up and running, but ["Cowboy" Ben Alman](http://benalman.com/) and [Mathias Bynens](http://mathiasbynens.be/) have [some](https://github.com/cowboy/dotfiles/tree/master/init) [pointers](https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh). The installation process is pretty simple on Mac OS X with [Homebrew](http://mxcl.github.io/homebrew/) & [git](http://git-scm.com/).
 
+Update: I wrote a simple installation script.
+
 ### Clone the repo:
     git clone https://github.com/simshanith/dotfiles.git ~/.dotfiles
 
-### Copy fresh config:
-    cp -vf ~/.dotfiles/.freshrc ~
-
-### Install Fresh:
-
-    bash -c "`curl -sL get.freshshell.com`"
-
-### Backup configs & run `fresh`
-    mv -vf ~/.{bash_profile,bashrc} ~/.dotfiles/backups/ 
-    fresh
-
-### Open a new Terminal & enjoy, or keep the same terminal:
-    source ~/.bash_profile
+### Run the install script:
+    ~/.dotfiles/install.sh
 
 Footnote: I think Sam Stephenson said it best when discussing his move from zsh to bash in his blog post ["On Configuration"](http://sstephenson.us/posts/on-configuration).
 
