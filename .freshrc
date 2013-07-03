@@ -11,11 +11,11 @@
 # Meta: handles updating fresh
 fresh freshshell/fresh bin/fresh --bin
 
-### ~/.bash_profile setup
+### ~/.bash_profile internals
 
 # inspired by mathiasbynens/dotfiles
 for dotfile in path exports aliases functions; do
-	fresh bash/$dotfile.bash --file=~/.$dotfile
+	fresh $dotfile --file
 done
 unset dotfile
 
@@ -31,6 +31,11 @@ fresh-options --file=~/.bash_prompt
 	# Model Extension (requires $BASH_IT env var)
 	# fresh revans/bash-it themes/doubletime_multiline_pyonly/doubletime_multiline_pyonly.theme.bash
 fresh-options
+
+# composure shell scripting
+# source'd for some nifty function writing utils
+fresh erichs/composure composure.sh
+fresh erichs/composure c_extras.sh
 
 # bash-it completions
 # brew gem git git_flow pip ssh todo
@@ -73,8 +78,8 @@ done
 unset gitHelper
 
 # composure shell scripting
-fresh erichs/composure composure.sh --bin
-fresh erichs/composure c_extras.sh --bin
+fresh erichs/composure composure.sh
+fresh erichs/composure c_extras.sh
 
 # FASD
 fresh clvv/fasd fasd --bin
