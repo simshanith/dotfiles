@@ -7,3 +7,5 @@ export GIT_EDITOR=$EDITOR
 
 # Handy Dropbox reference.
 export DROPBOX=$HOME/Dropbox
+
+export SIM_DOTFILES_SETUP='oooohyeah'
