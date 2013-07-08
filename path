@@ -2,7 +2,7 @@
 PATH=$PATH:~/.gem/ruby/1.8/bin:$HOME/.rvm/bin
 
 # Ensure /usr/local/bin before /usr/bin for Homebrew
-PATH=/usr/local/bin:$PATH
+PATH=~/bin/:/usr/local/bin:/usr/local/sbin:$PATH
 
 ### Heroku Toolbelt
 PATH="/usr/local/heroku/bin:$PATH"

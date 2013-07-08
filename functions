@@ -1,2 +1,12 @@
+# open man pages in Preview.app
+if [ -d "/Applications/Preview.app" ]
+then
+  pman () {
+    man -t "$@" |
+    ( which ps2pdf &> /dev/null && ps2pdf - - || cat) |
+    open -f -a /Applications/Preview.app
+  }
+fi
+
 # Load RVM into a shell session *as a function*
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm

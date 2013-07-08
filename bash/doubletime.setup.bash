@@ -52,4 +52,7 @@ $(sim_scm_prompt)$reset_color $ "
   PS4='+ '
 }
 
-PROMPT_COMMAND="prompt_setter; $PROMPT_COMMAND"
+export history_command='history -a;'
+history_command='history -a; echo "$$ $USER $(history 1)" >> ~/.bash_eternal_history'
+
+PROMPT_COMMAND="prompt_setter; $history_command"

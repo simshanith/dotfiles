@@ -23,6 +23,8 @@ alias -- -='cd -'        # Go back
 alias edit="$EDITOR"
 alias em='open -a emacs'
 
+alias realpath='greadlink -f'
+
 # alias "http" to SimpleHTTPServer
 alias http='python -m SimpleHTTPServer'
 
