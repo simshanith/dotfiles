@@ -52,4 +52,4 @@ $(sim_scm_prompt)$reset_color $ "
   PS4='+ '
 }
 
-PROMPT_COMMAND=prompt_setter
+PROMPT_COMMAND="prompt_setter; $PROMPT_COMMAND"
