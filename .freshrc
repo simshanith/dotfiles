@@ -59,7 +59,7 @@ fresh-options
 fresh .bashrc --file
 
 # .inputrc for bash / readline config
-# fresh .inputrc --file
+fresh .inputrc --file
 
 ### end config file linking
 
