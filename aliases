@@ -1,10 +1,17 @@
-# ls file listing
+# BSD ls file listing
+# G for color
+# F for non-file identification
+# A for hidden files & dirs
+# l for expanded listing
+# H for following symlinks
 alias ls='ls -GF'
 alias la='ls -GAF'
-alias ll='ls -GFalh'
+alias ll='ls -GFlh'
+alias lla='ls -GFalh'
 
-# less with ANSI colors
+# less & grep with ANSI colors
 alias less='less --RAW-CONTROL-CHARS'
+alias grep='grep --color=auto'
 
 # folder jumpin
 alias ..='cd ..'         # Go up one directory
