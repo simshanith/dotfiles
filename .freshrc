@@ -14,11 +14,15 @@ fresh freshshell/fresh bin/fresh --bin
 ### ~/.bash_profile internals
 
 # inspired by mathiasbynens/dotfiles
+
+# this `fresh` code symlinks each listed dotfile to ~/.$dotfile
+# linked files are then source`d in ~/.bash_profile constructed below
 for dotfile in path exports aliases functions; do
 	fresh $dotfile --file
 done
 unset dotfile
 
+# construct ~/.bash_prompt
 fresh-options --file=~/.bash_prompt
 	# bash-it theme: doubletime with custom extension
 	# load colors, base prompt setup
@@ -28,24 +32,9 @@ fresh-options --file=~/.bash_prompt
 	fresh bash/doubletime.setup.bash
 	# Original (`source`d in extensions)
 	# fresh revans/bash-it themes/doubletime/doubletime.theme.bash
-	# Model Extension (requires $BASH_IT env var)
+	# Model Extension (requires $BASH_IT env var set to bash-it source path)
 	# fresh revans/bash-it themes/doubletime_multiline_pyonly/doubletime_multiline_pyonly.theme.bash
 fresh-options
-
-# composure shell scripting
-# source'd for some nifty function writing utils
-fresh erichs/composure composure.sh
-fresh erichs/composure c_extras.sh
-
-# bash-it completions
-# brew gem git git_flow pip ssh todo
-for completion in brew gem git git_flow pip ssh todo; do
-	fresh revans/bash-it completion/available/$completion.completion.bash
-done
-unset completion
-
-# fresh completion (how meta)
-fresh freshshell/fresh contrib/completion/fresh-completion.bash
 
 ### end ~/.bash_profile setup
 
@@ -57,37 +46,82 @@ fresh freshshell/fresh contrib/completion/fresh-completion.bash
 fresh-options --file=~/.bash_profile
 	# Start with some simple defaults.
 	fresh bash/profile.start.bash
-	# path,bash_prompt,exports,aliases,functions,extra
+	# loads path,bash_prompt,exports,aliases,functions,extra
 	fresh bash/mathias.dotfiles.bash
-	# source fresh
+	# source fresh's output
 	fresh freshshell/fresh contrib/source-build.sh
 	# theme obscures working dir from terminal; this fixes it
+	# e.g. new tab opens in same (current) directory
 	fresh bash/apple.terminal.working-dir.bash
 fresh-options
-# Simply call .bash_profile
+
+# .bashrc delegates to .bash_profile
 fresh .bashrc --file
+
+# .inputrc for bash / readline config
+# fresh .inputrc --file
 
 ### end config file linking
 
-# BIN management
+# composure shell scripting
+# source'd for some nifty function writing utils
+fresh erichs/composure composure.sh
+fresh erichs/composure c_extras.sh
+
+# Node Version Manager
+# source'd to provide nvm as a function
+fresh creationix/nvm nvm.sh
+
+# fasd init (source'd)
+# this provides the aliases
+# & data from a cached init code
+# to keep things speedy
+fresh bash/fasd.setup.bash
+
+### BIN management
+
+# Re-install fresh with bootstrap
+fresh install.sh --bin=~/bin/dotfiles
 
 # git friendly
+# abstractions around common git tasks
 for gitHelper in branch merge pull push; do
 	fresh jamiew/git-friendly $gitHelper --bin
 done
 unset gitHelper
 
-# composure shell scripting
-fresh erichs/composure composure.sh
-fresh erichs/composure c_extras.sh
-
 # FASD
+# autojump, z util for directory jumping sorted by "frecency"
 fresh clvv/fasd fasd --bin
-fresh bash/fasd.setup.bash
 
-# Node Version Manager
-fresh creationix/nvm nvm.sh
+# Leiningen Clojure Build System
+# awesome way to bootstrap Clojure.
+# there's a `brew` for it but whatevs.
+# needs Java installed (JDK)
+fresh technomancy/leiningen bin/lein --bin --ref=origin/stable
 
 # todo.txt: simple todo list
 fresh ginatrapani/todo.txt-cli todo.sh --bin=~/bin/todo
+# store todos in dropbox for effortless syncing
 fresh todo.cfg --file=~/.todo/config
+
+### completions
+
+# bash-it completions
+# brew gem git git_flow pip ssh todo
+# Homebrew: Mac OS X package management (used to download most everything else listed here)
+# Ruby gems
+# git Source Control Management
+# git flow - Toolkit for Higher Level Branching abstractions
+# pip Python Package Management
+# ssh completion with allowed hosts
+# todo.txt cli
+for completion in brew gem git git_flow pip ssh todo; do
+	fresh revans/bash-it completion/available/$completion.completion.bash
+done
+unset completion
+
+# fresh completion (how meta)
+fresh freshshell/fresh contrib/completion/fresh-completion.bash
+
+### end completions
