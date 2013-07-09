@@ -63,6 +63,12 @@ fresh .inputrc --file
 
 ### end config file linking
 
+# fasd init (source'd)
+# this provides the aliases
+# & data from a cached init code
+# to keep things speedy
+fresh bash/fasd.setup.bash
+
 # composure shell scripting
 # source'd for some nifty function writing utils
 fresh erichs/composure composure.sh
@@ -71,12 +77,6 @@ fresh erichs/composure c_extras.sh
 # Node Version Manager
 # source'd to provide nvm as a function
 fresh creationix/nvm nvm.sh
-
-# fasd init (source'd)
-# this provides the aliases
-# & data from a cached init code
-# to keep things speedy
-fresh bash/fasd.setup.bash
 
 ### BIN management
 

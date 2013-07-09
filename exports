@@ -9,9 +9,14 @@ export GIT_HOSTING='git@bitbucket.org'
 
 # Set my editor and git editor
 export EDITOR="$HOME/bin/subl"
-export GIT_EDITOR=$EDITOR
+export GIT_EDITOR="$EDITOR"
+# GNU Emacs GUI
+export EMACS_APP="/Applications/Emacs.app/Contents/MacOS/Emacs"
 
 # Handy Dropbox reference.
-export DROPBOX=$HOME/Dropbox
+export DROPBOX="$HOME/Dropbox"
+
+# npm global path
+export NPM_GLOBAL_PACKAGES="/usr/local/lib/node_modules"
 
 export SIM_DOTFILES_SETUP='oooohyeah'
