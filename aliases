@@ -24,12 +24,27 @@ alias -- -='cd -'        # Go back
 # File editing
 # ~/bin/subl (set in exports)
 alias edit="$EDITOR"
-# fasd shortcut
+# fasd shortcuts
+alias fe="f -e $EDITOR"
 alias ae="a -e $EDITOR"
+alias se="s -e $EDITOR"
+alias de="d -e $EDITOR"
+# interactive mode: display list then open with editor
+alias fei="f -i -e $EDITOR"
+alias aei="a -i -e $EDITOR"
+alias sei="s -i -e $EDITOR"
+alias dei="d -i -e $EDITOR"
 
 # GNU Emacs.app
-alias em="open -a $EMACS_APP"
+alias em="$EMACS_APP"
+alias fem="f -e $EMACS_APP"
 alias aem="a -e $EMACS_APP"
+alias sem="s -e $EMACS_APP"
+alias dem="d -e $EMACS_APP"
+alias feim="f -i -e $EMACS_APP"
+alias aeim="a -i -e $EMACS_APP"
+alias seim="s -i -e $EMACS_APP"
+alias deim="d -i -e $EMACS_APP"
 
 alias realpath='greadlink -f'
 
