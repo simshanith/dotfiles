@@ -51,9 +51,11 @@ alias realpath='greadlink -f'
 # alias "http" to SimpleHTTPServer
 alias http='python -m SimpleHTTPServer'
 
-# alias markdown to marked (node markdown parser)
-alias markdown='marked --smart-lists'
+# alias md to marked (node markdown parser)
+alias md='marked --smart-lists'
 
+# alias prettydiff
+alias pd='node $NPM_GLOBAL_PACKAGES/prettydiff/api/node-local.js'
 
 # alias t to todo.txt CLI
 alias t='todo'
