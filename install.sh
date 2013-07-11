@@ -12,6 +12,9 @@ unset dotfile
 # copy .freshrc to ~
 cp -vf ~/.dotfiles/.freshrc ~
 
+# copy bin/symlinks to ~/bin
+cp -R ~/.dotfiles/bin/symlinks/* ~/bin/
+
 # install fresh or run for re-fresh
 if [[ -z `which fresh` ]]; then
 	bash -c "`curl -sL get.freshshell.com`"

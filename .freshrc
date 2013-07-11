@@ -101,6 +101,9 @@ fresh ginatrapani/todo.txt-cli todo.sh --bin=~/bin/todo
 # store todos in dropbox for effortless syncing
 fresh todo.cfg --file=~/.todo/config
 
+# Cross-Origin --disable-web-security Chrome with clean slate
+fresh bin/crossOriginChrome.sh --bin
+
 ### completions
 
 # bash-it completions
