@@ -18,7 +18,7 @@ fresh freshshell/fresh bin/fresh --bin
 # this `fresh` code symlinks each listed dotfile to ~/.$dotfile
 # linked files are then source`d in ~/.bash_profile constructed below
 for dotfile in path exports aliases functions; do
-	fresh $dotfile --file
+	fresh bash/$dotfile.bash --file=~/.$dotfile
 done
 unset dotfile
 
