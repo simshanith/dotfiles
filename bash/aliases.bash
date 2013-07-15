@@ -8,6 +8,7 @@ alias ls='ls -GF'
 alias la='ls -GAF'
 alias ll='ls -GFlh'
 alias lla='ls -GFalh'
+alias all='lla'
 alias lsnpm='echo $NPM_GLOBAL_PACKAGES; ls $NPM_GLOBAL_PACKAGES'
 
 
@@ -36,17 +37,29 @@ alias aei="a -i -e $EDITOR"
 alias sei="s -i -e $EDITOR"
 alias dei="d -i -e $EDITOR"
 
+alias fie="fei"
+alias aie="aei"
+alias sie="sei"
+alias die="dei"
+
 # GNU Emacs.app
 alias em="$EMACS_APP"
 alias fem="f -e $EMACS_APP"
 alias aem="a -e $EMACS_APP"
 alias sem="s -e $EMACS_APP"
 alias dem="d -e $EMACS_APP"
+
 alias feim="f -i -e $EMACS_APP"
 alias aeim="a -i -e $EMACS_APP"
 alias seim="s -i -e $EMACS_APP"
 alias deim="d -i -e $EMACS_APP"
 
+alias fiem="feim"
+alias aiem="aeim"
+alias siem="seim"
+alias diem="deim"
+
+# Use GNU readlink to determine absolute filepaths
 alias realpath='greadlink -f'
 
 # alias "http" to SimpleHTTPServer
