@@ -28,12 +28,10 @@ fresh-options --file=~/.bash_prompt
 	# load colors, base prompt setup
 	fresh revans/bash-it themes/colors.theme.bash
 	fresh revans/bash-it themes/base.theme.bash
+	# Original
+	fresh revans/bash-it themes/doubletime/doubletime.theme.bash
 	# Customizations based on Bash-It theme
 	fresh bash/doubletime.setup.bash
-	# Original (`source`d in extensions)
-	# fresh revans/bash-it themes/doubletime/doubletime.theme.bash
-	# Model Extension (requires $BASH_IT env var set to bash-it source path)
-	# fresh revans/bash-it themes/doubletime_multiline_pyonly/doubletime_multiline_pyonly.theme.bash
 fresh-options
 
 ### end ~/.bash_profile setup

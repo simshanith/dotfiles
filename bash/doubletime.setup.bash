@@ -1,9 +1,4 @@
-### path to bash it.
-### needed for some themes.
-export BASH_IT=$HOME/.fresh/source/revans/bash-it
-
-source "$BASH_IT/themes/doubletime/doubletime.theme.bash"
-
+# include svn status information
 sim_scm_prompt() {
   scm
   if [ "$SCM" == "$SCM_NONE" ]; then
@@ -44,9 +39,8 @@ function prompt_setter() {
   else
       clock=$THEME_PROMPT_CLOCK_FORMAT
   fi
-  PS1="
-${green}$clock${reset_color} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$reset_color] $(virtualenv_prompt)
-\w
+  PS1="${bold_white}${background_blue} ${clock} ${normal}${reset_color} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$reset_color]
+${black}${background_white} \w ${normal}${reset_color}
 $(sim_scm_prompt)$reset_color ${bold_white}λ${reset_color} "
   PS2='> '
   PS4='+ '
