@@ -13,6 +13,7 @@ alias lsnpm='echo $NPM_GLOBAL_PACKAGES; ls $NPM_GLOBAL_PACKAGES'
 
 # less & grep with ANSI colors
 alias less='less --RAW-CONTROL-CHARS'
+alias more='more --RAW-CONTROL-CHARS'
 alias grep='grep --color=auto'
 
 # folder jumpin
