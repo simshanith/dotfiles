@@ -4,6 +4,19 @@ set input-meta on
 set output-meta on
 set convert-meta off
 
+# Case-Insensitive and _==-
+set completion-ignore-case on
+set completion-map-case on
+# 7 matching chars converted to ...
+set completion-prefix-display-length 7
+# Quit trying to complete & prompt when 16 matches made
+set completion-query-items 16
+# Show 4 per row
+set print-completions-horizontally on
+set completion-display-width 4
+
+set bell-style visible
+
 # By default up/down are bound to previous-history
 # and next-history respectively. The following does the
 # same but gives the extra functionality where if you
