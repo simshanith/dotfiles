@@ -45,9 +45,9 @@ function prompt_setter() {
       clock=$THEME_PROMPT_CLOCK_FORMAT
   fi
   PS1="
-$clock $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$reset_color] $(virtualenv_prompt)
+${green}$clock${reset_color} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$reset_color] $(virtualenv_prompt)
 \w
-$(sim_scm_prompt)$reset_color $ "
+$(sim_scm_prompt)$reset_color ${bold_white}λ${reset_color} "
   PS2='> '
   PS4='+ '
 }
