@@ -9,7 +9,7 @@ export GIT_HOSTING='git@bitbucket.org'
 
 # Set my editor and git editor
 export EDITOR="$HOME/bin/subl"
-export GIT_EDITOR="$EDITOR"
+export GIT_EDITOR="$EDITOR -w"
 # GNU Emacs GUI
 export EMACS_APP="/Applications/Emacs.app/Contents/MacOS/Emacs"
 
