@@ -1,14 +1,16 @@
 # include svn status information
 sim_scm_prompt() {
   scm
+  local sim_scm_prompt_prefix
+  sim_scm_prompt_prefix="$background_cyan   $normal ${blue}$SCM${normal}"
   if [ "$SCM" == "$SCM_NONE" ]; then
     return
   elif [ "$SCM" == "$SCM_GIT" ]; then
-    echo "$background_cyan   $normal ${blue}$SCM_GIT${normal}$(git_prompt_status)"
+    echo "$sim_scm_prompt_prefix $(git_prompt_status)"
   elif [ "$SCM" == "$SCM_SVN" ]; then
-    echo "$background_cyan   $normal ${blue}$SCM_SVN${normal}$(svn_prompt_status)"
+    echo "$sim_scm_prompt_prefix $(svn_prompt_status)"
   else
-    echo "$background_cyan   $normal [$(scm_prompt_info)] "
+    echo "$sim_scm_prompt_prefix [$(scm_prompt_info)] "
   fi
   echo "\r"
 }
@@ -17,9 +19,9 @@ svn_prompt_status() {
   local svn_status_output
   svn_status_output=$(svn status --xml 2> /dev/null )
   if [ -n "$(echo $svn_status_output | grep 'item=\"modified\"')" ]; then
-     svn_status="${bold_yellow}^"
+     svn_status="${yellow}^"
   elif [ -n "$(echo $svn_status_output | grep 'item=\"unversioned\"')" ]; then
-     svn_status="${bold_cyan}+"
+     svn_status="${cyan}+"
   elif [ -n "$(echo $svn_status_output | grep '/status')" ]; then
      svn_status="${green}✓"
   else
@@ -27,6 +29,13 @@ svn_prompt_status() {
   fi
   echo "[$svn_status${normal}]"
 
+}
+
+
+# override bash-it echo -e with unescaped version
+function scm_char {
+  scm_prompt_char
+  echo "$SCM_CHAR"
 }
 
 function prompt_setter() {
@@ -38,11 +47,11 @@ function prompt_setter() {
   then
       clock="\t"
   else
-      clock=$THEME_PROMPT_CLOCK_FORMAT
+      clock="$THEME_PROMPT_CLOCK_FORMAT"
   fi
-  PS1="\n${bold_white}${background_blue} ${clock} ${normal}${reset_color} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$reset_color]
-${black}${background_white} \w ${normal}${reset_color}
-$(sim_scm_prompt)$reset_color${bold_white}${background_orange} λ ${normal}${reset_color} "
+  PS1="\n${bold_white}${background_blue} ${clock} ${normal} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$normal]
+${black}${background_white} \w ${normal}
+$(sim_scm_prompt)${bold_white}${background_orange} λ ${normal} "
   PS2='> '
   PS4='+ '
 }
