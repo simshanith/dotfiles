@@ -4,6 +4,8 @@ set input-meta on
 set output-meta on
 set convert-meta off
 
+set visible-stats on
+
 # Case-Insensitive and _==-
 set completion-ignore-case on
 set completion-map-case on
@@ -11,6 +13,9 @@ set completion-map-case on
 set completion-prefix-display-length 7
 # Quit trying to complete & prompt when 16 matches made
 set completion-query-items 16
+
+set show-all-if-unmodified on
+set skip-completed-text on
 
 set bell-style visible
 
