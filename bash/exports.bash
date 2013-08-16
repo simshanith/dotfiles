@@ -8,7 +8,7 @@ export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S  "
 export GIT_HOSTING='git@bitbucket.org'
 
 # Set my editor and git editor
-export EDITOR="subl"
+export EDITOR="subl -w"
 export GIT_EDITOR="subl -w"
 export SVN_EDITOR="subl -w"
 # GNU Emacs GUI

@@ -25,7 +25,11 @@ alias -- -='cd -'        # Go back
 
 # File editing
 # ~/bin/subl (set in exports)
-alias edit="$EDITOR"
+alias subl="subl -w"
+alias bgsubl="forever start -m 1 -c subl"
+alias edit="subl"
+
+
 # fasd shortcuts
 alias fe="f -e $EDITOR"
 alias ae="a -e $EDITOR"
