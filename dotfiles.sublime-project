@@ -1,0 +1,14 @@
+{
+	"folders":
+	[
+		{
+			"path": "~/.dotfiles",
+			"folder_exclude_patterns": ["backups", "bower_components"]
+		}
+	],
+	"settings":
+	{
+	    "tab_size": 2,
+	    "translate_tabs_to_spaces": true
+	}
+}

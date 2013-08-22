@@ -1,14 +1,14 @@
 # pipe markdown to screen as pretty-printed, syntax highlighted HTML
 markdown() {
-	pd mode:"beautify" readmethod:"screen" source:"`md $1`" |
-	pygmentize -l html
+  pd mode:"beautify" readmethod:"screen" source:"`md $1`" |
+  pygmentize -l html
 }
 
 
 # html css js csv beautification via prettydiff
 beautify() {
-	local SOURCE=`realpath "$1"`
-	[ -r "$SOURCE" ] && pd mode:'beautify' readmethod:'filescreen' source:"$SOURCE"
+  local SOURCE=`realpath "$1"`
+  [ -r "$SOURCE" ] && pd mode:'beautify' readmethod:'filescreen' source:"$SOURCE"
 }
 
 # open man pages in Preview.app
