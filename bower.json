@@ -19,7 +19,9 @@
     "swipe": "~2.0.0",
     "underscore-contrib": "~0.1.4",
     "underscore.string": "~2.3.3",
-    "chosen": "~1.0.0"
+    "chosen": "~1.0.0",
+    "imagesloaded": "~3.0.4",
+    "verge": "~1.6.3"
   },
   "resolutions": {
     "jquery": "~1.10.2",
