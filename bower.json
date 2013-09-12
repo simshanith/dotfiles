@@ -21,7 +21,8 @@
     "underscore.string": "~2.3.3",
     "chosen": "~1.0.0",
     "imagesloaded": "~3.0.4",
-    "verge": "~1.6.3"
+    "verge": "~1.6.3",
+    "jquery.scrollTo": "~1.4.6"
   },
   "resolutions": {
     "jquery": "~1.10.2",
