@@ -94,6 +94,10 @@ fresh clvv/fasd fasd --bin
 # needs Java installed (JDK)
 fresh technomancy/leiningen bin/lein --bin --ref=origin/stable
 
+# Leiningen-Powered Clojure Scripting
+fresh kumarshantanu/lein-exec lein-exec --bin
+fresh kumarshantanu/lein-exec lein-exec-p --bin
+
 # todo.txt: simple todo list
 fresh ginatrapani/todo.txt-cli todo.sh --bin=~/bin/todo
 # store todos in dropbox for effortless syncing
