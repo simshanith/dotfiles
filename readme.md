@@ -8,6 +8,8 @@ Inspired by (and using some pieces from) [Bash-It](https://github.com/revans/bas
 
 ![bash screenshot](https://raw.github.com/simshanith/dotfiles/master/bash_screenshot.png)
 
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/simshanith/dotfiles/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 After watching [Paul Irish's talk from Fluent 2012](http://www.youtube.com/watch?v=f7AU2Ozu8eo) I realized my dotfiles could use some attention. Generally, I throw some scripts in there as needed, but never take the time to figure out a good workflow for managing all the configurations. When I'm coding, I always have a Terminal open. With some fine tuning, the Terminal can offer a lot of power from a very simple interface. When you find your harmonious setup, you're going to want to share it across your machines and have backups.
 
 [Github Dotfiles](http://dotfiles.github.io/) is a community around publically sharing such setups. There's plenty of options and choices to make. This can be overwhelming but there's a few tools that help keep it simple.
