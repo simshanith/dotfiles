@@ -24,7 +24,11 @@
     "verge": "~1.6.3",
     "jquery.scrollTo": "~1.4.6",
     "screenfull": "~1.1.0",
-    "angular": "~1.0.8"
+    "angular": "~1.0.8",
+    "platform": "Polymer/platform#~0.1.0",
+    "polymer": "Polymer/polymer#~0.1.0",
+    "polymer-elements": "Polymer/polymer-elements#~0.0.20131108",
+    "polymer-ui-elements": "Polymer/polymer-ui-elements#~0.0.20131108"
   },
   "resolutions": {
     "jquery": "~1.10.2",
