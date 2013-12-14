@@ -69,6 +69,9 @@ alias realpath='greadlink -f'
 # alias "http" to SimpleHTTPServer
 alias http='python -m SimpleHTTPServer'
 
+# alias "jsontool" to json.tool
+alias jsontool='python -m json.tool'
+
 # alias md to marked (node markdown parser)
 alias md='marked --smart-lists'
 
