@@ -11,6 +11,17 @@ beautify() {
   [ -r "$SOURCE" ] && pd mode:'beautify' readmethod:'filescreen' source:"$SOURCE"
 }
 
+# Change directory to the current Finder directory
+# http://apple.stackexchange.com/a/96810/52388
+cdf() {
+    target=`osascript -e 'tell application "Finder" to if (count of Finder windows) > 0 then get POSIX path of (target of front Finder window as text)'`
+    if [ "$target" != "" ]; then
+        cd "$target"; pwd
+    else
+        echo 'No Finder window found' >&2
+    fi
+}
+
 # open man pages in Preview.app
 if [ -d "/Applications/Preview.app" ]
 then
