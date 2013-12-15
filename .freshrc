@@ -48,6 +48,9 @@ fresh-options --file=~/.bash_profile
 	fresh bash/mathias.dotfiles.bash
 	# source fresh's output
 	fresh freshshell/fresh contrib/source-build.sh
+
+	# nvm sourced in functions; now we can set it up.
+	fresh bash/nvm-setup.bash
 	# theme obscures working dir from terminal; this fixes it
 	# e.g. new tab opens in same (current) directory
 	fresh bash/apple.terminal.working-dir.bash

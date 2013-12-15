@@ -18,7 +18,7 @@ I started my customization journey with [`bash-it`](https://github.com/revans/ba
 
 While Bash-It provides a nifty framework for bootstrapping its set of customizations, I wanted something more flexible and extensible to manage my setup. I installed [`fresh`](http://freshshell.com/). With fresh, I can include anything from Bash-It's framework _as well as any other Git-hosted code_. So, rather than using Bash-It's bootstrap, I can use fresh's bootstrap to load Bash-It's files. Bash-It mirrors other files, like plugins, from popular shell libraries. With Fresh, I can go straight to the source and avoid the extra overhead of Bash-It.
 
-I have yet to write a proper bootstrap script to get a new machine up and running, but ["Cowboy" Ben Alman](http://benalman.com/) and [Mathias Bynens](http://mathiasbynens.be/) have [some](https://github.com/cowboy/dotfiles/tree/master/init) [pointers](https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh). The installation process is pretty simple on Mac OS X with [Homebrew](http://mxcl.github.io/homebrew/) & [git](http://git-scm.com/).
+I have yet to write a proper bootstrap script to get a new machine up and running, but ["Cowboy" Ben Alman](http://benalman.com/) and [Mathias Bynens](http://mathiasbynens.be/) have [some](https://github.com/cowboy/dotfiles/tree/master/init) [pointers](https://github.com/mathiasbynens/dotfiles/blob/master/bootstrap.sh). The installation process is pretty simple on Mac OS X with [Homebrew](http://brew.sh/) & [git](http://git-scm.com/).
 
 Update: I wrote a simple installation script.
 

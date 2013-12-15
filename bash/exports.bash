@@ -17,7 +17,4 @@ export EMACS_APP="/Applications/Emacs.app/Contents/MacOS/Emacs"
 # Handy Dropbox reference.
 export DROPBOX="$HOME/Dropbox"
 
-# npm global path from current nvm
-export NPM_GLOBAL_PACKAGES="$HOME/.nvm/v0.10.6/lib/node_modules"
-
 export SIM_DOTFILES_SETUP='oooohyeah'
