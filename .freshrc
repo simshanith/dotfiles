@@ -71,9 +71,6 @@ fresh bash/fasd.setup.bash
 # source'd for some nifty function writing utils
 fresh erichs/composure composure.sh
 
-# commenting out as not updated with release 1.2.0
-# fresh erichs/composure c_extras.sh
-
 ### BIN management
 
 # Re-install fresh with bootstrap
