@@ -56,6 +56,16 @@ cdf() {
     fi
 }
 
+nametab () { 
+    if [ -z "$1" ]; then
+        echo "Usage:"
+        echo "\`nametab workspace\`"
+        echo "Sets the tab's namespace in iTerm using escape sequence."
+    else
+        echo -e "\033];$1\007"
+    fi
+}
+
 # open man pages in Preview.app
 if [ -d "/Applications/Preview.app" ]
 then
@@ -65,8 +75,6 @@ then
     open -f -a /Applications/Preview.app
   }
 fi
-
-
 
 # Load nvm into a shell session *as a function*
 [[ -s $HOME/.nvm/nvm.sh ]] && source $HOME/.nvm/nvm.sh
