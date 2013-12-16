@@ -57,14 +57,15 @@ cdf() {
 }
 
 ### iTerm2 utils
-if [[ "$TERM_PROGRAM" == 'iTerm.app' ]]; then
+if [[ "$TERM_PROGRAM" == 'iTerm.app' ]]
+then
     nametab () { 
         if [ -z "$1" ]; then
             echo "Usage:"
             echo "\`nametab workspace\`"
             echo "Sets the tab's namespace in iTerm using escape sequence."
         else
-            echo -e "\033];$1\007"
+            echo -e $'\033];'${*}'\007' ; return ;
         fi
     }
 
