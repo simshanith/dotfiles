@@ -68,7 +68,10 @@ nametab () {
 
 # send growl messages
 # http://aming-blog.blogspot.com/2011/01/growl-notification-from-iterm-2.html
-growl() { echo -e $'\e]9;'${*}'\007' ; return ; }
+# requires growl & iTerm http://growl.info/
+if [[ "$TERM_PROGRAM" == 'iTerm.app' ]]; then
+    growl() { echo -e $'\e]9;'${*}'\007' ; return ; }
+fi
 
 # open man pages in Preview.app
 if [ -d "/Applications/Preview.app" ]
