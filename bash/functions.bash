@@ -56,20 +56,21 @@ cdf() {
     fi
 }
 
-nametab () { 
-    if [ -z "$1" ]; then
-        echo "Usage:"
-        echo "\`nametab workspace\`"
-        echo "Sets the tab's namespace in iTerm using escape sequence."
-    else
-        echo -e "\033];$1\007"
-    fi
-}
-
-# send growl messages
-# http://aming-blog.blogspot.com/2011/01/growl-notification-from-iterm-2.html
-# requires growl & iTerm http://growl.info/
+### iTerm2 utils
 if [[ "$TERM_PROGRAM" == 'iTerm.app' ]]; then
+    nametab () { 
+        if [ -z "$1" ]; then
+            echo "Usage:"
+            echo "\`nametab workspace\`"
+            echo "Sets the tab's namespace in iTerm using escape sequence."
+        else
+            echo -e "\033];$1\007"
+        fi
+    }
+
+    # send growl messages
+    # http://aming-blog.blogspot.com/2011/01/growl-notification-from-iterm-2.html
+    # requires growl http://growl.info/
     growl() { echo -e $'\e]9;'${*}'\007' ; return ; }
 fi
 
