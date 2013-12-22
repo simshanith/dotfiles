@@ -3,7 +3,6 @@ export HISTSIZE=100000
 export HISTFILESIZE=100000
 export HISTCONTROL=ignoredups
 export HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S  "
-export HISTIGNORE="ls:ls *:cd:cd -:pwd;exit:date:* --help"
 
 # Don’t clear the screen after quitting a manual page
 export MANPAGER="less -X"
