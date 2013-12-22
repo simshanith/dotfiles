@@ -14,6 +14,9 @@ set completion-prefix-display-length 7
 # Quit trying to complete & prompt when 16 matches made
 set completion-query-items 16
 
+# Immediately add a trailing slash when autocompleting symlinks to directories
+set mark-symlinked-directories on
+
 set show-all-if-unmodified on
 set skip-completed-text on
 
