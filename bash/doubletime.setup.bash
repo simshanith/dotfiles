@@ -16,19 +16,7 @@ sim_scm_prompt() {
 }
 
 svn_prompt_status() {
-  local svn_status_output
-  svn_status_output=$(svn status --xml 2> /dev/null )
-  if [ -n "$(echo $svn_status_output | grep 'item=\"modified\"')" ]; then
-     svn_status="${yellow}^"
-  elif [ -n "$(echo $svn_status_output | grep 'item=\"unversioned\"')" ]; then
-     svn_status="${cyan}+"
-  elif [ -n "$(echo $svn_status_output | grep '/status')" ]; then
-     svn_status="${green}✓"
-  else
-    svn_status="$(scm_prompt_info)"
-  fi
-  echo "[$svn_status${normal}]"
-
+  echo 
 }
 
 

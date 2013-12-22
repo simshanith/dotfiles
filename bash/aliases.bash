@@ -16,6 +16,9 @@ alias lsnpm='echo $NPM_GLOBAL_PACKAGES; ls $NPM_GLOBAL_PACKAGES'
 alias less='less --RAW-CONTROL-CHARS'
 alias more='more --RAW-CONTROL-CHARS'
 alias grep='grep --color=auto'
+# be nice
+alias please=sudo
+alias hosts='please $EDITOR /etc/hosts' 
 
 # folder jumpin
 alias ..='cd ..'         # Go up one directory
@@ -66,8 +69,8 @@ alias diem="deim"
 # Use GNU readlink to determine absolute filepaths
 alias realpath='greadlink -f'
 
-# alias "http" to SimpleHTTPServer
-alias http='python -m SimpleHTTPServer'
+# alias "http" to python SimpleHTTPServer function
+alias http='server'
 
 # alias "jsontool" to json.tool
 alias jsontool='python -m json.tool'
@@ -80,3 +83,13 @@ alias pd='node $NPM_GLOBAL_PACKAGES/prettydiff/api/node-local.js'
 
 # alias t to todo.txt CLI
 alias t='todo'
+
+# https://github.com/paulirish/dotfiles/blob/master/.aliases
+# `cat` with beautiful colors. requires Pygments installed.
+alias c='pygmentize -O style=monokai -f console256 -g'
+
+# http://xkcd.com/530/
+alias stfu="osascript -e 'set volume output muted true'"
+alias pumpitup="osascript -e 'set volume 10'"
+alias hax="growlnotify -a 'Activity Monitor' 'System error' -m 'WTF R U DOIN';"
+

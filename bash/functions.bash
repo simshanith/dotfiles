@@ -56,6 +56,11 @@ cdf() {
     fi
 }
 
+# Create a new directory and enter it
+function mkd() {
+    mkdir -p "$@" && cd "$@"
+}
+
 ### iTerm2 utils
 if [[ "$TERM_PROGRAM" == 'iTerm.app' ]]
 then
@@ -74,6 +79,33 @@ then
     # requires growl http://growl.info/
     growl() { echo -e $'\e]9;'${*}'\007' ; return ; }
 fi
+
+# http://xkcd.com/530/
+hello () {
+    osascript -e 'say "Hello '$1'"';
+}
+
+# git log with per-commit cmd-clickable GitHub URLs (iTerm)
+function gf() {
+  local remote="$(git remote -v | awk '/^origin.*\(push\)$/ {print $2}')"
+  [[ "$remote" ]] || return
+  local user_repo="$(echo "$remote" | perl -pe 's/.*://;s/\.git$//')"
+  git log $* --name-status --color | awk "$(cat <<AWK
+    /^.*commit [0-9a-f]{40}/ {sha=substr(\$2,1,7)}
+    /^[MA]\t/ {printf "%s\thttps://github.com/$user_repo/blob/%s/%s\n", \$1, sha, \$2; next}
+    /.*/ {print \$0}
+AWK
+  )" | less -F
+}
+
+# Start an HTTP server from a directory, optionally specifying the port
+function server() {
+    local port="${1:-8000}"
+    open "http://localhost:${port}/"
+    # Set the default Content-Type to `text/plain` instead of `application/octet-stream`
+    # And serve everything as UTF-8 (although not technically correct, this doesn’t break anything for binary files)
+    python -c $'import SimpleHTTPServer;\nmap = SimpleHTTPServer.SimpleHTTPRequestHandler.extensions_map;\nmap[""] = "text/plain";\nfor key, value in map.items():\n\tmap[key] = value + ";charset=UTF-8";\nSimpleHTTPServer.test();' "$port"
+}
 
 # open man pages in Preview.app
 if [ -d "/Applications/Preview.app" ]
