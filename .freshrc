@@ -62,6 +62,9 @@ fresh .bashrc --file
 # .inputrc for bash / readline config
 fresh .inputrc --file
 
+# gitconfig
+fresh .gitconfig --file
+
 ### end config file linking
 
 # fasd init (source'd)
