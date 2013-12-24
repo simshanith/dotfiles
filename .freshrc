@@ -63,7 +63,13 @@ fresh .bashrc --file
 fresh .inputrc --file
 
 # gitconfig
-fresh .gitconfig --file
+fresh-options --file=~/.gitconfig
+	fresh .gituserconfig
+	fresh .gitconfig
+fresh-options
+
+fresh .gitattributes --file
+fresh .gitignore --file
 
 ### end config file linking
 
