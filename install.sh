@@ -15,7 +15,7 @@ cp -vf ~/.dotfiles/.freshrc ~
 # copy bin/symlinks to ~/bin
 cp -R ~/.dotfiles/bin/symlinks/* ~/bin/
 
-if [[ -r "~/.dotfiles/.gituserconfig" ]]; then
+if [ -e ~/.dotfiles/.gituserconfig ]; then
   echo "Git user config already exists."
 else
   touch ~/.dotfiles/.gituserconfig
@@ -25,7 +25,7 @@ else
   echo "#   name = John Doe" >> ~/.dotfiles/.gituserconfig
   echo "#   email = jdoe@example.com" >> ~/.dotfiles/.gituserconfig
 
-  echo "Git user config already exists. Please edit and re-run \`fresh\`."
+  echo "Git user config intialized. Please edit and re-run \`fresh\`."
 fi
 
 # install fresh or run for re-fresh
