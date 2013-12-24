@@ -32,6 +32,9 @@ alias subl="subl -w"
 alias bgsubl="forever start -m 1 -c subl"
 alias edit="subl"
 
+# git hub
+# http://hub.github.com/
+alias git=hub
 
 # fasd shortcuts
 alias fe="f -e $EDITOR"
