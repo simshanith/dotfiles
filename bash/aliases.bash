@@ -81,6 +81,9 @@ alias jsontool='python -m json.tool'
 # alias md to marked (node markdown parser)
 alias md='marked --smart-lists'
 
+# alias nw to node-webkit app
+alias nw='/Applications/node-webkit.app/Contents/MacOS/node-webkit'
+
 # alias prettydiff
 alias pd='node $NPM_GLOBAL_PACKAGES/prettydiff/api/node-local.js'
 
