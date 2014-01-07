@@ -30,7 +30,8 @@
     "polymer-elements": "Polymer/polymer-elements#~0.0.20131108",
     "polymer-ui-elements": "Polymer/polymer-ui-elements#~0.0.20131108",
     "react": "~0.8.0",
-    "mori": "~0.2.4"
+    "mori": "~0.2.4",
+    "yepnope": "~1.5.4"
   },
   "resolutions": {
     "jquery": "~1.10.2",
