@@ -1,3 +1,6 @@
+# declare brew bash as shell
+export SHELL="/usr/local/bin/bash"
+
 # awesome history tracking
 export HISTSIZE=100000
 export HISTFILESIZE=100000
