@@ -81,6 +81,9 @@ alias jsontool='python -m json.tool'
 # alias md to marked (node markdown parser)
 alias md='marked --smart-lists'
 
+# alias mou to Mou app
+alias mou='open -a Mou'
+
 # alias nw to node-webkit app
 alias nw='~/Applications/node-webkit.app/Contents/MacOS/node-webkit'
 
@@ -98,4 +101,3 @@ alias c='pygmentize -O style=monokai -f console256 -g'
 alias stfu="osascript -e 'set volume output muted true'"
 alias pumpitup="osascript -e 'set volume 10'"
 alias hax="growlnotify -a 'Activity Monitor' 'System error' -m 'WTF R U DOIN';"
-
