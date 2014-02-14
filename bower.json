@@ -8,7 +8,7 @@
     "q": "git://github.com/kriskowal/q.git#~0.9.6",
     "jquery.transit": "git://github.com/rstacruz/jquery.transit.git#~0.9.9",
     "jquery-touchswipe": "git://github.com/mattbryson/TouchSwipe-Jquery-Plugin.git#~1.6.4",
-    "typeahead.js": "~0.9.3",
+    "typeahead.js": "~0.10.0",
     "lodash": "~1.3.1",
     "backbone": "~1.1.0",
     "underscore": "~1.5.1",
@@ -32,7 +32,8 @@
     "react": "~0.8.0",
     "mori": "~0.2.4",
     "yepnope": "~1.5.4",
-    "jade": "~1.1.4"
+    "jade": "~1.1.4",
+    "webshim": "~1.12.2"
   },
   "resolutions": {
     "jquery": "~1.10.2",
