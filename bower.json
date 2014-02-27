@@ -2,8 +2,8 @@
   "name": "sim dotfiles",
   "version": "0.1.0",
   "dependencies": {
-    "jquery": "git://github.com/components/jquery.git#1.10",
-    "jquery-legacy": "git://github.com/components/jquery.git#1.10",
+    "jquery": "git://github.com/components/jquery.git#1.11",
+    "jquery-legacy": "git://github.com/components/jquery.git#1.11",
     "jquery-modern": "git://github.com/components/jquery.git#2",
     "q": "git://github.com/kriskowal/q.git#~0.9.6",
     "jquery.transit": "git://github.com/rstacruz/jquery.transit.git#~0.9.9",
