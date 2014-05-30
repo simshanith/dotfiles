@@ -117,6 +117,10 @@ then
   }
 fi
 
+λ () {
+    fortune | cowsay -f tux -W 50 | lolcat -p 2
+}
+
 # Load nvm into a shell session *as a function*
 [[ -s $HOME/.nvm/nvm.sh ]] && source $HOME/.nvm/nvm.sh
 
