@@ -2,7 +2,7 @@
 PATH="/usr/local/heroku/bin:$PATH"
 
 # Add rvm & ruby gems to the path
-PATH="$PATH:~/.gem/ruby/1.8/bin:$HOME/.rvm/bin"
+#PATH="$PATH:~/.gem/ruby/1.8/bin:$HOME/.rvm/bin"
 
 # Ensure /usr/local/bin before /usr/bin for Homebrew
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
