@@ -33,7 +33,9 @@
     "mori": "~0.2.4",
     "yepnope": "~1.5.4",
     "jade": "~1.1.4",
-    "webshim": "~1.12.2"
+    "webshim": "~1.12.2",
+    "jquery-hammerjs": "hammerjs/jquery.hammer.js",
+    "hammerjs": "~2.0.2"
   },
   "resolutions": {
     "jquery": "~1.10.2",
