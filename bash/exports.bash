@@ -28,4 +28,7 @@ export EMACS_APP="/Applications/Emacs.app/Contents/MacOS/Emacs"
 # Handy Dropbox reference.
 export DROPBOX="$HOME/Dropbox"
 
+# Golang
+export GOPATH="$HOME/golang"
+
 export SIM_DOTFILES_SETUP='oooohyeah'
