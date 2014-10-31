@@ -7,6 +7,9 @@ PATH="/usr/local/heroku/bin:$PATH"
 # Ensure /usr/local/bin before /usr/bin for Homebrew
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
+# Golang
+PATH="${GOPATH//://bin:}/bin"
+
 # AEM stuffs
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.7.0_67.jdk/Contents/Home"
 export MAVEN_HOME="/usr/local/Cellar/maven/3.2.3/libexec"
