@@ -8,7 +8,7 @@ PATH="/usr/local/heroku/bin:$PATH"
 PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
 # Golang
-PATH="${GOPATH//://bin:}/bin"
+PATH="${GOPATH//://bin:}/bin:$PATH"
 
 # AEM stuffs
 export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.7.0_67.jdk/Contents/Home"
