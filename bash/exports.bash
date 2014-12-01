@@ -31,4 +31,8 @@ export DROPBOX="$HOME/Dropbox"
 # Golang
 export GOPATH="$HOME/golang"
 
+# pkg-config for node-canvas et al.
+# <https://github.com/Automattic/node-canvas/wiki/installation---osx>
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
+
 export SIM_DOTFILES_SETUP='oooohyeah'
