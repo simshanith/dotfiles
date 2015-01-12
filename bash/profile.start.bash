@@ -10,3 +10,6 @@ shopt -s histappend
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
+
+# up the maximum open files
+ulimit -n 8192
