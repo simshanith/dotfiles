@@ -12,4 +12,4 @@ shopt -s histappend
 shopt -s checkwinsize
 
 # up the maximum open files
-ulimit -n 8192
+ulimit -n 16384
