@@ -52,7 +52,7 @@
     lnc = log --pretty=format:"%h\\ %s\\ [%cn]"
     #list all aliases
     la = "!git config -l | grep alias | cut -c 7-"
-    diff = diff --word-diff
+    #diff = diff --word-diff
     d = diff --word-diff
     dc = diff --cached
     #list modified files in last commit
