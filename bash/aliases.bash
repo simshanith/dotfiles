@@ -34,7 +34,7 @@ alias edit="subl"
 
 # git hub
 # http://hub.github.com/
-alias git=hub
+# alias git=hub
 
 # fasd shortcuts
 alias fe="f -e $EDITOR"
