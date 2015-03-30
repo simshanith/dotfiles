@@ -18,6 +18,7 @@ brew 'ack'
 brew 'bash'
 brew 'curl'
 brew 'emacs'
+brew 'heroku-toolbelt'
 brew 'tree'
 brew 'wget'
 
