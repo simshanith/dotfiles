@@ -25,6 +25,7 @@ brew 'wget'
 # VCS.
 brew 'git', args: ['with-brewed-curl', 'with-brewed-openssl', 'with-brewed-svn', 'with-gettext', 'with-pcre', 'with-persistent-https']
 brew 'git-flow'
+brew 'tig'
 brew 'hub'
 brew 'subversion', args: ['with-perl']
 
