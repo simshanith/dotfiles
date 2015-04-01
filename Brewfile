@@ -69,6 +69,8 @@ cask 'google-chrome'
 
 # Editors.
 cask 'lighttable'
+cask 'lightpaper'
+cask 'mou'
 
 # Music.
 cask 'lastfm'
