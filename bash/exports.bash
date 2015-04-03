@@ -32,7 +32,11 @@ export DROPBOX="$HOME/Dropbox"
 export GOPATH="$HOME/golang"
 
 # Google Chrome via Caskroom.
-export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+export CHROME_BIN="$HOME/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+# Firefox via Caskroom (for SlimerJS)
+export SLIMERJSLAUNCHER="$HOME/Applications/Firefox.app/Contents/MacOS/firefox"
+
 
 # pkg-config for node-canvas et al.
 # <https://github.com/Automattic/node-canvas/wiki/installation---osx>
