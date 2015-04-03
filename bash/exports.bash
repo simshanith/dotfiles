@@ -31,6 +31,9 @@ export DROPBOX="$HOME/Dropbox"
 # Golang
 export GOPATH="$HOME/golang"
 
+# Google Chrome via Caskroom.
+export CHROME_BIN="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
 # pkg-config for node-canvas et al.
 # <https://github.com/Automattic/node-canvas/wiki/installation---osx>
 export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/opt/X11/lib/pkgconfig
