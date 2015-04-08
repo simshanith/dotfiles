@@ -42,6 +42,8 @@ brew 'casperjs', args: ['devel']
 
 # Misc.
 brew 'd-bus'
+brew 'flow'
+brew 'jq'
 
 # Dependencies for above.
 # While redundant; nice to have whitelisted.
