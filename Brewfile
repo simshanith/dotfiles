@@ -40,6 +40,16 @@ brew 'phantomjs'
 brew 'slimerjs'
 brew 'casperjs', args: ['devel']
 
+# Virtual Machines
+brew 'docker'
+brew 'docker-machine'
+brew 'boot2docker'
+brew 'fig'
+
+# Databases
+brew 'mongodb', args: ['with-openssl']
+brew 'redis'
+
 # Misc.
 brew 'd-bus'
 brew 'flow'
@@ -78,6 +88,9 @@ cask 'mou'
 # Music.
 cask 'lastfm'
 cask 'spotify'
+
+# Virtual Machines
+cask 'virtualbox'
 
 # Misc.
 cask 'xquartz'
