@@ -27,6 +27,7 @@ brew 'git', args: ['with-brewed-curl', 'with-brewed-openssl', 'with-brewed-svn',
 brew 'git-flow'
 brew 'tig'
 brew 'hub'
+brew 'gibo'
 brew 'subversion', args: ['with-perl']
 
 # Languages.
