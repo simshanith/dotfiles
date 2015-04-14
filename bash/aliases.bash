@@ -85,7 +85,7 @@ alias md='marked --smart-lists'
 alias mou='open -a Mou'
 
 # alias nw to node-webkit app
-alias nw='~/Applications/node-webkit.app/Contents/MacOS/node-webkit'
+# alias nw='~/Applications/node-webkit.app/Contents/MacOS/node-webkit'
 
 # alias prettydiff
 alias pd='node $NPM_GLOBAL_PACKAGES/prettydiff/api/node-local.js'
