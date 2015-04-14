@@ -36,7 +36,7 @@
     "webshim": "~1.15.3",
     "jquery-hammerjs": "hammerjs/jquery.hammer.js",
     "hammerjs": "~2.0.4",
-    "silent-console": "~0.1.0"
+    "silent-console": "~0.3.1"
   },
   "resolutions": {
     "jquery": "~1.11.1",
