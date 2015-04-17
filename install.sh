@@ -4,7 +4,7 @@
 # requires git
 
 # backup configs
-for dotfile in ~/.{bash_profile,bashrc,freshrc}; do
+for dotfile in ~/.{bash_profile,bashrc,freshrc,gitconfig}; do
   [ -r "$dotfile" ] && mv -vf $dotfile ~/.dotfiles/backups/
 done
 unset dotfile
