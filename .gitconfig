@@ -20,6 +20,7 @@
 # http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
 [url "git@github.com:simshanith/"]
   insteadOf = "git://github.com/simshanith/"
+  insteadOf = "https://github.com/simshanith/"
 
 # alias {{{
 [alias]
