@@ -14,7 +14,7 @@ export MANPAGER="less -X"
 export GIT_HOSTING='git@bitbucket.org'
 
 # Java
-export JAVA_HOME=`/usr/libexec/java_home -v 1.7`
+export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
 
 # Set my editor and git editor
 export EDITOR="subl -w"
