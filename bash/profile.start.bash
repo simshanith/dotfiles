@@ -12,4 +12,5 @@ shopt -s histappend
 shopt -s checkwinsize
 
 # up the maximum open files
-ulimit -n 16384
+# (not working in El Capitan)
+# ulimit -n 16384
