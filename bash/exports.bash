@@ -29,6 +29,9 @@ export DROPBOX="$HOME/Dropbox"
 # Golang
 export GOPATH="$HOME/golang"
 
+# Globally install apps with homebrew cask
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
 # Google Chrome via Caskroom.
 export CHROME_BIN="$HOME/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
