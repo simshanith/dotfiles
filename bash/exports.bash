@@ -15,6 +15,8 @@ export GIT_HOSTING='git@bitbucket.org'
 
 # Java
 export JAVA_HOME=`/usr/libexec/java_home -v 1.8`
+# Maven from brew
+export MAVEN_HOME="/usr/local/Cellar/maven/3.3.9/libexec"
 
 # Set my editor and git editor
 export EDITOR="subl -w"
