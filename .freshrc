@@ -136,4 +136,7 @@ unset completion
 # fresh completion (how meta)
 fresh freshshell/fresh contrib/completion/fresh-completion.bash
 
+# apex
+fresh autocompletion/apex.sh
+
 ### end completions
