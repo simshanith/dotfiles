@@ -30,7 +30,7 @@ export DROPBOX="$HOME/Dropbox"
 
 # Golang
 export GOPATH="$HOME/golang"
-export GOBIN = "$GOPATH/bin"
+export GOBIN="$GOPATH/bin"
 
 # Globally install apps with homebrew cask
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
