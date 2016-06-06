@@ -21,6 +21,7 @@ brew 'emacs'
 brew 'heroku-toolbelt'
 brew 'tree'
 brew 'wget'
+brew 'thefuck'
 
 # VCS.
 brew 'git', args: ['with-brewed-curl', 'with-brewed-openssl', 'with-brewed-svn', 'with-gettext', 'with-pcre', 'with-persistent-https']
