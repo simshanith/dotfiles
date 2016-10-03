@@ -75,7 +75,7 @@ brew 'swig'
 # http://caskroom.io/
 
 tap 'caskroom/cask'
-brew 'brew-cask'
+# brew 'brew-cask'
 
 # Browsers.
 cask 'firefox'
