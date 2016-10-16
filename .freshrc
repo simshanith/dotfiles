@@ -76,6 +76,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	fresh tmux/.tmux.macOS.conf --file=~/.tmux.conf
 fi
 
+# emacs
+fresh emacs/init.el --file=~/.emacs.d/init.el
+
 ### end config file linking
 
 # fasd init (source'd)
