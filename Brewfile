@@ -1,16 +1,16 @@
-# Brewfile, powered by brewdler.
+# Brewfile, powered by Homebrew Bundle.
 # https://robots.thoughtbot.com/brewfile-a-gemfile-but-for-homebrew
-# https://github.com/Homebrew/homebrew-brewdler
+# https://github.com/Homebrew/homebrew-bundle
 
-# Install brewdler as a tap:
-# `brew tap Homebrew/brewdler`
+# Install as a tap:
+# `brew tap homebrew/bundle`
 # Install everything listed here:
-# `brew brewdle`
+# `brew bundle`
 
 # Meta, for maintaining whitelist.
-tap 'homebrew/brewdler'
+tap 'homebrew/bundle'
 
-# `brew brewdle cleanup --dry-run`
+# `brew bundle cleanup --dry-run`
 # outputs formulae not listed here.
 
 # CLI tools.
@@ -18,10 +18,12 @@ brew 'ack'
 brew 'bash'
 brew 'curl'
 brew 'emacs'
-brew 'heroku-toolbelt'
+brew 'heroku'
 brew 'tree'
 brew 'wget'
 brew 'thefuck'
+brew 'tmux'
+brew 'reattach-to-user-namespace'
 
 # VCS.
 brew 'git', args: ['with-brewed-curl', 'with-brewed-openssl', 'with-brewed-svn', 'with-gettext', 'with-pcre', 'with-persistent-https']
@@ -46,15 +48,21 @@ brew 'docker'
 brew 'docker-machine'
 brew 'boot2docker'
 brew 'fig'
+brew 'docker-compose'
 
 # Databases
 brew 'mongodb', args: ['with-openssl']
 brew 'redis'
+brew 'mysql'
+brew 'postgresql'
 
 # Misc.
 brew 'd-bus'
 brew 'flow'
 brew 'jq'
+brew 'fortune'
+brew 'cowsay'
+brew 'mas'
 
 # Dependencies for above.
 # While redundant; nice to have whitelisted.
@@ -75,7 +83,10 @@ brew 'swig'
 # http://caskroom.io/
 
 tap 'caskroom/cask'
-# brew 'brew-cask'
+tap 'caskroom/fonts'
+
+# Fonts
+cask 'font-dejavu-sans'
 
 # Browsers.
 cask 'firefox'
@@ -92,6 +103,7 @@ cask 'spotify'
 
 # Virtual Machines
 cask 'virtualbox'
+cask 'vagrant'
 
 # Misc.
 cask 'xquartz'

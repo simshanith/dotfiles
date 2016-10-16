@@ -4,7 +4,7 @@
 # requires git
 
 # backup configs
-for dotfile in ~/.{bash_profile,bashrc,freshrc,gitconfig}; do
+for dotfile in ~/.{bash_profile,bashrc,freshrc,gitconfig,tmux.conf}; do
   [ -r "$dotfile" ] && mv -vf $dotfile ~/.dotfiles/backups/
 done
 unset dotfile
@@ -13,7 +13,9 @@ unset dotfile
 cp -vf ~/.dotfiles/.freshrc ~
 
 # copy bin/symlinks to ~/bin
-cp -R ~/.dotfiles/bin/symlinks/* ~/bin/
+if [[ "$(uname)" == "Darwin" ]]; then
+  cp -R ~/.dotfiles/bin/symlinks/* ~/bin/
+fi
 
 if [ -e ~/.dotfiles/.gituserconfig ]; then
   echo "Git user config already exists."

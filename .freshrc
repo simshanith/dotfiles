@@ -71,6 +71,11 @@ fresh-options
 fresh .gitattributes --file
 fresh .gitignore --file
 
+# tmux
+if [[ "$(uname)" == "Darwin" ]]; then
+	fresh tmux/.tmux.macOS.conf --file=~/.tmux.conf
+fi
+
 ### end config file linking
 
 # fasd init (source'd)
