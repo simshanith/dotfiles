@@ -37,8 +37,15 @@ function prompt_setter() {
   else
       clock="$THEME_PROMPT_CLOCK_FORMAT"
   fi
+
+  if [[ -z "$SSH_CLIENT" ]]
+  then
+      ssh_prompt=""
+  else
+      ssh_prompt="${bold_white}${background_cyan} ssh ${normal}"
+  fi
   PS1="\n${bold_white}${background_blue} ${clock} ${normal} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$normal]
-${black}${background_white} \w ${normal}
+$ssh_prompt${black}${background_white} \w ${normal}
 $(sim_scm_prompt)${bold_white}${background_orange} λ ${normal} "
   PS2='> '
   PS4='+ '
