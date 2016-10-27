@@ -77,7 +77,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 # emacs
-fresh emacs/init.el --file=~/.emacs.d/init.el
+fresh-options --file=~/.emacs.d/init.el
+	fresh emacs/init.el
+fresh-options
 
 ### end config file linking
 
