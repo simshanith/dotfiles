@@ -4,6 +4,7 @@
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
 
 (defvar my-packages '(better-defaults paredit idle-highlight-mode ido-ubiquitous
+                                      color-theme color-theme-solarized
                                       find-file-in-project magit smex scpaste))
 
 (package-initialize)
