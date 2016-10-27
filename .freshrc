@@ -72,9 +72,12 @@ fresh .gitattributes --file
 fresh .gitignore --file
 
 # tmux
-if [[ "$(uname)" == "Darwin" ]]; then
-	fresh tmux/.tmux.macOS.conf --file=~/.tmux.conf
-fi
+fresh-options --file=~/.tmux.conf
+	if [[ "$(uname)" == "Darwin" ]]; then
+		fresh tmux/.tmux.macOS.conf
+	fi
+	fresh seebi/tmux-colors-solarized tmuxcolors-dark.conf
+fresh-options
 
 # emacs
 fresh-options --file=~/.emacs.d/init.el
