@@ -52,22 +52,7 @@ alias aie="aei"
 alias sie="sei"
 alias die="dei"
 
-# GNU Emacs.app
-alias em="$EMACS_APP"
-alias fem="f -e $EMACS_APP"
-alias aem="a -e $EMACS_APP"
-alias sem="s -e $EMACS_APP"
-alias dem="d -e $EMACS_APP"
-
-alias feim="f -i -e $EMACS_APP"
-alias aeim="a -i -e $EMACS_APP"
-alias seim="s -i -e $EMACS_APP"
-alias deim="d -i -e $EMACS_APP"
-
-alias fiem="feim"
-alias aiem="aeim"
-alias siem="seim"
-alias diem="deim"
+alias emacs="TERM=xterm-256color emacs --no-splash -nw"
 
 # Use GNU readlink to determine absolute filepaths
 alias realpath='greadlink -f'
