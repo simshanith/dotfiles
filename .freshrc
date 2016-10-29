@@ -135,16 +135,20 @@ fresh bin/crossOriginChrome.sh --bin
 
 ### completions
 
-# bash-it completions
-# brew gem git git_flow pip ssh todo
+fresh autocompletion/local.sh
+# local completions
+# brew git git-flow etc.
 # Homebrew: Mac OS X package management (used to download most everything else listed here)
-# Ruby gems
 # git Source Control Management
 # git flow - Toolkit for Higher Level Branching abstractions
+
+# bash-it completions
+# gem pip ssh todo
+# Ruby gems
 # pip Python Package Management
 # ssh completion with allowed hosts
 # todo.txt cli
-for completion in brew gem git git_flow pip ssh todo; do
+for completion in gem pip ssh todo; do
 	fresh revans/bash-it completion/available/$completion.completion.bash
 done
 unset completion
