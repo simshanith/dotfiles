@@ -2,9 +2,9 @@ USE_GNU_LS=true
 
 if $USE_GNU_LS ; then
 	if [[ "$(uname)" == "Darwin" ]]; then
-		alias ls="gls --color=auto -p"
+		alias ls="gls --color=auto -p -F"
 	else
-		alias ls="ls --color=auto -p "
+		alias ls="ls --color=auto -p -F"
 	fi
 else
 	alias ls="ls -GFH"
