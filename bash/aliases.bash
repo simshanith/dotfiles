@@ -1,14 +1,20 @@
-# BSD ls file listing
-# G for color
-# F for non-file identification
-# A for hidden files & dirs
-# l for expanded listing
-# H for following symlinks
-alias ls='ls -GF'
-alias la='ls -GAF'
-alias ll='ls -GFlh'
-alias lla='ls -GFalh'
-alias all='lla'
+USE_GNU_LS=true
+
+if $USE_GNU_LS ; then
+	if [[ "$(uname)" == "Darwin" ]]; then
+		alias ls="gls --color=auto -p"
+	else
+		alias ls="ls --color=auto -p "
+	fi
+else
+	alias ls="ls -GFH"
+fi
+
+alias la="ls -A"
+alias ll="ls -lHh"
+alias lla="ll -A"
+alias all="lla"
+
 alias lsnpm='echo $NPM_GLOBAL_PACKAGES; ls $NPM_GLOBAL_PACKAGES'
 
 
