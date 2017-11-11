@@ -4,7 +4,7 @@
 Inspired by (and using some pieces from) [Bash-It](https://github.com/revans/bash-it)
 
 # Customizing the Terminal
-###### Mac OS X 10.8.4 Mountain Lion BASH
+###### macOs, bash, and [Operator Mono](https://www.typography.com/blog/introducing-operator)
 
 ![bash screenshot](https://raw.github.com/simshanith/dotfiles/master/bash_screenshot.png)
 
