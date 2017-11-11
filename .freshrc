@@ -26,10 +26,10 @@ unset dotfile
 fresh-options --file=~/.bash_prompt
 	# bash-it theme: doubletime with custom extension
 	# load colors, base prompt setup
-	fresh revans/bash-it themes/colors.theme.bash
-	fresh revans/bash-it themes/base.theme.bash
+	fresh Bash-it/bash-it themes/colors.theme.bash
+	fresh Bash-it/bash-it themes/base.theme.bash
 	# Original
-	fresh revans/bash-it themes/doubletime/doubletime.theme.bash
+	fresh Bash-it/bash-it themes/doubletime/doubletime.theme.bash
 	# Customizations based on Bash-It theme
 	fresh bash/doubletime.setup.bash
 fresh-options
@@ -44,6 +44,7 @@ fresh-options
 fresh-options --file=~/.bash_profile
 	# Start with some simple defaults.
 	fresh bash/profile.start.bash
+	fresh Bash-it/bash-it lib/helpers.bash
 	# loads path,bash_prompt,exports,aliases,functions,extra
 	fresh bash/mathias.dotfiles.bash
 	# source fresh's output
@@ -152,7 +153,7 @@ fresh autocompletion/local.sh
 # ssh completion with allowed hosts
 # todo.txt cli
 for completion in gem pip ssh todo; do
-	fresh revans/bash-it completion/available/$completion.completion.bash
+	fresh Bash-it/bash-it completion/available/$completion.completion.bash
 done
 unset completion
 
