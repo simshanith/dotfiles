@@ -42,11 +42,15 @@ fresh-options
 # Comment out the lines below.
 ###	
 fresh-options --file=~/.bash_profile
+# composure shell scripting
+	fresh erichs/composure composure.sh
 	# Start with some simple defaults.
 	fresh bash/profile.start.bash
+	fresh bash/bash-it-cite.bash
 	fresh Bash-it/bash-it lib/helpers.bash
 	# loads path,bash_prompt,exports,aliases,functions,extra
 	fresh bash/mathias.dotfiles.bash
+
 	# source fresh's output
 	fresh freshshell/fresh contrib/source-build.sh
 
@@ -95,10 +99,6 @@ fresh bash/dircolors.bash
 # & data from a cached init code
 # to keep things speedy
 fresh bash/fasd.setup.bash
-
-# composure shell scripting
-# source'd for some nifty function writing utils
-fresh erichs/composure composure.sh
 
 # https://github.com/nvbn/thefuck
 fresh bash/thefuck.sh
