@@ -1,4 +1,5 @@
 # Some NVM integration
+nvm use default;
 
 alias currentnode='nvm ls current | ack --nocolor "(?P<version>v[\d]*\.[\d]*.[\d]*)" --output "$+{version}"'
 export CURRENT_NODE=`currentnode`
