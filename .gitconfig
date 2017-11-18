@@ -26,6 +26,9 @@
 [push]
   default = simple
 
+[diff]
+  algorithm = patience
+
 # alias {{{
 [alias]
   st = status -s
