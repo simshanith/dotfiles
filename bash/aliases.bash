@@ -15,8 +15,6 @@ alias ll="ls -lHh"
 alias lla="ll -A"
 alias all="lla"
 
-alias lsnpm='echo $NPM_GLOBAL_PACKAGES; ls $NPM_GLOBAL_PACKAGES'
-
 
 # less & grep with ANSI colors
 alias less='less --RAW-CONTROL-CHARS'
@@ -77,9 +75,6 @@ alias mou='open -a Mou'
 
 # alias nw to node-webkit app
 # alias nw='~/Applications/node-webkit.app/Contents/MacOS/node-webkit'
-
-# alias prettydiff
-alias pd='node $NPM_GLOBAL_PACKAGES/prettydiff/api/node-local.js'
 
 # alias t to todo.txt CLI
 alias t='todo'
