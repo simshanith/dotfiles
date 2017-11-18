@@ -86,7 +86,7 @@ alias c='pygmentize -O style=monokai -f console256 -g'
 # http://xkcd.com/530/
 alias stfu="osascript -e 'set volume output muted true'"
 alias pumpitup="osascript -e 'set volume 10'"
-alias hax="growlnotify -a 'Activity Monitor' 'System error' -m 'WTF R U DOIN';"
+alias hax="growl '31337 hax WTF'; eightbit;"
 
 # open all merge conflicts or currently changed files in sublime text
 alias fixchanges="git diff --name-only | uniq | xargs subl"
