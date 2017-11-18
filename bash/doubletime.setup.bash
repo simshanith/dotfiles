@@ -4,13 +4,14 @@ sim_scm_prompt() {
   local sim_scm_prompt_prefix
   sim_scm_prompt_prefix="$background_cyan   $normal ${blue}$SCM${normal}"
   if [ "$SCM" == "$SCM_NONE" ]; then
+    echo
     return
   elif [ "$SCM" == "$SCM_GIT" ]; then
-    echo "$sim_scm_prompt_prefix $(git_prompt_status)"
+    echo "$sim_scm_prompt_prefix $(git_prompt_status)\n"
   elif [ "$SCM" == "$SCM_SVN" ]; then
-    echo "$sim_scm_prompt_prefix $(svn_prompt_status)"
+    echo "$sim_scm_prompt_prefix $(svn_prompt_status)\n"
   else
-    echo "$sim_scm_prompt_prefix [$(scm_prompt_info)] "
+    echo "$sim_scm_prompt_prefix [$(scm_prompt_info)]\n"
   fi
 }
 
@@ -44,7 +45,7 @@ function prompt_setter() {
       ssh_prompt="${bold_white}${background_cyan} ssh ${normal}"
   fi
   PS1="\n${bold_white}${background_blue} ${clock} ${normal} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}${normal}]
-$ssh_prompt${black}${background_white} \w ${normal}\r\n$(sim_scm_prompt)\n${bold_white}${background_orange} λ ${normal} "
+$ssh_prompt${black}${background_white} \w ${normal}\n$(sim_scm_prompt)${bold_white}${background_orange} λ ${normal} "
   PS2='> '
   PS4='+ '
 }
