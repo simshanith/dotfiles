@@ -1,5 +1,6 @@
 [core]
   editor = subl
+  excludesfile = ~/.gitignore
 [color]
   ui = always
   diff = true
