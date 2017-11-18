@@ -38,11 +38,6 @@ brew 'go'
 brew 'python'
 brew 'ruby'
 
-# Browsers.
-brew 'phantomjs'
-brew 'slimerjs'
-brew 'casperjs', args: ['devel']
-
 # Virtual Machines
 brew 'docker'
 brew 'docker-machine'
@@ -90,12 +85,11 @@ cask 'font-dejavu-sans'
 
 # Browsers.
 cask 'firefox'
-cask 'google-chrome'
+# cask 'google-chrome'
 
 # Editors.
 cask 'lighttable'
 cask 'lightpaper'
-cask 'mou'
 
 # Music.
 cask 'lastfm'
