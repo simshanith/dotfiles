@@ -12,7 +12,6 @@ sim_scm_prompt() {
   else
     echo "$sim_scm_prompt_prefix [$(scm_prompt_info)] "
   fi
-  echo "\r"
 }
 
 svn_prompt_status() {
@@ -44,9 +43,8 @@ function prompt_setter() {
   else
       ssh_prompt="${bold_white}${background_cyan} ssh ${normal}"
   fi
-  PS1="\n${bold_white}${background_blue} ${clock} ${normal} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}$normal]
-$ssh_prompt${black}${background_white} \w ${normal}
-$(sim_scm_prompt)${bold_white}${background_orange} λ ${normal} "
+  PS1="\n${bold_white}${background_blue} ${clock} ${normal} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}${normal}]
+$ssh_prompt${black}${background_white} \w ${normal}\r\n$(sim_scm_prompt)\n${bold_white}${background_orange} λ ${normal} "
   PS2='> '
   PS4='+ '
 }
