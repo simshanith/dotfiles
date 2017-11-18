@@ -19,6 +19,12 @@ svn_prompt_status() {
   echo 
 }
 
+itermMark() {
+  if [[ "$TERM_PROGRAM" == 'iTerm.app' ]] && [[ $(type -t iterm2_prompt_mark) == 'function' ]]
+  then
+    echo "\[$(iterm2_prompt_mark)\]"
+  fi
+}
 
 # override bash-it echo -e with unescaped version
 function scm_char {
@@ -45,7 +51,7 @@ function prompt_setter() {
       ssh_prompt="${bold_white}${background_cyan} ssh ${normal}"
   fi
   PS1="\n${bold_white}${background_blue} ${clock} ${normal} $(scm_char) [$THEME_PROMPT_HOST_COLOR\u@${THEME_PROMPT_HOST}${normal}]
-$ssh_prompt${black}${background_white} \w ${normal}\n$(sim_scm_prompt)${bold_white}${background_orange} λ ${normal} "
+$ssh_prompt${black}${background_white} \w ${normal}\n$(sim_scm_prompt)$(itermMark)${bold_white}${background_orange} λ ${normal} "
   PS2='> '
   PS4='+ '
 }
