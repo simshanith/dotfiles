@@ -1,4 +1,4 @@
-if [[ -x "$(which gls)" ]] ; then
+if hash gls 2>/dev/null ; then
 	if [[ "$(uname)" == "Darwin" ]]; then
 		alias ls="gls --color=auto -p -F"
 	else
