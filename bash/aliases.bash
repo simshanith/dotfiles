@@ -1,6 +1,4 @@
-USE_GNU_LS=true
-
-if $USE_GNU_LS ; then
+if [[ -x "$(which gls)" ]] ; then
 	if [[ "$(uname)" == "Darwin" ]]; then
 		alias ls="gls --color=auto -p -F"
 	else
