@@ -91,7 +91,6 @@ tap 'caskroom/fonts'
 
 # Fonts
 cask 'caskroom/fonts/font-dejavu-sans'
-cask 'caskroom/fonts/font-awesome-terminal-fonts'
 
 # Browsers.
 cask 'firefox'
