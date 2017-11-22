@@ -9,6 +9,10 @@
 
 # Meta, for maintaining whitelist.
 tap 'homebrew/bundle'
+# systemd-esque services
+tap 'homebrew/services'
+# missing command helper
+tap 'homebrew/command-not-found'
 
 # `brew bundle cleanup --dry-run`
 # outputs formulae not listed here.
@@ -17,26 +21,30 @@ tap 'homebrew/bundle'
 brew 'ack'
 brew 'bash'
 brew 'curl'
+brew 'coreutils'
 brew 'emacs'
 brew 'heroku'
-brew 'tree'
-brew 'wget'
+brew 'reattach-to-user-namespace'
 brew 'thefuck'
 brew 'tmux'
-brew 'reattach-to-user-namespace'
+brew 'tree'
+brew 'wget'
+brew 'yarn'
 
 # VCS.
 brew 'git', args: ['with-brewed-curl', 'with-brewed-openssl', 'with-brewed-svn', 'with-gettext', 'with-pcre', 'with-persistent-https']
 brew 'git-flow'
-brew 'tig'
-brew 'hub'
 brew 'gibo'
+brew 'hub'
+brew 'legit'
 brew 'subversion', args: ['with-perl']
+brew 'tig'
 
 # Languages.
 brew 'go'
 brew 'python'
 brew 'ruby'
+brew 'node'
 
 # Virtual Machines
 brew 'docker'
@@ -78,16 +86,19 @@ brew 'swig'
 # http://caskroom.io/
 
 tap 'caskroom/cask'
+tap 'caskroom/versions'
 tap 'caskroom/fonts'
 
 # Fonts
-cask 'font-dejavu-sans'
+cask 'caskroom/fonts/font-dejavu-sans'
+cask 'caskroom/fonts/font-awesome-terminal-fonts'
 
 # Browsers.
 cask 'firefox'
-# cask 'google-chrome'
+cask 'google-chrome'
 
 # Editors.
+cask 'sublime-text'
 cask 'lighttable'
 cask 'lightpaper'
 
@@ -100,4 +111,19 @@ cask 'virtualbox'
 cask 'vagrant'
 
 # Misc.
+cask 'bartender'
 cask 'xquartz'
+
+# Mac App Store
+mas "Amphetamine", id: 937984704
+mas "BetterSnapTool", id: 417375580
+mas "Gapplin", id: 768053424
+mas "GarageBand", id: 682658836
+mas "Growl", id: 467939042
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "LastPass", id: 926036361
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "The Unarchiver", id: 425424353
+mas "Xcode", id: 497799835

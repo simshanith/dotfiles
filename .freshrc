@@ -103,6 +103,9 @@ fresh bash/fasd.setup.bash
 # https://github.com/nvbn/thefuck
 fresh bash/thefuck.sh
 
+# brew command-not-found
+fresh bash/command-not-found.bash
+
 ### BIN management
 
 # Re-install fresh with bootstrap
