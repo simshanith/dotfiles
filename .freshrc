@@ -28,6 +28,7 @@ fresh-options --file=~/.bash_prompt
 	# load colors, base prompt setup
 	fresh Bash-it/bash-it themes/colors.theme.bash
 	fresh Bash-it/bash-it themes/base.theme.bash
+	fresh Bash-it/bash-it themes/githelpers.theme.bash
 	# Original
 	fresh Bash-it/bash-it themes/doubletime/doubletime.theme.bash
 	# Customizations based on Bash-It theme
