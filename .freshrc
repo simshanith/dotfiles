@@ -170,4 +170,7 @@ fresh freshshell/fresh contrib/completion/fresh-completion.bash
 # apex
 fresh autocompletion/apex.sh
 
+# git-friendly
+fresh autocompletion/git-friendly.sh
+
 ### end completions
