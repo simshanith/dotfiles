@@ -120,3 +120,5 @@ fi
 λ () {
     fortune | cowsay -f tux -W 50 | lolcat -p 2
 }
+
+[[ -s "~/.rvm/scripts/rvm" ]] && source "~/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

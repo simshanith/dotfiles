@@ -2,9 +2,6 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	### Heroku Toolbelt
 	PATH="/usr/local/heroku/bin:$PATH"
 
-	# Add rvm & ruby gems to the path
-	#PATH="$PATH:~/.gem/ruby/1.8/bin:$HOME/.rvm/bin"
-
 	# Adobe Flex SDK
 	PATH="~/Code/flex_sdk_4.6/bin:$PATH"
 
@@ -20,5 +17,8 @@ fi
 
 # Put ~/bin before everything
 PATH="~/bin:$PATH"
+
+# Add RVM to PATH for scripting.
+PATH="$PATH:~/.rvm/bin"
 
 export PATH
