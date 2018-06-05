@@ -3,7 +3,7 @@ if [[ "$(uname)" == "Darwin" ]]; then
 	PATH="/usr/local/heroku/bin:$PATH"
 
 	# Adobe Flex SDK
-	PATH="~/Code/flex_sdk_4.6/bin:$PATH"
+	# PATH="~/Code/flex_sdk_4.6/bin:$PATH"
 
 	# Ensure /usr/local/bin before /usr/bin for Homebrew
 	PATH="/usr/local/bin:/usr/local/sbin:$PATH"
@@ -16,9 +16,9 @@ if [[ "$(uname)" == "Darwin" ]]; then
 fi
 
 # Put ~/bin before everything
-PATH="~/bin:$PATH"
+PATH="$HOME/bin:$PATH"
 
 # Add RVM to PATH for scripting.
-PATH="$PATH:~/.rvm/bin"
+PATH="$PATH:$HOME/.rvm/bin"
 
 export PATH
