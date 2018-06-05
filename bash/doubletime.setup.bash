@@ -1,3 +1,6 @@
+# Use FQDN
+THEME_PROMPT_HOST="$(hostname -f)"
+
 # include svn status information
 sim_scm_prompt() {
   scm
