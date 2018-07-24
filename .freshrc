@@ -173,4 +173,7 @@ fresh autocompletion/apex.sh
 # git-friendly
 fresh autocompletion/git-friendly.sh
 
+# vault
+fresh autocompletion/vault.sh
+
 ### end completions
