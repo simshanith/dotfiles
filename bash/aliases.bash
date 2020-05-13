@@ -79,7 +79,7 @@ alias t='todo'
 
 # https://github.com/paulirish/dotfiles/blob/master/.aliases
 # `cat` with beautiful colors. requires Pygments installed.
-alias c='pygmentize -O style=monokai -f console256 -g'
+alias c='pygmentize -O style=solarized-dark -f console256 -g'
 
 # http://xkcd.com/530/
 alias stfu="osascript -e 'set volume output muted true'"
