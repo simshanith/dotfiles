@@ -53,6 +53,16 @@ fi
 cp "$DOTFILES/.freshrc" "$HOME/.freshrc"
 fresh install
 
+# Configure git to include fresh-managed defaults
+# This allows git config --global to work while preserving fresh defaults
+FRESH_GITCONFIG="$HOME/.fresh/build/gitconfig"
+if [[ -f "$FRESH_GITCONFIG" ]]; then
+    if ! git config --global --get-all include.path 2>/dev/null | grep -qF "$FRESH_GITCONFIG"; then
+        echo "Configuring git to include fresh defaults..."
+        git config --global include.path "$FRESH_GITCONFIG"
+    fi
+fi
+
 # iTerm2 shell integration
 if [[ ! -f "$HOME/.iterm2_shell_integration.zsh" ]]; then
     echo "Installing iTerm2 shell integration..."

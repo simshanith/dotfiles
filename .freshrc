@@ -22,7 +22,7 @@ fresh seebi/dircolors-solarized dircolors.ansi-universal --file=~/.dircolors
 # ============================================================
 # Git
 # ============================================================
-fresh-options --file=~/.gitconfig
+fresh-options --file=gitconfig
     fresh git/.gituserconfig
     fresh git/.gitconfig
 fresh-options

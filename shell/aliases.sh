@@ -26,6 +26,7 @@ alias -- -='cd -'
 # Color output
 # ============================================================
 alias grep='grep --color=auto'
+alias rg='rg --smart-case'
 alias less='less -R'
 alias more='more -R'
 

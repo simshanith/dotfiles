@@ -96,10 +96,10 @@
   grep = grep -Ii
   gr = grep -Ii
   #grep from root folder
-  gra = "!f() { A=$(pwd) && TOPLEVEL=$(git rev-parse --show-toplevel) && cd $TOPLEVEL && git grep --full-name -In $1 | xargs -I{} echo $TOPLEVEL/{} && cd $A; }; f"
+  gra = grep --full-name -In :/
 
   #grep on filename
-  f = "!git ls-files | grep -i"
+  f = "!git ls-files | rg -i"
 
   #rename branch tree to done-
   done = "!f() { git branch | grep "$1" | cut -c 3- | grep -v done | xargs -I{} git branch -m {} done-{}; }; f"
@@ -108,7 +108,7 @@
   assume = update-index --assume-unchanged
   unassume = update-index --no-assume-unchanged
   #show assumed files
-  assumed = "!git ls-files -v | grep ^h | cut -c 3-"
+  assumed = "!git ls-files -v | rg '^h' | cut -c 3-"
   #unassume all the assumed files
   unassumeall = "!git assumed | xargs git update-index --no-assume-unchanged"
   assumeall = "!git st -s | awk {'print $2'} | xargs git assume"

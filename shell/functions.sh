@@ -96,3 +96,14 @@ eightbit() {
             while(c!=128) { c<128?c++:c--; printf("%c",c)}}}' |
     sox -t raw -r 64k -c 1 -e unsigned -b 8 - -d
 }
+
+# ============================================================
+# Search (ripgrep + fzf)
+# ============================================================
+# Interactive ripgrep with fzf preview
+rgf() {
+    rg --color=always --line-number --no-heading "$@" |
+        fzf --ansi --delimiter : \
+            --preview 'bat --color=always --highlight-line {2} {1}' \
+            --preview-window '+{2}-5'
+}
