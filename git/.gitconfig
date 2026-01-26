@@ -4,6 +4,8 @@
 [color]
   ui = always
   diff = true
+[init]
+  defaultBranch = main
 [url "git@github.com:"]
   insteadOf = "gh:"
   pushInsteadOf = "github:"
@@ -25,6 +27,7 @@
 
 [push]
   default = simple
+  autoSetupRemote = true
 
 [diff]
   algorithm = patience

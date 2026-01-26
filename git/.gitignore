@@ -26,3 +26,5 @@ Icon
 
 # SublimeText project files
 *.sublime-workspace
+
+.claude/settings.local.json

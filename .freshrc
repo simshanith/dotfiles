@@ -1,179 +1,54 @@
 # freshshell.com
-#
-# Examples:
-#
-#   fresh twe4ked/dotfiles shell/functions.sh
-#   fresh jasoncodes/dotfiles aliases/rails.sh
-#   fresh jasoncodes/dotfiles config/tmux.conf --file
-#
-# See http://freshshell.com/readme for documentation.
+# Zsh-focused dotfiles configuration
 
 # Meta: handles updating fresh
 fresh freshshell/fresh bin/fresh --bin
 
-### ~/.bash_profile internals
+# ============================================================
+# Shell configs (symlinked to ~/)
+# ============================================================
+fresh shell/exports.sh --file=~/.exports
+fresh shell/path.sh --file=~/.path
+fresh shell/aliases.sh --file=~/.aliases
+fresh shell/functions.sh --file=~/.functions
 
-# inspired by mathiasbynens/dotfiles
-
-# this `fresh` code symlinks each listed dotfile to ~/.$dotfile
-# linked files are then source`d in ~/.bash_profile constructed below
-for dotfile in path exports aliases functions; do
-	fresh bash/$dotfile.bash --file=~/.$dotfile
-done
-unset dotfile
-
-# construct ~/.bash_prompt
-fresh-options --file=~/.bash_prompt
-	# bash-it theme: doubletime with custom extension
-	# load colors, base prompt setup
-	fresh Bash-it/bash-it themes/colors.theme.bash
-	fresh Bash-it/bash-it themes/base.theme.bash
-	fresh Bash-it/bash-it themes/githelpers.theme.bash
-	# Original
-	fresh Bash-it/bash-it themes/doubletime/doubletime.theme.bash
-	# Customizations based on Bash-It theme
-	fresh bash/doubletime.setup.bash
-fresh-options
-
-### end ~/.bash_profile setup
-
-### CONFIG FILE LINKING
-# Alternatively, copy manually along with this file,
-# instead of symlinking with fresh.
-# Comment out the lines below.
-###	
-fresh-options --file=~/.bash_profile
-# composure shell scripting
-	fresh erichs/composure composure.sh
-	# Start with some simple defaults.
-	fresh bash/profile.start.bash
-	fresh bash/bash-it-cite.bash
-	fresh Bash-it/bash-it lib/helpers.bash
-	# loads path,bash_prompt,exports,aliases,functions,extra
-	fresh bash/mathias.dotfiles.bash
-
-	# source fresh's output
-	fresh freshshell/fresh contrib/source-build.sh
-
-	# nvm sourced in functions; now we can set it up.
-	fresh bash/nvm-setup.bash
-	# theme obscures working dir from terminal; this fixes it
-	# e.g. new tab opens in same (current) directory
-	fresh bash/apple.terminal.working-dir.bash
-fresh-options
-
-# .bashrc delegates to .bash_profile
-fresh .bashrc --file
-
-# .inputrc for bash / readline config
-fresh .inputrc --file
-
-# gitconfig
-fresh-options --file=~/.gitconfig
-	fresh .gituserconfig
-	fresh .gitconfig
-fresh-options
-
-fresh .gitattributes --file
-fresh .gitignore --file
-
-# tmux
-fresh-options --file=~/.tmux.conf
-	if [[ "$(uname)" == "Darwin" ]]; then
-		fresh tmux/.tmux.macOS.conf
-	fi
-	fresh seebi/tmux-colors-solarized tmuxcolors-dark.conf
-fresh-options
-
-# emacs
-fresh-options --file=~/.emacs.d/init.el
-	fresh emacs/init.el
-fresh-options
-
-### end config file linking
-
-# dircolors
-fresh bash/dircolors.bash
-
-# fasd init (source'd)
-# this provides the aliases
-# & data from a cached init code
-# to keep things speedy
-fresh bash/fasd.setup.bash
-
-# https://github.com/nvbn/thefuck
-fresh bash/thefuck.sh
-
-# brew command-not-found
-fresh bash/command-not-found.bash
-
-### BIN management
-
-# Re-install fresh with bootstrap
-fresh install.sh --bin=~/bin/dotfiles
-
-# git friendly
-# abstractions around common git tasks
-for gitHelper in branch merge pull push; do
-	fresh jamiew/git-friendly $gitHelper --bin
-done
-unset gitHelper
-
-# FASD
-# autojump, z util for directory jumping sorted by "frecency"
-fresh clvv/fasd fasd --bin
-
-# Leiningen Clojure Build System
-# awesome way to bootstrap Clojure.
-# there's a `brew` for it but whatevs.
-# needs Java installed (JDK)
-fresh technomancy/leiningen bin/lein --bin --ref=origin/stable
-
-# Leiningen-Powered Clojure Scripting
-fresh kumarshantanu/lein-exec lein-exec --bin
-fresh kumarshantanu/lein-exec lein-exec-p --bin
-
-# todo.txt: simple todo list
-fresh ginatrapani/todo.txt-cli todo.sh --bin=~/bin/todo
-# store todos in dropbox for effortless syncing
-fresh todo.cfg --file=~/.todo/config
-
-# Cross-Origin --disable-web-security Chrome with clean slate
-fresh bin/crossOriginChrome.sh --bin
-
-### completions
-
-fresh autocompletion/local.sh
-# local completions
-# brew git git-flow etc.
-# Homebrew: Mac OS X package management (used to download most everything else listed here)
-# git Source Control Management
-# git flow - Toolkit for Higher Level Branching abstractions
-
-# bash-it completions
-# gem pip ssh todo
-# Ruby gems
-# pip Python Package Management
-# ssh completion with allowed hosts
-# todo.txt cli
-for completion in gem pip ssh todo; do
-	fresh Bash-it/bash-it completion/available/$completion.completion.bash
-done
-unset completion
+# Zsh config
+fresh zsh/.zshrc --file
 
 # GNU ls dircolors
+fresh shell/dircolors.sh
 fresh seebi/dircolors-solarized dircolors.ansi-universal --file=~/.dircolors
 
-# fresh completion (how meta)
-fresh freshshell/fresh contrib/completion/fresh-completion.bash
+# ============================================================
+# Git
+# ============================================================
+fresh-options --file=~/.gitconfig
+    fresh git/.gituserconfig
+    fresh git/.gitconfig
+fresh-options
 
-# apex
-fresh autocompletion/apex.sh
+fresh git/.gitattributes --file
+fresh git/.gitignore --file
 
-# git-friendly
-fresh autocompletion/git-friendly.sh
+# ============================================================
+# Tmux
+# ============================================================
+fresh-options --file=~/.tmux.conf
+    fresh tmux/.tmux.conf
+    fresh seebi/tmux-colors-solarized tmuxcolors-dark.conf
+fresh-options
 
-# vault
-fresh autocompletion/vault.sh
+# ============================================================
+# Emacs
+# ============================================================
+# fresh emacs/init.el --file=~/.emacs.d/init.el
 
-### end completions
+# ============================================================
+# Readline (still useful for other programs)
+# ============================================================
+fresh .inputrc --file
+
+# ============================================================
+# Bin scripts
+# ============================================================
+fresh install.sh --bin=~/bin/dotfiles
