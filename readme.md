@@ -1,3 +1,11 @@
+# dotfiles
+
+See [2026_REFRESH.md](./2026_REFRESH.md) for the current zsh-based setup.
+
+---
+
+*The content below is kept for posterity.*
+
 [dotfiles.github.io](http://dotfiles.github.io/)
 [freshshell.com](http://freshshell.com/)
 
