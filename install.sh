@@ -55,6 +55,9 @@ else
     fresh update || true
 fi
 
+# Source fresh to make the command available
+source "$HOME/.fresh/build/shell.sh"
+
 # Link configs
 cp "$DOTFILES/.freshrc" "$HOME/.freshrc"
 fresh install
