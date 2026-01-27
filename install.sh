@@ -21,12 +21,18 @@ brew bundle --file="$DOTFILES/Brewfile" || true
 # Backup existing configs
 backup_dir="$DOTFILES/backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$backup_dir"
-for f in .zshrc .exports .path .aliases .functions .gitconfig .tmux.conf .inputrc; do
+for f in .zshrc .exports .path .aliases .functions .tmux.conf .inputrc; do
     if [[ -f "$HOME/$f" && ! -L "$HOME/$f" ]]; then
         echo "Backing up ~/$f"
         mv "$HOME/$f" "$backup_dir/"
     fi
 done
+
+# Backup starship config if it exists
+if [[ -f "$HOME/.config/starship.toml" && ! -L "$HOME/.config/starship.toml" ]]; then
+    echo "Backing up ~/.config/starship.toml"
+    mv "$HOME/.config/starship.toml" "$backup_dir/"
+fi
 
 # Create .gituserconfig if it doesn't exist
 if [[ ! -e "$DOTFILES/git/.gituserconfig" ]]; then
