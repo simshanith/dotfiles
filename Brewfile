@@ -2,8 +2,10 @@
 # Install: brew bundle
 # Cleanup: brew bundle cleanup --force
 tap "d12frosted/emacs-plus"
+tap "oven-sh/bun"
 
 # Shell
+brew "bash"
 brew "zsh"
 brew "zsh-history-substring-search"
 brew "starship"
@@ -21,6 +23,7 @@ brew "tree"
 brew "coreutils"
 brew "gnu-sed"
 brew "grep"
+brew "ssh-copy-id"
 
 # Git
 brew "git"
@@ -36,6 +39,7 @@ brew "emacs-plus@30"
 brew "tmux"
 
 # Languages
+brew "bun"
 brew "go"
 brew "python"
 brew "rust"
@@ -48,5 +52,13 @@ brew "lolcat"
 brew "sox"
 
 # Casks
+cask "1password"
+cask "1password-cli"
+cask "ghostty"
+cask "google-chrome"
+cask "iterm2"
+cask "localsend"
+cask "tailscale-app"
+
 # Fonts
 cask "font-symbols-only-nerd-font"
