@@ -23,7 +23,7 @@ setopt HIST_REDUCE_BLANKS        # Remove extra blanks
 # Editor
 # ============================================================
 # export EDITOR="subl -n -w"
-export EDITOR="emacs" # --no-splash -nw"
+export EDITOR="emacs --no-splash -nw"
 export VISUAL="$EDITOR"
 export GIT_EDITOR="$EDITOR"
 
