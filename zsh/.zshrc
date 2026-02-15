@@ -81,10 +81,10 @@ fi
 [[ -e "${HOME}/.iterm2_shell_integration.zsh" ]] && \
     source "${HOME}/.iterm2_shell_integration.zsh"
 
-# nvm (Node version manager)
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+# mise (runtime version manager - replaces nvm)
+if command -v mise &>/dev/null; then
+    eval "$(mise activate zsh)"
+fi
 
 # bun
 if [[ -d "${HOME}/.bun" ]]; then
