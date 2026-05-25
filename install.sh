@@ -72,6 +72,13 @@ if [[ -f "$FRESH_GITCONFIG" ]]; then
     fi
 fi
 
+# mise config (copy template if not present)
+if [[ ! -f "$HOME/.config/mise/config.local.toml" ]]; then
+    mkdir -p "$HOME/.config/mise"
+    cp "$DOTFILES/.config/mise/config.local.toml" "$HOME/.config/mise/config.local.toml"
+    echo "mise config template copied. Edit ~/.config/mise/config.local.toml as needed."
+fi
+
 # iTerm2 shell integration
 if [[ ! -f "$HOME/.iterm2_shell_integration.zsh" ]]; then
     echo "Installing iTerm2 shell integration..."
