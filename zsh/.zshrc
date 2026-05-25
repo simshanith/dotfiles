@@ -81,7 +81,12 @@ fi
 [[ -e "${HOME}/.iterm2_shell_integration.zsh" ]] && \
     source "${HOME}/.iterm2_shell_integration.zsh"
 
-# nvm (Node version manager)
+# mise (polyglot runtime manager - replaces nvm, pyenv, etc.)
+if command -v mise &>/dev/null; then
+    eval "$(mise activate zsh)"
+fi
+
+# nvm (Node version manager) - keep until migrated to mise
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"

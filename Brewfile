@@ -38,6 +38,9 @@ brew "emacs-plus@30"
 # Terminal
 brew "tmux"
 
+# Runtime management
+brew "mise"
+
 # Languages
 brew "bun"
 brew "go"
