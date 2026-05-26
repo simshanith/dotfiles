@@ -32,6 +32,14 @@ else
 fi
 
 # ============================================================
+# mise (must run before any tool init that depends on its shims:
+# starship, zoxide, fzf, thefuck, etc.)
+# ============================================================
+if command -v mise &>/dev/null; then
+    eval "$(mise activate zsh)"
+fi
+
+# ============================================================
 # Prompt: Starship
 # ============================================================
 if command -v starship &>/dev/null; then
@@ -81,11 +89,6 @@ fi
 [[ -e "${HOME}/.iterm2_shell_integration.zsh" ]] && \
     source "${HOME}/.iterm2_shell_integration.zsh"
 
-# mise (polyglot runtime manager - replaces nvm, pyenv, etc.)
-if command -v mise &>/dev/null; then
-    eval "$(mise activate zsh)"
-fi
-
 # nvm (Node version manager) - keep until migrated to mise
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
@@ -98,8 +101,8 @@ if [[ -d "${HOME}/.bun" ]]; then
     export PATH="${BUN_INSTALL}/bin:${PATH}"
 fi
 
-# thefuck (if installed)
-command -v thefuck &>/dev/null && eval "$(thefuck --alias)"
+# pay-respects (Rust thefuck replacement; press F to apply suggestion)
+command -v pay-respects &>/dev/null && eval "$(pay-respects zsh --alias fuck)"
 
 # ============================================================
 # Local overrides (not in git)

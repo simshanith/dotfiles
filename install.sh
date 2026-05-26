@@ -72,11 +72,17 @@ if [[ -f "$FRESH_GITCONFIG" ]]; then
     fi
 fi
 
-# mise config (copy template if not present)
+# mise config:
+#   - conf.d/fresh.toml is symlinked by fresh (always-synced baseline)
+#   - config.toml + config.local.toml are copied once (machine-mutable)
+mkdir -p "$HOME/.config/mise/conf.d"
+if [[ ! -f "$HOME/.config/mise/config.toml" ]]; then
+    cp "$DOTFILES/mise/config.toml" "$HOME/.config/mise/config.toml"
+    echo "mise config.toml copied. Edit ~/.config/mise/config.toml for machine-specific tools."
+fi
 if [[ ! -f "$HOME/.config/mise/config.local.toml" ]]; then
-    mkdir -p "$HOME/.config/mise"
-    cp "$DOTFILES/.config/mise/config.local.toml" "$HOME/.config/mise/config.local.toml"
-    echo "mise config template copied. Edit ~/.config/mise/config.local.toml as needed."
+    cp "$DOTFILES/mise/config.local.toml" "$HOME/.config/mise/config.local.toml"
+    echo "mise config.local.toml template copied."
 fi
 
 # iTerm2 shell integration

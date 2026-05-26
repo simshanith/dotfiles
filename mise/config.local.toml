@@ -1,0 +1,9 @@
+# Per-machine mise overrides. Not symlinked — copied once by install.sh.
+# Shared defaults live in ~/.config/mise/config.toml (symlinked from the dotfiles repo).
+#
+# Example:
+# [tools]
+# node = "22"
+# python = "3.13"
+
+[tools]

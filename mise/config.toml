@@ -1,0 +1,12 @@
+# Local mise config — copied (not symlinked) by install.sh.
+# Edit freely; this file is not auto-overwritten from the dotfiles repo.
+#
+# The dotfiles-managed baseline (tools + settings) lives in:
+#   ~/.config/mise/conf.d/fresh.toml  (symlinked from ~/.dotfiles/mise/conf.d/fresh.toml)
+# Per-machine overrides go in:
+#   ~/.config/mise/config.local.toml
+#
+# mise merges all of these at runtime.
+
+[tools]
+# Add machine-specific tools here.

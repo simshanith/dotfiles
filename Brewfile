@@ -1,54 +1,43 @@
 # Brewfile
 # Install: brew bundle
 # Cleanup: brew bundle cleanup --force
+#
+# Most CLI tools live in ~/.config/mise/config.toml now.
+# This file is for: shells, system PATH replacements, GUI apps,
+# and tools that need brew's macOS integration (taps, terminfo, keychain).
 tap "d12frosted/emacs-plus"
-tap "oven-sh/bun"
 
 # Shell
 brew "bash"
 brew "zsh"
 brew "zsh-history-substring-search"
-brew "starship"
 
-# Modern CLI
-brew "bat"
-brew "fd"
-brew "fzf"
-brew "ripgrep"
-brew "zoxide"
-brew "jq"
-brew "tree"
-
-# Core utilities
+# Core utilities (system PATH replacements)
 brew "coreutils"
 brew "gnu-sed"
 brew "grep"
 brew "ssh-copy-id"
 
-# Git
+# Git (kept in brew: bootstrap dependency, macOS keychain integration)
 brew "git"
-brew "git-delta"
-brew "gh"
-brew "tig"
-brew "gibo"
 
 # Editors
 brew "emacs-plus@30"
 
-# Terminal
+# Terminal (kept in brew: terminfo + tmux-256color)
 brew "tmux"
 
-# Runtime management
+# tree: GNU tree (not in mise's short-name registry)
+brew "tree"
+
+# tig: ncurses git browser (not in mise's short-name registry)
+brew "tig"
+
+# Runtime management (bootstrap)
 brew "mise"
 
-# Languages
-brew "bun"
-brew "go"
-brew "python"
-brew "rust"
-
 # Misc
-brew "thefuck"
+# thefuck dropped — replaced by pay-respects (mise-managed Rust port)
 brew "fortune"
 brew "cowsay"
 brew "lolcat"

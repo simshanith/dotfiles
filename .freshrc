@@ -53,6 +53,8 @@ fresh .inputrc --file
 # ============================================================
 fresh starship/starship.toml --file=~/.config/starship.toml
 
+fresh mise/fresh.toml --file=~/.config/mise/conf.d/fresh.toml
+
 # ============================================================
 # Bin scripts
 # ============================================================
