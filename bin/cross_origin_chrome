@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Launches a throwaway-profile Chrome instance with web security disabled, for
+# local cross-origin testing. Old trick (~2013) but still valid as of 2026.
+#
+# NOTE: Chrome (v73+) ignores --disable-web-security unless it's paired with a
+# non-default --user-data-dir, so the temp profile below is REQUIRED, not just
+# tidy. Security: this disables CORS/web protections — only for short-lived
+# local testing; the throwaway profile keeps your real Chrome data safe.
+#
+# Override the binary if Chrome lives elsewhere (or for Chromium/Canary):
+#   CHROME_BIN="/path/to/Google Chrome" cross_origin_chrome
+#
+### original notes:
+### tip via https://sites.google.com/a/yarina.org/dougs-notes/home/mac-os-x/multiple-instances-of-chrome
+### http://dev.chromium.org/user-experience/user-data-directory
+### https://developer.apple.com/library/mac/#documentation/opensource/conceptual/shellscripting/
+
+CHROME_BIN="${CHROME_BIN:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
+
+# Throwaway profile in a unique temp dir (honors $TMPDIR; no /tmp/junk collisions)
+USER_DATA_DIR="$(mktemp -d "${TMPDIR:-/tmp}/cross_origin_chrome.XXXXXX")"
+
+(
+	"$CHROME_BIN" --disable-web-security --user-data-dir="$USER_DATA_DIR" > /dev/null 2>&1 &
+	chrome_process_id=$!
+	wait "$chrome_process_id"
+	rm -rf "$USER_DATA_DIR"
+) &
