@@ -1,6 +1,14 @@
+# Rendered by chezmoi (mode=symlink, but .tmpl files are rendered, not linked).
+# [user] is templated from chezmoi data (replaces the old git/.gituserconfig
+# stub + ~/.gitconfig include-path hack that Fresh wired up).
+[user]
+  name = {{ .name }}
+  email = {{ .email }}
+
 [core]
   editor = subl
   excludesfile = ~/.gitignore
+  attributesfile = ~/.gitattributes
 [color]
   ui = always
   diff = true
@@ -32,7 +40,7 @@
 [diff]
   algorithm = patience
 
-# alias {{{
+# alias {{ "{{{" }}
 [alias]
   st = status -s
 
@@ -130,4 +138,4 @@
   sba = "!f() { git subtree add --prefix $2 $1 master --squash; }; f" 
   # initial empty commit
   empty = "!git commit -am\"[empty] Initial commit\" --allow-empty"
-# }}}
+# {{ "}}}" }}
