@@ -62,8 +62,12 @@ Keep the repo at `~/.dotfiles`. chezmoi reads it via `--source ~/.dotfiles` (set
 ├── dot_gitattributes                                    → ~/.gitattributes
 ├── dot_gitignore                                        → ~/.gitignore
 ├── dot_tmux.conf                                        → ~/.tmux.conf
+├── dot_emacs.d/
+│   └── init.el                                          → ~/.emacs.d/init.el  (archives refreshed)
 ├── dot_config/
 │   ├── starship.toml                                    → ~/.config/starship.toml
+│   ├── ghostty/
+│   │   └── config                                       → ~/.config/ghostty/config  (primary terminal)
 │   ├── chezmoi/
 │   │   └── chezmoi.toml.tmpl                            → ~/.config/chezmoi/chezmoi.toml  (init prompts)
 │   └── mise/
@@ -82,6 +86,10 @@ Keep the repo at `~/.dotfiles`. chezmoi reads it via `--source ~/.dotfiles` (set
 │   └── tmuxcolors-dark.conf                             # vendored from seebi
 ├── git/
 │   └── (empty after migration — .gituserconfig dance goes into the template)
+├── bin/                                                 # managed by chezmoi → ~/bin (on PATH)
+│   ├── executable_cross_origin_chrome                   → ~/bin/cross_origin_chrome  (+x)
+│   ├── symlink_subl.tmpl                                → ~/bin/subl      (symlink, darwin only)
+│   └── symlink_dotfiles                                 → ~/bin/dotfiles  (symlink → install.sh)
 ├── install.sh                                           # tiny bootstrap (brew + mise + chezmoi init --apply)
 ├── Brewfile
 ├── .chezmoiignore                                       # tells chezmoi to skip shell/, tmux/, git/, install.sh, etc.
@@ -171,9 +179,7 @@ install.sh
 .idea
 .claude
 backups
-emacs
 iterm2-preferences
-bin
 shell
 tmux
 git
@@ -229,10 +235,9 @@ mise install -y    # picks up chezmoi from fresh.toml
 # 3. chezmoi takes it from here
 chezmoi init --source="$DOTFILES" --apply
 
-# 4. Mirror this script into ~/bin (could also be done via a symlink_ entry in chezmoi;
-#    keeping it inline because install.sh is the bootstrap that runs *before* chezmoi)
-mkdir -p "$HOME/bin"
-ln -sfn "$DOTFILES/install.sh" "$HOME/bin/dotfiles"
+# 4. ~/bin is chezmoi-managed now (executable_ scripts + symlink_ entries), so the
+#    `chezmoi init --apply` above already created ~/bin/{dotfiles,subl,cross_origin_chrome}.
+#    No manual ln needed here.
 
 echo "Done. Restart shell: exec zsh"
 echo "Verify: chezmoi status (should be empty)"
@@ -260,34 +265,49 @@ Gone vs current `install.sh`:
 | `tmux/.tmux.conf` | `dot_tmux.conf` | rename; add `source-file` line |
 | seebi tmux colors | `tmux/tmuxcolors-dark.conf` (vendored) | ignored by chezmoi |
 | `.inputrc` | `dot_inputrc` | rename |
+| `emacs/init.el` | `dot_emacs.d/init.el` | newly managed; refresh package archives (drop marmalade, https melpa) |
+| (live) `~/.config/ghostty/config` | `dot_config/ghostty/config` | newly managed; primary terminal (cmux/Ghostty), `iTerm2 Solarized Dark` theme |
 | `starship/starship.toml` | `dot_config/starship.toml` | path mirrors target |
 | seebi dircolors | `shell/dircolors.ansi-universal` (vendored) | ignored |
 | `mise/fresh.toml` | `dot_config/mise/conf.d/fresh.toml` | path mirrors target |
 | `mise/config.toml` | `dot_config/mise/config.toml.tmpl` | templated |
 | `mise/config.local.toml` | `dot_config/mise/config.local.toml.tmpl` | templated |
-| `install.sh` | `install.sh` (root) + symlink at `~/bin/dotfiles` | not chezmoi-managed |
-| `bin/symlinks/subl,subl3` | drop | unused |
+| `install.sh` | `install.sh` (root); `~/bin/dotfiles` via `bin/symlink_dotfiles` | script not managed; the ~/bin symlink is |
+| `bin/symlinks/subl,subl3` | `bin/symlink_subl.tmpl` → `~/bin/subl`; drop `subl3` | chezmoi `symlink_`, darwin-gated via `.chezmoiignore` |
+| `bin/crossOriginChrome.sh` | `bin/executable_cross_origin_chrome` → `~/bin/cross_origin_chrome` | renamed snake_case, no ext; chezmoi `executable_` sets +x |
 | iTerm2 integration curl | `run_once_before_10-iterm2-shell-integration.sh.tmpl` | chezmoi tracks state |
 
 ## Cut-over plan
 
 1. Add `chezmoi` to `mise/fresh.toml` (already done — `mise use -g cargo:chezmoi`).
-2. Create `.chezmoiignore`, `dot_config/chezmoi/chezmoi.toml.tmpl`.
-3. Rename and (where needed) templatize files per the layout. One commit per cluster (git, mise, shell-roots, config dir, scripts) keeps the diff reviewable.
-4. Rewrite `install.sh`.
-5. On a clean profile *or* after backing up `~`'s currently-symlinked files: run `./install.sh`, then `chezmoi status` should report empty.
-6. Delete `.freshrc`. Drop fresh references from `install.sh` and `Brewfile`. Remove `~/.fresh/` (manual on the dev machine).
-7. Update `2026_REFRESH.md`: replace the Stow plan with chezmoi reality. Move from "Future Plans" to "What Changed."
+2. **Vendor the seebi color files into the repo** (replaces Fresh's external-fetch; chezmoi can't pull from remote git). These two files are effectively frozen, so vendor rather than submodule:
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.ansi-universal \
+     -o shell/dircolors.ansi-universal
+   curl -fsSL https://raw.githubusercontent.com/seebi/tmux-colors-solarized/master/tmuxcolors-dark.conf \
+     -o tmux/tmuxcolors-dark.conf
+   ```
+   Then point the loaders at the local copies: `shell/dircolors.sh` evals `$DOTFILES/shell/dircolors.ansi-universal` instead of `~/.dircolors`; `dot_tmux.conf` `source-file`s `~/.dotfiles/tmux/tmuxcolors-dark.conf`.
+3. Create `.chezmoiignore`, `dot_config/chezmoi/chezmoi.toml.tmpl`.
+4. Rename and (where needed) templatize files per the layout. One commit per cluster (git, mise, shell-roots, config dir, scripts) keeps the diff reviewable.
+5. Rewrite `install.sh`.
+6. On a clean profile *or* after backing up `~`'s currently-symlinked files: run `./install.sh`, then `chezmoi status` should report empty.
+7. Delete `.freshrc`. Drop fresh references from `install.sh` and `Brewfile`. Remove `~/.fresh/` (manual on the dev machine).
+8. Update `2026_REFRESH.md`: replace the Stow plan with chezmoi reality. Move from "Future Plans" to "What Changed."
 
 ## Open questions before we actually move files
 
-1. **Vendor or submodule the seebi files?** Vendor — they barely change.
-2. **`emacs/init.el`** — bring under `dot_emacs.d/init.el` now, or punt? Recommend punt; it's not in `.freshrc` today.
-3. **`iterm2-preferences/`** — not path-mirror-able (it's a `defaults` plist). Punt; document import path in README.
-4. **`bin/symlinks/subl,subl3`** — drop.
+_(Vendoring resolved — now step 2 of the cut-over plan. The `config.local.toml` comment fix is committed on this branch — `b5ab690`.)_
+
+1. **`emacs/init.el`** — ✅ **include.** Migrate to `dot_emacs.d/init.el` (technomancy `emacs-starter-kit` lineage: `better-defaults`, `paredit`, `magit`, `smex`). Refresh the package archives during the move: drop the dead `marmalade-repo`, switch `melpa-stable` to `https`, add `melpa`. Wasn't in `.freshrc`, so this newly puts it under management.
+2. **`iterm2-preferences/`** — 🅿️ **punt prefs management; Ghostty is now primary.** Ghostty's config is plain text (`~/.config/ghostty/config`) and joins chezmoi cleanly (now in the layout as `dot_config/ghostty/config`). iTerm2 stays *installed* as a secondary for the one thing Ghostty/cmux can't do yet — **`tmux -CC` control mode**, especially over remote ssh. Its other historical edge, the **hotkey/Quake window**, is already covered by Ghostty's `global:opt+`=toggle_quick_terminal`. Don't wire up iTerm2 prefs now; keep the how-to in case it earns a permanent seat:
+   - Native "custom preferences folder": `defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$HOME/.dotfiles/iterm2-preferences"` + `LoadPrefsFromCustomFolder -bool true`. iTerm2 then reads/writes `com.googlecode.iterm2.plist` in that folder; commit it. Loosen `iterm2-preferences/.gitignore` (currently `*` / `!.gitignore`) to allow the plist.
+   - Prefer that over chezmoi-managing the plist directly — iTerm2 rewrites it constantly; chezmoi would just leave the dir alone.
+   - Watch for `tmux -CC` support landing in Ghostty/cmux — that's the trigger to retire iTerm2 entirely.
+3. **`bin/symlinks/subl,subl3`** — ✅ **keep, simplified, chezmoi-managed.** *Not* a `mise link` candidate (that's for runtime versions, not app CLIs). chezmoi owns `~/bin` now, so a `symlink_subl.tmpl` entry creates `~/bin/subl` → `/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl`, OS-gated via `.chezmoiignore` (`{{ if ne .chezmoi.os "darwin" }}bin/subl{{ end }}`); drop the `subl→subl3` indirection.
+4. **`bin/crossOriginChrome.sh`** — ✅ **keep, modernized, chezmoi-managed.** Old (~2013) `--disable-web-security` launcher, verified still valid as of 2026. Reworked: `CHROME_BIN` override, `mktemp -d` profile (now flagged *required* — Chrome v73+ ignores `--disable-web-security` without a non-default `--user-data-dir`), security note. shellcheck-clean. Renamed snake_case / no extension; chezmoi `bin/executable_cross_origin_chrome` lands it at `~/bin/cross_origin_chrome` (+x, on PATH). **The live file is already renamed to `bin/cross_origin_chrome`; the `executable_` prefix gets added at cut-over (step 4) when chezmoi takes over `~/bin`.**
 5. **Per-machine zsh overrides** — keep `~/.extra` (sourced by `.zshrc`, gitignored). Could move to chezmoi templates later if `.extra` gets crowded.
 6. **The init prompts** — `name`, `email`, `work`, `machine` is the starting set. Add others lazily as needs surface.
-7. **The lingering `mise/config.local.toml` comment fix from `simshanith/zsh-refresh`** — moot after this migration; the file is replaced by a template. Drop the change or carry it back to `zsh-refresh` for cleanliness?
 
 ---
 
