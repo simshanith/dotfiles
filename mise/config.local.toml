@@ -1,5 +1,6 @@
-# Per-machine mise overrides. Not symlinked — copied once by install.sh.
-# Shared defaults live in ~/.config/mise/config.toml (symlinked from the dotfiles repo).
+# Per-machine mise overrides. Copied once by install.sh; safe to edit freely.
+# Shared baseline lives in ~/.config/mise/conf.d/fresh.toml (symlinked from the dotfiles repo).
+# Local entry point is ~/.config/mise/config.toml (copied from the repo, also editable).
 #
 # Example:
 # [tools]
