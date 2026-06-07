@@ -28,5 +28,7 @@ mise
 backups
 iterm2-preferences
 
-# OS-gating (.chezmoiignore is itself templated): subl symlink is macOS-only.
-{{ if ne .chezmoi.os "darwin" }}bin/subl{{ end }}
+# subl symlink only on macOS AND only when Sublime Text is actually installed
+# (.chezmoiignore is itself templated; stat is re-evaluated every apply, so this
+# self-corrects after `brew bundle` installs the app, or if it's removed).
+{{ if or (ne .chezmoi.os "darwin") (not (stat "/Applications/Sublime Text.app")) }}bin/subl{{ end }}

@@ -50,6 +50,7 @@ cask "ghostty"
 cask "google-chrome"
 cask "iterm2"
 cask "localsend"
+cask "sublime-text"   # prereq for the ~/bin/subl symlink (chezmoi links it only if present)
 cask "tailscale-app"
 
 # Fonts
