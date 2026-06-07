@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Runs once (per content hash) on `chezmoi apply`. Installs iTerm2 shell
+# integration if absent. iTerm2 is secondary now (Ghostty is primary) but kept
+# for `tmux -CC` control mode; .zshrc still sources this if present.
+{{ if eq .chezmoi.os "darwin" -}}
+set -euo pipefail
+target="$HOME/.iterm2_shell_integration.zsh"
+[[ -f "$target" ]] || curl -fsSL https://iterm2.com/shell_integration/zsh -o "$target"
+{{ end -}}
