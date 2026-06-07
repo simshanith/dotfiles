@@ -27,3 +27,6 @@ mise
 # Deliberately unmanaged
 backups
 iterm2-preferences
+
+# OS-gating (.chezmoiignore is itself templated): subl symlink is macOS-only.
+{{ if ne .chezmoi.os "darwin" }}bin/subl{{ end }}
