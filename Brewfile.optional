@@ -1,0 +1,14 @@
+# Brewfile.optional — opt-in GUI / per-machine extras.
+#
+# NOT installed by install.sh (which only runs the baseline Brewfile). Run by
+# hand on machines where you want these, typically headed/desktop machines:
+#
+#     brew bundle --file="$HOME/.dotfiles/Brewfile.optional"
+#
+# The matching chezmoi entries self-gate on the app being present, so installing
+# from here (then `chezmoi apply`) wires up the related symlinks; skipping it
+# leaves them unmanaged. Keep the baseline Brewfile headless-safe.
+
+# Sublime Text — prereq for the ~/bin/subl symlink (chezmoi links it only if the
+# app is present; see .chezmoiignore).
+cask "sublime-text"
