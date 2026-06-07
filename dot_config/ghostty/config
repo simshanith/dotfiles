@@ -1,0 +1,5 @@
+font-family = Operator Mono SSm Book
+theme = iTerm2 Solarized Dark
+keybind = global:opt+`=toggle_quick_terminal
+cursor-style = block
+shell-integration-features = no-cursor
