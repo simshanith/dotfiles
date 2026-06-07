@@ -1,19 +1,19 @@
 # ~/.zshrc
 # Zsh configuration for macOS (Apple Silicon)
-# Managed via Fresh from ~/.dotfiles
+# Managed via chezmoi from ~/.dotfiles (this file is a symlink into the repo)
 
 # ============================================================
-# Fresh shell manager
+# Shell helpers — sourced directly from the dotfiles repo.
+# (chezmoi keeps shell/*.sh outside its apply tree; see .chezmoiignore.)
 # ============================================================
-source ~/.fresh/build/shell.sh
-
-# ============================================================
-# Cross-shell configs (managed by Fresh)
-# ============================================================
-for file in ~/.{exports,path,aliases,functions,extra}; do
-    [[ -r "$file" ]] && source "$file"
+: "${DOTFILES:=$HOME/.dotfiles}"
+for f in exports path aliases functions dircolors; do
+    [[ -r "$DOTFILES/shell/$f.sh" ]] && source "$DOTFILES/shell/$f.sh"
 done
-unset file
+unset f
+
+# Per-machine extras (not in repo)
+[[ -r ~/.extra ]] && source ~/.extra
 
 # ============================================================
 # Completions
@@ -78,13 +78,9 @@ if (( $+functions[history-substring-search-up] )); then
 fi
 
 # ============================================================
-# Colors
-# ============================================================
-[[ -f ~/.dircolors ]] && eval "$(gdircolors ~/.dircolors)"
-
-# ============================================================
 # Tool integrations
 # ============================================================
+# (dircolors/LS_COLORS handled by shell/dircolors.sh, sourced above)
 # iTerm2 shell integration
 [[ -e "${HOME}/.iterm2_shell_integration.zsh" ]] && \
     source "${HOME}/.iterm2_shell_integration.zsh"
