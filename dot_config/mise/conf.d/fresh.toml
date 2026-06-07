@@ -1,5 +1,7 @@
-# Shared mise config (symlinked to ~/.config/mise/config.toml)
-# User-specific overrides go in config.local.toml.
+# Shared mise baseline, version-controlled in the dotfiles repo.
+# chezmoi symlinks this to ~/.config/mise/conf.d/fresh.toml.
+# Machine-local entry point: ~/.config/mise/config.toml (seeded once, edit freely).
+# Per-machine overrides: ~/.config/mise/config.local.toml.
 
 [settings.github]
 # Pull a GitHub token on demand from gh CLI to avoid API rate limits
@@ -43,3 +45,9 @@ starship = "latest"
 # AI coding agents
 codex    = "latest"  # openai/codex
 opencode = "latest"  # anomalyco/opencode
+
+# Dotfiles management — must be in the committed baseline so a fresh machine's
+# install.sh (mise install -> chezmoi init) can bootstrap. (Previously chezmoi
+# lived only in the machine-local config.toml via `mise use -g`, which a clean
+# checkout would not have.)
+chezmoi = "latest"
