@@ -13,7 +13,7 @@
 {{- $work := promptBoolOnce . "work" "Work machine?" false -}}
 {{- $machine := promptStringOnce . "machine" "Machine label (e.g. mbp-personal)" "personal" -}}
 
-sourceDir = "{{ .chezmoi.homeDir }}/.dotfiles"
+sourceDir = "{{ .chezmoi.sourceDir }}"
 mode = "symlink"
 
 [data]
