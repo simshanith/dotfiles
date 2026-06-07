@@ -1,7 +1,11 @@
 # Migration: Fresh → chezmoi
 
 Branch: `simshanith/chezmoi-migration`
-Status: **sketch** — nothing in this branch changes runtime yet. Read first, edit, then we cut a follow-up that actually moves files.
+Status: **DONE** — executed on this branch, one commit per cluster. `$HOME` is now
+chezmoi-managed (`mode = symlink`) and Fresh is retired. Each cluster was verified
+in a freshly-spawned shell (captures in `backups/migration-evidence/`). See
+**Execution notes / deviations from this sketch** at the bottom for where reality
+diverged from the plan below.
 
 ## Getting started with chezmoi
 
@@ -323,4 +327,40 @@ Stow sketch (preserved for posterity): each top-level dir is a package mirroring
 
 ## Footnote: why not tuckr?
 
-[Considered.](https://github.com/RaphGL/Tuckr) Author's tool, ~zero third-party adoption, opinionated `Configs/<group>/` layout, hardcoded `dotfiles[_profile]` directory naming requires a `TUCKR_HOME` symlink shim. Doesn't beat Stow on adoption or chezmoi on power. Kept installed via mise (cheap) in case `tuckr status` is ever wanted over an arbitrary tree.
+[Considered.](https://github.com/RaphGL/Tuckr) Author's tool, ~zero third-party adoption, opinionated `Configs/<group>/` layout, hardcoded `dotfiles[_profile]` directory naming requires a `TUCKR_HOME` symlink shim. Doesn't beat Stow on adoption or chezmoi on power. **Dropped entirely** during migration (was briefly installed via `mise use -g cargo:tuckr`; removed from the baseline + local mise config and uninstalled).
+
+---
+
+## Execution notes / deviations from this sketch
+
+The sketch above was followed cluster-by-cluster, but reality forced several
+corrections (all committed with rationale in their respective commits):
+
+- **`.chezmoiroot` dropped.** Only needed when source state lives in a *subdir*;
+  ours is the repo root. Adding it would mis-point chezmoi. (`.chezmoiignore` was
+  verified empirically: chezmoi matches slashless patterns at the top level only,
+  so `mise` suppresses `~/mise` without touching `~/.config/mise`.)
+- **Init template lives at the source root as `.chezmoi.toml.tmpl`**, not as a
+  managed `dot_config/chezmoi/chezmoi.toml.tmpl`. `chezmoi init` reads the
+  config-generation template from the root, and the generated config holds
+  per-machine data we don't commit.
+- **mise `config.toml` / `config.local.toml` use `create_`** (seed once, never
+  overwrite), not plain managed templates — which would have clobbered the real
+  machine-local tools already in `config.toml` on `chezmoi apply`.
+- **chezmoi added to the baseline `conf.d/fresh.toml`.** The sketch assumed it was
+  already there, but `mise use -g` had written it only to the machine-local
+  `config.toml`; a clean checkout's bootstrap would have had no chezmoi.
+- **install.sh bootstrap order fixed.** The sketch ran `mise install` (to get
+  chezmoi) *before* `chezmoi apply`, but the mise baseline isn't symlinked until
+  apply. Corrected to: bootstrap chezmoi via `mise exec chezmoi@latest`, apply,
+  *then* `mise install` the full toolchain.
+- **emacs: adopted the LIVE `~/.emacs.d/init.el`**, not the repo's `emacs/init.el`.
+  The live file was already modern (https melpa, better-defaults, sanityinc theme,
+  treesit); the repo copy was the stale technomancy starter-kit. Pushing the repo
+  version would have clobbered the real config.
+- **`~/bin` and `~/.emacs.d` marked `private_`** to preserve their original `0700`
+  perms (chezmoi defaults managed dirs to `0755`).
+- **`dot_gitconfig.tmpl`**: added `core.attributesfile = ~/.gitattributes` (the
+  delivered file was previously never pointed at by git); vim fold markers escaped
+  for the Go template parser.
+- **Dropped:** the `subl → subl3` indirection (and `subl3`), and tuckr (above).

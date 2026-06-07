@@ -7,34 +7,14 @@ originally bash-focused using Bash-It framework. Time to modernize.
 
 ## Future Plans
 
-### mise - Polyglot Version Manager
-Replace nvm (and rvm, pyenv, etc.) with [mise](https://mise.jdx.dev/):
-- Single tool for Node, Ruby, Python, Go, Java, etc.
-- Faster than nvm (no shell startup penalty)
-- Compatible with `.nvmrc`, `.node-version`, `.ruby-version`
-- Configuration in `~/.config/mise/config.toml`
-
-```bash
-brew install mise
-# In .zshrc: eval "$(mise activate zsh)"
-```
-
-### GNU Stow - Simpler Symlink Management
-Consider replacing Fresh with [GNU Stow](https://www.gnu.org/software/stow/):
-- Simpler mental model (directories mirror `~/`)
-- No build step - what you see is what you link
-- Widely used in dotfiles community
-- Each "package" is a directory that gets symlinked
-
-```bash
-brew install stow
-cd ~/.dotfiles
-stow zsh shell git tmux  # Creates symlinks to ~/
-```
-
-### Other Considerations
+### Shell sugar (not yet adopted)
 - **zsh-autosuggestions** - Fish-like suggestions as you type
 - **zsh-syntax-highlighting** - Command highlighting
+
+### iTerm2 prefs management (punted)
+Ghostty is the primary terminal (`~/.config/ghostty/config`, chezmoi-managed).
+iTerm2 stays installed as a secondary for `tmux -CC` control mode; its prefs
+plist is intentionally **not** managed yet. Revisit if it earns a permanent seat.
 
 ---
 
@@ -64,6 +44,8 @@ Old bash-specific files removed (git history preserved).
 
 | Old | New | Why |
 |-----|-----|-----|
+| Fresh | chezmoi | Per-machine templating; no build step; active project |
+| nvm | mise | Polyglot, fast, no shell-startup penalty |
 | Bash-It themes | Starship | Cross-shell, fast, configurable |
 | fasd | zoxide | Faster, maintained, better algorithm |
 | hub | gh | Official GitHub CLI |
@@ -90,28 +72,38 @@ Removed deprecated packages and trimmed to essentials:
 - `growl` (deprecated)
 - Old cask tap names (`caskroom/*` → `homebrew/*`)
 
-## Configuration
+### Dotfile management: Fresh → chezmoi
 
-### Fresh Shell Manager
+Retired [Fresh](http://freshshell.com/) in favor of [chezmoi](https://www.chezmoi.io/)
+(`mode = "symlink"`). GNU Stow was considered and rejected — the recurring pain in
+this repo is *per-machine state* (mise `config.local.toml`, git user identity,
+future work/personal split), which chezmoi templates solve natively and Stow does
+not. See `CHEZMOI_MIGRATION.md` for the full rationale and cut-over log.
 
-Still using [Fresh](http://freshshell.com/) for symlink management. Updated `.freshrc`
-to build zsh configs instead of bash.
+How it maps (source name → target):
+- `dot_zshrc` → `~/.zshrc`; `.zshrc` sources `shell/*.sh` directly from `$DOTFILES`
+  (those helpers stay outside chezmoi's tree via `.chezmoiignore`).
+- `dot_gitconfig.tmpl` → `~/.gitconfig` (templated; folds in user identity from
+  chezmoi data — no more `.gituserconfig` stub or `include.path` hack).
+- `dot_tmux.conf` → `~/.tmux.conf` (`source-file`s the vendored seebi solarized theme).
+- `dot_config/starship.toml`, `dot_config/ghostty/config`, `dot_inputrc` → their `~` paths.
+- `dot_config/mise/conf.d/fresh.toml` → managed symlink (shared tool baseline);
+  `create_config*.toml.tmpl` → seeded once, then edit-freely (chezmoi won't clobber).
+- `private_bin/` → `~/bin` (`executable_cross_origin_chrome`, `symlink_subl`, `symlink_dotfiles`).
+- `private_dot_emacs.d/init.el` → `~/.emacs.d/init.el`.
+- seebi color files vendored into the repo (`shell/dircolors.ansi-universal`,
+  `tmux/tmuxcolors-dark.conf`) — chezmoi can't fetch remote git like Fresh did.
 
-Fresh builds:
-- `~/.zshrc` ← `zsh/.zshrc`
-- `~/.exports` ← `shell/exports.sh`
-- `~/.path` ← `shell/path.sh`
-- `~/.aliases` ← `shell/aliases.sh`
-- `~/.functions` ← `shell/functions.sh`
-- `~/.config/starship.toml` ← `starship/starship.toml`
-- `~/.gitconfig` ← `git/.gitconfig` + `git/.gituserconfig`
-- `~/.tmux.conf` ← `tmux/.tmux.conf` + solarized colors
-- `~/.dircolors` ← seebi/dircolors-solarized
+Daily use: `chezmoi status` / `chezmoi diff` / `chezmoi apply` / `chezmoi edit`.
+Per-machine answers (name/email/work/machine) live in `~/.config/chezmoi/chezmoi.toml`
+(prompted by `chezmoi init`, not committed).
 
-### Git Config
+### Version management: nvm → mise
 
-Uses `include.path` to allow `git config --global` while preserving Fresh defaults.
-Set up by `install.sh`.
+[mise](https://mise.jdx.dev/) owns the CLI toolchain (node, rust, go, bun, starship,
+ripgrep, chezmoi itself, …). Shared baseline: `~/.config/mise/conf.d/fresh.toml`
+(committed). Machine-local: `~/.config/mise/config.toml` (seeded once). Python is
+delegated to `uv`. `eval "$(mise activate zsh)"` runs from `.zshrc`.
 
 ## Installation
 
@@ -125,9 +117,10 @@ exec zsh
 ## Verification
 
 ```bash
-echo $SHELL              # /bin/zsh
+echo $SHELL              # /opt/homebrew/bin/zsh
 which brew               # /opt/homebrew/bin/brew
 starship --version       # Prompt
 zoxide --version         # Directory jumping
-fresh                    # No errors
+mise doctor             # Toolchain healthy
+chezmoi status          # Empty = $HOME matches the repo
 ```
