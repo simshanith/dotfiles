@@ -1,0 +1,15 @@
+# ~/.zprofile
+# Login-shell config. Also sourced by IDEs/GUI apps that spawn a login shell
+# (e.g. WebStorm/JetBrains). .zshrc is NOT sourced for non-interactive login
+# shells, so PATH essentials those tools need live here.
+
+# Homebrew
+eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
+
+# mise shims — make mise-managed tools (node, ...) visible to IDEs and other
+# non-interactive login shells that don't run `mise activate` (that's in .zshrc).
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+
+# App CLIs (only if installed)
+[[ -d "/Applications/Obsidian.app/Contents/MacOS" ]] && export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
+[[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ]] && export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"

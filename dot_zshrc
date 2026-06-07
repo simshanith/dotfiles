@@ -85,10 +85,7 @@ fi
 [[ -e "${HOME}/.iterm2_shell_integration.zsh" ]] && \
     source "${HOME}/.iterm2_shell_integration.zsh"
 
-# nvm (Node version manager) - keep until migrated to mise
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+# Node and other runtimes come from mise (activated above); nvm retired.
 
 # bun
 if [[ -d "${HOME}/.bun" ]]; then
