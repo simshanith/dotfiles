@@ -1,0 +1,23 @@
+{{/*
+   chezmoi config-generation template.
+
+   `chezmoi init` evaluates THIS file (special source-root .chezmoi.toml.tmpl),
+   asks the prompts below, and writes the answers to ~/.config/chezmoi/chezmoi.toml.
+   That generated file holds per-machine data (name/email/...) and is NOT committed
+   to the repo — it lives only in $HOME. Every other template reads {{ .name }} etc.
+   from it. The promptXxxOnce variants skip re-prompting once a value is recorded,
+   so re-running `chezmoi init` is safe.
+*/ -}}
+{{- $name := promptStringOnce . "name" "Full name" -}}
+{{- $email := promptStringOnce . "email" "Git email" -}}
+{{- $work := promptBoolOnce . "work" "Work machine?" false -}}
+{{- $machine := promptStringOnce . "machine" "Machine label (e.g. mbp-personal)" "personal" -}}
+
+sourceDir = "{{ .chezmoi.sourceDir }}"
+mode = "symlink"
+
+[data]
+    name = {{ $name | quote }}
+    email = {{ $email | quote }}
+    work = {{ $work }}
+    machine = {{ $machine | quote }}

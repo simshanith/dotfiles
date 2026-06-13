@@ -1,128 +1,56 @@
-# Brewfile, powered by Homebrew Bundle.
-# https://robots.thoughtbot.com/brewfile-a-gemfile-but-for-homebrew
-# https://github.com/Homebrew/homebrew-bundle
+# Brewfile
+# Install: brew bundle
+# Cleanup: brew bundle cleanup --force
+#
+# Most CLI tools live in ~/.config/mise/config.toml now.
+# This file is for: shells, system PATH replacements, GUI apps,
+# and tools that need brew's macOS integration (taps, terminfo, keychain).
+tap "d12frosted/emacs-plus"
 
-# Install as a tap:
-# `brew tap homebrew/bundle`
-# Install everything listed here:
-# `brew bundle`
+# Shell
+brew "bash"
+brew "zsh"
+brew "zsh-history-substring-search"
 
-# Meta, for maintaining whitelist.
-tap 'homebrew/bundle'
-# systemd-esque services
-tap 'homebrew/services'
-# missing command helper
-tap 'homebrew/command-not-found'
+# Core utilities (system PATH replacements)
+brew "coreutils"
+brew "gnu-sed"
+brew "grep"
+brew "ssh-copy-id"
 
-# `brew bundle cleanup --dry-run`
-# outputs formulae not listed here.
+# Git (kept in brew: bootstrap dependency, macOS keychain integration)
+brew "git"
 
-# CLI tools.
-brew 'ack'
-brew 'bash'
-brew 'curl'
-brew 'coreutils'
-brew 'emacs'
-brew 'heroku'
-brew 'reattach-to-user-namespace'
-brew 'thefuck'
-brew 'tmux'
-brew 'tree'
-brew 'wget'
-brew 'yarn'
+# Editors
+brew "emacs-plus@30"
 
-# VCS.
-brew 'git', args: ['with-brewed-curl', 'with-brewed-openssl', 'with-brewed-svn', 'with-gettext', 'with-pcre', 'with-persistent-https']
-brew 'git-flow'
-brew 'gibo'
-brew 'hub'
-brew 'legit'
-brew 'subversion', args: ['with-perl']
-brew 'tig'
+# Terminal (kept in brew: terminfo + tmux-256color)
+brew "tmux"
 
-# Languages.
-brew 'go'
-brew 'python'
-brew 'ruby'
-brew 'node'
+# tree: GNU tree (not in mise's short-name registry)
+brew "tree"
 
-# Virtual Machines
-brew 'docker'
-brew 'docker-machine'
-brew 'boot2docker'
-brew 'fig'
-brew 'docker-compose'
+# tig: ncurses git browser (not in mise's short-name registry)
+brew "tig"
 
-# Databases
-brew 'mongodb', args: ['with-openssl']
-brew 'redis'
-brew 'mysql'
-brew 'postgresql'
+# Runtime management (bootstrap)
+brew "mise"
 
-# Misc.
-brew 'd-bus'
-brew 'flow'
-brew 'jq'
-brew 'fortune'
-brew 'cowsay'
-brew 'mas'
+# Misc
+# thefuck dropped — replaced by pay-respects (mise-managed Rust port)
+brew "fortune"
+brew "cowsay"
+brew "lolcat"
+brew "sox"
 
-# Dependencies for above.
-# While redundant; nice to have whitelisted.
-brew 'gdbm'
-brew 'gettext'
-brew 'libyaml'
-brew 'openssl'
-brew 'pcre'
-brew 'pkg-config'
-brew 'readline'
-brew 'scons'
-brew 'sqlite'
-brew 'swig'
-
-# ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-
-
-# Casks.
-# http://caskroom.io/
-
-tap 'caskroom/cask'
-tap 'caskroom/versions'
-tap 'caskroom/fonts'
+# Casks
+cask "1password"
+cask "1password-cli"
+cask "ghostty"
+cask "google-chrome"
+cask "iterm2"
+cask "localsend"
+cask "tailscale-app"
 
 # Fonts
-cask 'caskroom/fonts/font-dejavu-sans'
-
-# Browsers.
-cask 'firefox'
-cask 'google-chrome'
-
-# Editors.
-cask 'sublime-text'
-cask 'lighttable'
-cask 'lightpaper'
-
-# Music.
-cask 'lastfm'
-cask 'spotify'
-
-# Virtual Machines
-cask 'virtualbox'
-cask 'vagrant'
-
-# Misc.
-cask 'bartender'
-cask 'xquartz'
-
-# Mac App Store
-mas "Amphetamine", id: 937984704
-mas "BetterSnapTool", id: 417375580
-mas "Gapplin", id: 768053424
-mas "GarageBand", id: 682658836
-mas "Growl", id: 467939042
-mas "iMovie", id: 408981434
-mas "Keynote", id: 409183694
-mas "LastPass", id: 926036361
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "The Unarchiver", id: 425424353
-mas "Xcode", id: 497799835
+cask "font-symbols-only-nerd-font"

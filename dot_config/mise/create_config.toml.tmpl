@@ -1,0 +1,19 @@
+# Machine-local mise entry point.
+#
+# chezmoi `create_` semantics: seeded from this template the first time
+# `chezmoi apply` runs on a machine, then left alone forever. Edit freely —
+# chezmoi will NOT overwrite your changes on subsequent applies.
+#
+# The dotfiles-managed baseline (tools + settings) lives in:
+#   ~/.config/mise/conf.d/fresh.toml  (symlinked from ~/.dotfiles/dot_config/mise/conf.d/fresh.toml)
+# Per-machine overrides go in:
+#   ~/.config/mise/config.local.toml
+#
+# mise merges all of these at runtime.
+
+[tools]
+# Add machine-specific tools here.
+{{- if .work }}
+# Work-only tools (this machine answered work=true at chezmoi init)
+# example: aws-vault = "latest"
+{{- end }}

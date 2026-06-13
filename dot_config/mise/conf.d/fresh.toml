@@ -1,0 +1,53 @@
+# Shared mise baseline, version-controlled in the dotfiles repo.
+# chezmoi symlinks this to ~/.config/mise/conf.d/fresh.toml.
+# Machine-local entry point: ~/.config/mise/config.toml (seeded once, edit freely).
+# Per-machine overrides: ~/.config/mise/config.local.toml.
+
+[settings.github]
+# Pull a GitHub token on demand from gh CLI to avoid API rate limits
+# when mise fetches release metadata for aqua/ubi-backed tools.
+credential_command = "gh auth token"
+
+[tools]
+# Languages
+bun  = "latest"
+go   = "latest"
+node = "22"
+rust = "latest"
+
+# Python: managed by uv, not mise. `uv` owns interpreters, venvs, and
+# pipx-style CLI tool installs (`uv tool install <pkg>`). For one-off
+# scripts use `uv run script.py` or `uv run --python 3.13 ...`.
+uv = "latest"
+
+# Modern CLI
+bat     = "latest"
+fd      = "latest"
+fzf     = "latest"
+ripgrep = "latest"
+zoxide  = "latest"
+jq      = "latest"
+yazi    = "latest"
+# tree: not in mise registry under that short name — left in Brewfile
+
+# Git
+delta   = "latest"  # git-delta
+gh      = "latest"
+lazygit = "latest"
+# tig: not in mise registry under that short name — left in Brewfile
+
+# Shell prompt
+starship = "latest"
+
+# Command-correction (Rust thefuck replacement; press F to apply suggestion)
+"aqua:iffse/pay-respects" = "latest"
+
+# AI coding agents
+codex    = "latest"  # openai/codex
+opencode = "latest"  # anomalyco/opencode
+
+# Dotfiles management — must be in the committed baseline so a fresh machine's
+# install.sh (mise install -> chezmoi init) can bootstrap. (Previously chezmoi
+# lived only in the machine-local config.toml via `mise use -g`, which a clean
+# checkout would not have.)
+chezmoi = "latest"

@@ -1,0 +1,34 @@
+# chezmoi auto-ignores any source entry whose name begins with "." (verified):
+#   .idea/ .claude/ .freshrc .DS_Store .git/ ...  — so they need no entry here.
+#
+# Patterns below are matched against TARGET paths (relative to $HOME). chezmoi
+# does NOT apply gitignore "match at any depth" to slashless patterns (verified
+# on v2.70.5): a bare "mise" suppresses ~/mise only and leaves the managed
+# ~/.config/mise untouched. Each entry below therefore suppresses a top-level
+# ~/ target we don't want chezmoi to create.
+
+# Repo meta / docs — not dotfiles
+README.md
+readme.md
+2026_REFRESH.md
+CHEZMOI_MIGRATION.md
+Brewfile*
+dotfiles.sublime-project
+bash_screenshot.png
+install.sh
+
+# Source-only dirs: referenced by managed files (sourced from $DOTFILES, or
+# vendored), but not themselves $HOME targets.
+shell
+tmux
+git
+mise
+
+# Deliberately unmanaged
+backups
+iterm2-preferences
+
+# subl symlink only on macOS AND only when Sublime Text is actually installed
+# (.chezmoiignore is itself templated; stat is re-evaluated every apply, so this
+# self-corrects after `brew bundle` installs the app, or if it's removed).
+{{ if or (ne .chezmoi.os "darwin") (not (stat "/Applications/Sublime Text.app")) }}bin/subl{{ end }}

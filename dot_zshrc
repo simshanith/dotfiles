@@ -1,0 +1,97 @@
+# ~/.zshrc
+# Zsh configuration for macOS (Apple Silicon)
+# Managed via chezmoi from ~/.dotfiles (this file is a symlink into the repo)
+
+# ============================================================
+# Shell helpers — sourced directly from the dotfiles repo.
+# (chezmoi keeps shell/*.sh outside its apply tree; see .chezmoiignore.)
+# ============================================================
+: "${DOTFILES:=$HOME/.dotfiles}"
+for f in exports path aliases functions dircolors; do
+    [[ -r "$DOTFILES/shell/$f.sh" ]] && source "$DOTFILES/shell/$f.sh"
+done
+unset f
+
+# Per-machine extras (not in repo)
+[[ -r ~/.extra ]] && source ~/.extra
+
+# ============================================================
+# Completions
+# ============================================================
+# Homebrew completions (Apple Silicon path) - must be before compinit
+if type brew &>/dev/null; then
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+fi
+
+autoload -Uz compinit
+# Rebuild completion cache once per day
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+    compinit
+else
+    compinit -C
+fi
+
+# ============================================================
+# mise (must run before any tool init that depends on its shims:
+# starship, zoxide, fzf, thefuck, etc.)
+# ============================================================
+if command -v mise &>/dev/null; then
+    eval "$(mise activate zsh)"
+fi
+
+# ============================================================
+# Prompt: Starship
+# ============================================================
+if command -v starship &>/dev/null; then
+    eval "$(starship init zsh)"
+fi
+
+# ============================================================
+# Modern CLI tools
+# ============================================================
+# zoxide - smart directory jumping (replaces fasd/z/autojump)
+if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
+fi
+
+# fzf - fuzzy finder
+if command -v fzf &>/dev/null; then
+    source <(fzf --zsh)
+fi
+
+# zsh-history-substring-search
+if [[ -f "$(brew --prefix 2>/dev/null)/share/zsh-history-substring-search/zsh-history-substring-search.zsh" ]]; then
+    source "$(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+fi
+
+# ============================================================
+# Key bindings
+# ============================================================
+# Word navigation (Option + arrow keys in iTerm2)
+bindkey "[D" backward-word    # opt-left
+bindkey "[C" forward-word     # opt-right
+
+# History search with up/down arrows (if substring-search loaded)
+if (( $+functions[history-substring-search-up] )); then
+    bindkey "^[[A" history-substring-search-up
+    bindkey "^[[B" history-substring-search-down
+fi
+
+# ============================================================
+# Tool integrations
+# ============================================================
+# (dircolors/LS_COLORS handled by shell/dircolors.sh, sourced above)
+# iTerm2 shell integration
+[[ -e "${HOME}/.iterm2_shell_integration.zsh" ]] && \
+    source "${HOME}/.iterm2_shell_integration.zsh"
+
+# Node and other runtimes come from mise (activated above); nvm retired.
+
+
+# pay-respects (Rust thefuck replacement; press F to apply suggestion)
+command -v pay-respects &>/dev/null && eval "$(pay-respects zsh --alias fuck)"
+
+# ============================================================
+# Local overrides (not in git)
+# ============================================================
+[[ -r ~/.zshrc.local ]] && source ~/.zshrc.local
