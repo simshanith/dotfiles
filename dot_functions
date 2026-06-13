@@ -1,0 +1,3 @@
+# ~/.functions
+# Mattias dotfiles convention — entry point, content lives in shell/functions.sh
+[[ -r "$DOTFILES/shell/functions.sh" ]] && source "$DOTFILES/shell/functions.sh"

@@ -1,0 +1,26 @@
+# Python toolchain
+# Managed via chezmoi from ~/.dotfiles/dot_config/mise/conf.d/
+
+[tools]
+python = "3.14"
+uv     = "latest"
+
+[settings]
+# Bridges mise-managed Python with uv-managed venvs:
+# mise provides the binary, uv handles venvs + dependencies.
+python.uv_venv_auto = "create|source"
+
+# ─────────────────────────────────────────────────────
+# uv tool installs — run with:  mise run uv-tools
+# These are globally-installed Python CLIs managed by
+# uv (separate from mise's tool registry).
+# ─────────────────────────────────────────────────────
+[tasks.uv-tools]
+description = "Install/update Python CLI tools via uv"
+depends = ["python"]
+run = [
+  # Linters / formatters
+  "uv tool install --force ruff",
+  # Pre-commit framework
+  "uv tool install --force pre-commit",
+]

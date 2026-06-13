@@ -1,0 +1,13 @@
+# Git tooling
+# Managed via chezmoi from ~/.dotfiles/dot_config/mise/conf.d/
+
+[tools]
+delta   = "latest"  # git-delta
+gh      = "latest"
+lazygit = "latest"
+# tig: not in mise registry — left in Brewfile
+
+[settings.github]
+# Pull a GitHub token on demand from gh CLI to avoid API rate limits
+# when mise fetches release metadata for aqua/ubi-backed tools.
+credential_command = "gh auth token"

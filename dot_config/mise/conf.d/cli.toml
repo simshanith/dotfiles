@@ -1,0 +1,30 @@
+# General-purpose CLI tools
+# Managed via chezmoi from ~/.dotfiles/dot_config/mise/conf.d/
+
+[tools]
+# File / text processing
+bat     = "latest"
+fd      = "latest"
+fzf     = "latest"
+ripgrep = "latest"
+zoxide  = "latest"
+jq      = "latest"
+yazi    = "latest"
+
+# tree: not in mise registry — left in Brewfile
+
+# Prompt
+starship = "latest"
+
+# Command correction (press F to apply suggestion)
+"aqua:iffse/pay-respects" = "latest"
+
+# AI coding agents
+codex    = "latest"
+opencode = "latest"
+claude   = "latest"
+glow     = "latest"
+
+# Dotfiles bootstrapping (chezmoi must be in the committed baseline so a
+# fresh machine's install.sh -> mise install -> chezmoi init works)
+chezmoi = "latest"

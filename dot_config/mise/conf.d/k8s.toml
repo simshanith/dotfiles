@@ -1,0 +1,9 @@
+# Kubernetes tooling
+# Managed via chezmoi from ~/.dotfiles/dot_config/mise/conf.d/
+
+[tools]
+kind      = "latest"
+kubectl   = "latest"
+kustomize = "latest"
+ctlptl    = "latest"
+tilt      = "latest"

@@ -1,0 +1,11 @@
+# JavaScript / TypeScript toolchain
+# Managed via chezmoi from ~/.dotfiles/dot_config/mise/conf.d/
+
+[tools]
+# Runtime
+bun    = "latest"
+node   = "lts"
+
+# Package managers (mise provides via npm: backend)
+"npm:pnpm" = "latest"
+"npm:yarn" = "latest"

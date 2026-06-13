@@ -1,0 +1,3 @@
+# ~/.exports
+# Mattias dotfiles convention — entry point, content lives in shell/exports.sh
+[[ -r "$DOTFILES/shell/exports.sh" ]] && source "$DOTFILES/shell/exports.sh"

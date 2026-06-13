@@ -1,0 +1,5 @@
+# Go toolchain
+# Managed via chezmoi from ~/.dotfiles/dot_config/mise/conf.d/
+
+[tools]
+go = "latest"

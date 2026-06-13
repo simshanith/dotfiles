@@ -1,0 +1,3 @@
+# ~/.dircolors
+# Mattias dotfiles convention — entry point, content lives in shell/dircolors.sh
+[[ -r "$DOTFILES/shell/dircolors.sh" ]] && source "$DOTFILES/shell/dircolors.sh"

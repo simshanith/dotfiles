@@ -3,16 +3,16 @@
 # Managed via chezmoi from ~/.dotfiles (this file is a symlink into the repo)
 
 # ============================================================
-# Shell helpers — sourced directly from the dotfiles repo.
-# (chezmoi keeps shell/*.sh outside its apply tree; see .chezmoiignore.)
+# Mattias dotfiles convention — optional ~/.<dotfile> stubs
+# Each sources its corresponding $DOTFILES/shell/*.sh content.
+# Missing ones are silently skipped.
 # ============================================================
-: "${DOTFILES:=$HOME/.dotfiles}"
-for f in exports path aliases functions dircolors; do
-    [[ -r "$DOTFILES/shell/$f.sh" ]] && source "$DOTFILES/shell/$f.sh"
+for f in path exports aliases functions dircolors; do
+    [[ -r "$HOME/.$f" ]] && source "$HOME/.$f"
 done
 unset f
 
-# Per-machine extras (not in repo)
+# Per-machine extras (not in repo — create-once)
 [[ -r ~/.extra ]] && source ~/.extra
 
 # ============================================================

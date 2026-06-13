@@ -1,0 +1,20 @@
+# Rust toolchain
+# Managed via chezmoi from ~/.dotfiles/dot_config/mise/conf.d/
+
+[tools]
+rust = "latest"
+
+# ─────────────────────────────────────────────────────
+# cargo binstalls — run with:  mise run cargo-tools
+# Tools available in mise's registry are listed above
+# (rust). For binary crates not yet in the registry,
+# cargo binstall is faster than `cargo install` because
+# it downloads pre-built binaries from GitHub releases.
+# ─────────────────────────────────────────────────────
+[tasks.cargo-tools]
+description = "Install/update Rust CLI binaries via cargo binstall"
+depends = ["rust"]
+run = [
+  # Example (uncomment as needed):
+  # "cargo binstall -y --force cargo-audit cargo-nextest 2>/dev/null || true",
+]

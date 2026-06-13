@@ -1,0 +1,26 @@
+# ~/.path
+# PATH configuration — Mattias dotfiles convention
+# Sourced from shell/path.sh (interactive) and dot_zprofile (login)
+
+# Homebrew (Apple Silicon)
+if [[ -d "/opt/homebrew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -d "/usr/local/Homebrew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+fi
+
+# User binaries
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/bin:$PATH"
+
+# Cargo / Rustup (mise-managed rustup installs to ~/.cargo/bin)
+[[ -d "$HOME/.cargo/bin" ]] && export PATH="$HOME/.cargo/bin:$PATH"
+
+# Go
+[[ -d "$HOME/go/bin" ]] && export PATH="$HOME/go/bin:$PATH"
+
+# Mise shims (non-interactive shell support; mise activate handles interactive)
+[[ -d "$HOME/.local/share/mise/shims" ]] && export PATH="$HOME/.local/share/mise/shims:$PATH"
+
+# Container tools
+[[ -d "$HOME/.rd/bin" ]] && export PATH="$HOME/.rd/bin:$PATH"

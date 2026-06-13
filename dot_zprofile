@@ -13,3 +13,10 @@ export PATH="$HOME/.local/share/mise/shims:$PATH"
 # App CLIs (only if installed)
 [[ -d "/Applications/Obsidian.app/Contents/MacOS" ]] && export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 [[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ]] && export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+
+
+# Mattias dotfiles — sourced for login shells (GUI apps, IDEs)
+for f in path exports; do
+    [[ -r "$HOME/.$f" ]] && source "$HOME/.$f"
+done
+unset f

@@ -1,0 +1,6 @@
+# ~/.aliases
+# Mattias dotfiles convention — entry point, content lives in shell/aliases.sh
+#
+# Most aliases are declared in mise config for cross-shell portability.
+# zsh-specific aliases (if any) go here or in shell/aliases.sh.
+[[ -r "$DOTFILES/shell/aliases.sh" ]] && source "$DOTFILES/shell/aliases.sh"

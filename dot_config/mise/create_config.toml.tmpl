@@ -4,12 +4,24 @@
 # `chezmoi apply` runs on a machine, then left alone forever. Edit freely —
 # chezmoi will NOT overwrite your changes on subsequent applies.
 #
-# The dotfiles-managed baseline (tools + settings) lives in:
-#   ~/.config/mise/conf.d/fresh.toml  (symlinked from ~/.dotfiles/dot_config/mise/conf.d/fresh.toml)
+# The dotfiles-managed baseline lives in individual files under:
+#   ~/.config/mise/conf.d/*.toml  (symlinked from ~/.dotfiles/dot_config/mise/conf.d/*.toml)
+#
+#   ┌─────────────┬───────────────────────────────────────────────────────┐
+#   │ File        │ Tools                                                 │
+#   ├─────────────┼───────────────────────────────────────────────────────┤
+#   │ javascript  │ bun, node, npm:pnpm, npm:yarn                         │
+#   │ python      │ python, uv (+ uv-tools task)                          │
+#   │ go          │ go                                                     │
+#   │ rust        │ rust (+ cargo-tools task)                             │
+#   │ cli         │ bat, fd, fzf, rg, zoxide, jq, yazi, starship,         │
+#   │             │ pay-respects, codex, opencode, claude, glow, chezmoi   │
+#   │ git         │ delta, gh, lazygit, github.credential_command          │
+#   │ k8s         │ kind, kubectl, kustomize, ctlptl, tilt                 │
+#   └─────────────┴───────────────────────────────────────────────────────┘
+#
 # Per-machine overrides go in:
 #   ~/.config/mise/config.local.toml
-#
-# mise merges all of these at runtime.
 
 [tools]
 # Add machine-specific tools here.
