@@ -22,11 +22,8 @@ export PATH="$HOME/bin:$PATH"
 # Go
 [[ -d "$HOME/go/bin" ]] && export PATH="$HOME/go/bin:$PATH"
 
-# Bun
-if [[ -d "$HOME/.bun" ]]; then
-    export BUN_INSTALL="$HOME/.bun"
-    export PATH="$BUN_INSTALL/bin:$PATH"
-fi
+# Mise shims (non-interactive shell support; mise activate handles interactive)
+[[ -d "$HOME/.local/share/mise/shims" ]] && export PATH="$HOME/.local/share/mise/shims:$PATH"
 
 # ============================================================
 # Container tools

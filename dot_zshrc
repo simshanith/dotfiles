@@ -87,12 +87,6 @@ fi
 
 # Node and other runtimes come from mise (activated above); nvm retired.
 
-# bun
-if [[ -d "${HOME}/.bun" ]]; then
-    export BUN_INSTALL="${HOME}/.bun"
-    [[ -s "${BUN_INSTALL}/_bun" ]] && source "${BUN_INSTALL}/_bun"
-    export PATH="${BUN_INSTALL}/bin:${PATH}"
-fi
 
 # pay-respects (Rust thefuck replacement; press F to apply suggestion)
 command -v pay-respects &>/dev/null && eval "$(pay-respects zsh --alias fuck)"
