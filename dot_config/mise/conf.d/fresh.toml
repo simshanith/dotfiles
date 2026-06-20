@@ -51,3 +51,32 @@ opencode = "latest"  # anomalyco/opencode
 # lived only in the machine-local config.toml via `mise use -g`, which a clean
 # checkout would not have.)
 chezmoi = "latest"
+
+# Emacs dev tooling: LSP servers (Eglot) + formatters (apheleia) backing the
+# Emacs setup for dotfiles + silicon-grove. See ~/.dotfiles/emacs.md.
+# NOTE: tree-sitter grammars are NOT listed here — treesit-auto downloads them
+# on first file open. Only language servers + formatters belong in mise.
+# NOTE: this installs fleet-wide via the shared baseline. If you'd rather keep
+# LSP servers off headless boxes, move this block to config.local.toml.
+"npm:typescript-language-server"        = "latest"  # TS / JS / TSX
+"npm:yaml-language-server"              = "latest"  # YAML
+"npm:vscode-langservers-extracted"      = "latest"  # JSON / CSS / HTML / ESLint
+"npm:bash-language-server"              = "latest"  # Bash / sh
+"npm:dockerfile-language-server-nodejs" = "latest"  # Dockerfile
+marksman = "latest"  # Markdown LSP
+# Formatters for apheleia (format-on-save off by default; C-c f formats once):
+prettier = "latest"  # TS / JSON / YAML / Markdown
+shfmt    = "latest"  # shell
+taplo    = "latest"  # TOML
+# rust-analyzer + rustfmt ship with the rust toolchain. If rust-analyzer is
+# absent:  rustup component add rust-analyzer rustfmt
+
+# Clojure / ClojureScript toolchain (TODO — uncomment when doing clj/cljs).
+# Pairs with the staged Clojure layer documented in ~/.dotfiles/emacs.md.
+# clojure   = "latest"  # clj / clojure CLI (deps.edn, tools.build)
+# babashka  = "latest"  # bb: fast-startup Clojure scripting (shell-script killer)
+# clj-kondo = "latest"  # linter (Emacs: flycheck-clj-kondo)
+# "github:clojure-lsp/clojure-lsp" = "latest"  # LSP server for Eglot
+# leiningen = "latest"  # optional: classic build tool, only if a project needs it
+# cljs builds run through shadow-cljs (npm, per-project) or figwheel; CIDER
+# connects to that REPL — no extra global tool needed.
