@@ -1,24 +1,151 @@
+;;; init.el --- Emacs config for dotfiles + silicon-grove dev -*- lexical-binding: t; -*-
+
+;;; Package bootstrap ---------------------------------------------------------
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
-(add-to-list 'load-path "~/.emacs.d/better-defaults")
-(require 'better-defaults)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(inhibit-startup-screen t)
- '(package-selected-packages '(yaml-mode)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;; Refresh the MELPA index on first run or when it's stale. MELPA keeps only
+;; the latest build of each package, so an outdated index makes use-package
+;; request version strings that 404. A periodic refresh self-heals that.
+(let* ((archive (expand-file-name "elpa/archives/melpa/archive-contents"
+                                  user-emacs-directory))
+       (mtime (or (file-attribute-modification-time (file-attributes archive)) 0)))
+  (when (or (not package-archive-contents)
+            (> (float-time (time-since mtime)) (* 7 24 60 60)))  ; 7 days
+    (package-refresh-contents)))
 
-(load-theme 'sanityinc-solarized-dark t)
+;; use-package is built into Emacs 29+. Make every declaration self-installing.
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+;; Keep Customize's auto-writes out of this chezmoi-managed file: send them to
+;; a separate, un-managed custom.el so `chezmoi apply` never fights with Emacs.
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
+
+;;; Built-in quality-of-life ---------------------------------------------------
+(use-package emacs
+  :ensure nil
+  :init
+  (savehist-mode 1)                       ; persist minibuffer history
+  (recentf-mode 1)                        ; recent files
+  (electric-pair-mode 1)                  ; auto-close brackets/quotes
+  (which-key-mode 1)                      ; built-in since Emacs 30
+  :hook (prog-mode . display-line-numbers-mode)
+  :custom
+  (inhibit-startup-screen t))
+
+;;; Environment ---------------------------------------------------------------
+;; GUI Emacs launched from the Dock/Spotlight gets launchd's minimal PATH, not
+;; the shell's — so it can't see mise shims and Eglot can't find language
+;; servers. Import PATH from a *login* shell (-l), which sources ~/.zprofile
+;; (where the mise shims live) but skips the heavy interactive ~/.zshrc.
+;; Gated to GUI sessions: a no-op on terminal/headless boxes that already
+;; inherit PATH.
+(use-package exec-path-from-shell
+  :when (memq window-system '(mac ns))
+  :init (setq exec-path-from-shell-arguments '("-l"))
+  :config (exec-path-from-shell-initialize))
+
+;;; Theme + font (self-installing so a fresh machine reproduces it) -----------
+(use-package color-theme-sanityinc-solarized
+  :config
+  (load-theme 'sanityinc-solarized-dark t))
+
 (set-face-attribute 'default nil :font "Operator Mono SSm Book-11")
-(require 'treesit)
-(treesit-available-p)  ;; t
+
+;; better-defaults: sane editing baseline (now from MELPA, was a local clone).
+(use-package better-defaults)
+
+;;; Tree-sitter ---------------------------------------------------------------
+;; Emacs 30 ships the *-ts-mode major modes but not the grammars.
+;; treesit-auto installs missing grammars on demand and remaps file types
+;; (ts/tsx/js/json/yaml/toml/rust/bash/dockerfile/css/html/...) to *-ts-mode.
 (setq treesit-extra-load-path '("/usr/local/lib"))
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)          ; ask before downloading a grammar
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+;;; Markdown ------------------------------------------------------------------
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'"       . gfm-mode))
+  :custom
+  (markdown-command "pandoc")
+  (markdown-fontify-code-blocks-natively t) ; highlight fenced ```ts blocks
+  :hook (markdown-mode . visual-line-mode))
+
+;; GitHub-accurate live preview (requires `grip`: uv tool install grip).
+(use-package grip-mode
+  :bind (:map markdown-mode-command-map ("g" . grip-mode)))
+
+;;; LSP via Eglot (built-in) --------------------------------------------------
+(use-package eglot
+  :ensure nil
+  :hook ((typescript-ts-mode . eglot-ensure)
+         (tsx-ts-mode        . eglot-ensure)
+         (js-ts-mode         . eglot-ensure)
+         (rust-ts-mode       . eglot-ensure)
+         (yaml-ts-mode       . eglot-ensure)
+         (json-ts-mode       . eglot-ensure)
+         (bash-ts-mode       . eglot-ensure)
+         (dockerfile-ts-mode . eglot-ensure)))
+
+;;; Completion: corfu (in-buffer) + vertico (minibuffer) ----------------------
+(use-package corfu
+  :init (global-corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t))
+
+(use-package cape
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+
+(use-package vertico
+  :init (vertico-mode))
+
+(use-package marginalia
+  :init (marginalia-mode))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion)))))
+
+;;; Git -----------------------------------------------------------------------
+(use-package magit
+  :bind ("C-x g" . magit-status))
+
+;;; Editing polish ------------------------------------------------------------
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; paredit: structural editing for lisps. Let it own parens in lisp buffers,
+;; so turn off the global electric-pair-mode there to avoid double-inserts.
+(use-package paredit
+  :hook ((emacs-lisp-mode lisp-interaction-mode lisp-mode ielm-mode)
+         . (lambda ()
+             (electric-pair-local-mode -1)
+             (enable-paredit-mode))))
+
+;;; Formatting ----------------------------------------------------------------
+;; Installed but format-on-save is OFF by default.
+;;   C-c f             -> format the current buffer once
+;;   M-x apheleia-global-mode -> toggle format-on-save for the session
+(use-package apheleia
+  :bind ("C-c f" . apheleia-format-buffer))
+
+;;; chezmoi -------------------------------------------------------------------
+;; Edit/diff/apply chezmoi-managed files from inside Emacs.
+(use-package chezmoi)
+
+;; Clojure / ClojureScript: not used yet. The staged layer (CIDER, paredit,
+;; clojure-lsp, mise tooling) is documented in ~/.dotfiles/emacs.md.
+
+;;; init.el ends here
