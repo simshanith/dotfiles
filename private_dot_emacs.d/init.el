@@ -62,7 +62,10 @@
 ;; Emacs 30 ships the *-ts-mode major modes but not the grammars.
 ;; treesit-auto installs missing grammars on demand and remaps file types
 ;; (ts/tsx/js/json/yaml/toml/rust/bash/dockerfile/css/html/...) to *-ts-mode.
-(setq treesit-extra-load-path '("/usr/local/lib"))
+;; Grammars live under ~/.emacs.d/tree-sitter (kept out of /usr/local/lib so
+;; Homebrew doesn't flag them as unbrewed dylibs).
+(setq treesit-extra-load-path
+      (list (expand-file-name "tree-sitter" user-emacs-directory)))
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)          ; ask before downloading a grammar
