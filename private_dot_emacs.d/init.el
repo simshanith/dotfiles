@@ -32,6 +32,21 @@
   (recentf-mode 1)                        ; recent files
   (electric-pair-mode 1)                  ; auto-close brackets/quotes
   (which-key-mode 1)                      ; built-in since Emacs 30
+  ;; Keep backup (foo~), auto-save (#foo#), and lock (.#foo) files out of the
+  ;; working tree — corral them under ~/.emacs.d/ so they never litter repos.
+  (let ((backup-dir (expand-file-name "backups/" user-emacs-directory))
+        (auto-save-dir (expand-file-name "auto-saves/" user-emacs-directory)))
+    (make-directory backup-dir t)
+    (make-directory auto-save-dir t)
+    (setq backup-directory-alist `((".*" . ,backup-dir))
+          auto-save-file-name-transforms `((".*" ,auto-save-dir t))
+          auto-save-list-file-prefix (expand-file-name ".saves-" auto-save-dir)
+          ;; .#foo lock files are usually the real annoyance on a single-user
+          ;; machine; disable them. (Keep them if you edit over shared/NFS dirs.)
+          create-lockfiles nil
+          backup-by-copying t              ; don't break hardlinks/symlinks
+          version-control t delete-old-versions t
+          kept-new-versions 6 kept-old-versions 2))
   :hook (prog-mode . display-line-numbers-mode)
   :custom
   (inhibit-startup-screen t))
