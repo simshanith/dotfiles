@@ -71,6 +71,23 @@ On a fresh machine, after `chezmoi apply` + `mise install`:
 ### Git
 - **magit** — `C-x g`.
 
+### Fuzzy finding — fzf.el
+- **fzf.el** ([bling/fzf.el](https://github.com/bling/fzf.el)) — runs the
+  terminal `fzf` in a popup term buffer. Complements the minibuffer stack
+  (vertico/orderless); shines for fast git-tracked file jumps and whole-repo
+  content grep. Needs the `fzf` binary (in the mise baseline); the grep commands
+  use `rg` (`fzf/grep-command` = `rg --no-heading -nH --color=always`), also in
+  the baseline.
+
+  | Key | Command | Action |
+  |-----|---------|--------|
+  | `C-c z f` | `fzf-find-file` | files under `default-directory` |
+  | `C-c z g` | `fzf-git-files` | files tracked in the git repo |
+  | `C-c z b` | `fzf-switch-buffer` | switch buffer |
+  | `C-c z e` | `fzf-recentf` | recent files |
+  | `C-c z r` | `fzf-grep-dwim` | ripgrep content, seeded from symbol at point |
+  | `C-c z R` | `fzf-grep` | ripgrep content, prompt for pattern |
+
 ### Editing polish
 - **rainbow-delimiters** — colored paren nesting in prog buffers.
 - **paredit** — structural editing in lisp buffers (emacs-lisp, lisp-interaction,
@@ -116,6 +133,12 @@ missing: `rustup component add rust-analyzer rustfmt`.
 |-----|--------|
 | `C-x g` | `magit-status` |
 | `C-c f` | `apheleia-format-buffer` (format once) |
+| `C-c z f` | `fzf-find-file` |
+| `C-c z g` | `fzf-git-files` |
+| `C-c z b` | `fzf-switch-buffer` |
+| `C-c z e` | `fzf-recentf` |
+| `C-c z r` | `fzf-grep-dwim` (ripgrep, symbol at point) |
+| `C-c z R` | `fzf-grep` (ripgrep, prompt) |
 | `g` (markdown command map) | `grip-mode` preview |
 
 ---

@@ -140,6 +140,29 @@
 (use-package magit
   :bind ("C-x g" . magit-status))
 
+;;; Fuzzy finding — fzf.el -----------------------------------------------------
+;; Terminal `fzf` driven from a popup term buffer. Complements the minibuffer
+;; stack (vertico/orderless): great for fast git-tracked file jumps and
+;; whole-repo content grep. Needs the `fzf` binary (mise baseline) plus `rg`
+;; for the grep commands — both already installed fleet-wide.
+;;   C-c z f -> find file under default-directory   (fzf-find-file)
+;;   C-c z g -> git-tracked files in the repo        (fzf-git-files)
+;;   C-c z b -> switch buffer                         (fzf-switch-buffer)
+;;   C-c z e -> recent files                          (fzf-recentf)
+;;   C-c z r -> ripgrep content, seed from symbol     (fzf-grep-dwim)
+;;   C-c z R -> ripgrep content, prompt for pattern   (fzf-grep)
+(use-package fzf
+  :bind (("C-c z f" . fzf-find-file)
+         ("C-c z g" . fzf-git-files)
+         ("C-c z b" . fzf-switch-buffer)
+         ("C-c z e" . fzf-recentf)
+         ("C-c z r" . fzf-grep-dwim)
+         ("C-c z R" . fzf-grep))
+  :custom
+  ;; Use ripgrep for fzf-grep-* (default is `grep -nrH`); rg honors .gitignore
+  ;; and is the rest-of-fleet's grep already.
+  (fzf/grep-command "rg --no-heading -nH --color=always"))
+
 ;;; Editing polish ------------------------------------------------------------
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
