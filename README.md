@@ -1,7 +1,7 @@
 # dotfiles
 
 Personal macOS (Apple Silicon) dotfiles for zsh, managed with
-[chezmoi](https://www.chezmoi.io/) + [mise](https://mise.jdx.dev/). One
+[chezmoi](https://www.chezmoi.io/) + [mise](https://mise.en.dev/). One
 idempotent bootstrap brings a fresh machine — or a headless box — up to a full
 shell, toolchain, and editor setup.
 
