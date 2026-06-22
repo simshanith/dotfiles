@@ -71,6 +71,20 @@ On a fresh machine, after `chezmoi apply` + `mise install`:
 ### Git
 - **magit** — `C-x g`.
 
+### Terminal — ghostel
+- **ghostel** ([dakra/ghostel](https://github.com/dakra/ghostel)) — terminal
+  emulator backed by libghostty-vt (Ghostty's VT engine). A prebuilt native
+  module auto-downloads on first `M-x ghostel`; no toolchain/compile step like
+  vterm. Prebuilt binaries cover the whole fleet (aarch64-macos, aarch64-linux
+  for the pis, x86_64-linux), so it works headless. Gated on
+  `module-file-suffix` (non-nil iff modules are supported) so an Emacs built
+  `--without-modules` skips it — `dynamic-modules` isn't pushed onto `features`
+  on every build, so it's the wrong thing to gate on.
+  Because ghostel releases ~daily and MELPA keeps only the newest build, the
+  config does a just-in-time `package-refresh-contents` before a fresh install
+  (the 7-day index refresh is too wide) to avoid a 404 on a stale tarball.
+  - `C-c t` — open a ghostel terminal.
+
 ### Fuzzy finding — fzf.el
 - **fzf.el** ([bling/fzf.el](https://github.com/bling/fzf.el)) — runs the
   terminal `fzf` in a popup term buffer. Complements the minibuffer stack

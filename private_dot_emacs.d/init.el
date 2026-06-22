@@ -140,6 +140,22 @@
 (use-package magit
   :bind ("C-x g" . magit-status))
 
+;;; Terminal — ghostel ---------------------------------------------------------
+;; Terminal emulator on libghostty-vt; prebuilt native module auto-downloads on
+;; first `M-x ghostel` (no compile step). Gated on module support so a
+;; stripped/headless build no-ops instead of erroring. `module-file-suffix` is
+;; the canonical test (non-nil iff modules are supported); `dynamic-modules`
+;; isn't pushed onto `features` on every build, so don't gate on featurep.
+;; ghostel ships ~daily and MELPA keeps only the newest build, so the 7-day
+;; refresh above is too wide: a stale index 404s on a fresh install. Refresh
+;; just-in-time, before the install.
+;;   C-c t -> open a ghostel terminal
+(when module-file-suffix
+  (unless (package-installed-p 'ghostel)
+    (package-refresh-contents))
+  (use-package ghostel
+    :bind ("C-c t" . ghostel)))
+
 ;;; Fuzzy finding — fzf.el -----------------------------------------------------
 ;; Terminal `fzf` driven from a popup term buffer. Complements the minibuffer
 ;; stack (vertico/orderless): great for fast git-tracked file jumps and
