@@ -86,6 +86,9 @@
   (treesit-auto-install 'prompt)          ; ask before downloading a grammar
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
+  ;; treesit-auto's JavaScript recipe only claims .js/.jsx, so the ESM/CJS
+  ;; extensions would otherwise fall through to fundamental-mode.
+  (add-to-list 'auto-mode-alist '("\\.[cm]js\\'" . js-ts-mode))
   (global-treesit-auto-mode))
 
 ;;; Markdown ------------------------------------------------------------------
