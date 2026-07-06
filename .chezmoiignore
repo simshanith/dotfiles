@@ -16,6 +16,7 @@ Brewfile*
 dotfiles.sublime-project
 bash_screenshot.png
 install.sh
+emacs.md
 cheatsheets
 
 # Source-only dirs: referenced by managed files (sourced from $DOTFILES, or

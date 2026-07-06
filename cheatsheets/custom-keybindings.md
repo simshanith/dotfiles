@@ -27,6 +27,23 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 | `C-c f` | `apheleia-format-buffer` | apheleia | global |
 <!-- END GENERATED -->
 
+## What each package does
+
+One-liners for when the command name isn't enough; full write-ups in
+[emacs.md](../emacs.md) under "What's installed and why".
+
+- **magit** — the git porcelain. `C-x g` opens the status buffer; everything
+  else keys off it.
+- **ghostel** — embedded terminal on libghostty-vt (Ghostty's VT engine),
+  themed to match standalone Ghostty. `C-c t` opens one.
+- **fzf** — terminal `fzf` in a popup buffer for file/buffer jumps and
+  whole-repo ripgrep. Complements (doesn't replace) the vertico minibuffer.
+- **apheleia** — code formatter (prettier/shfmt/taplo/rustfmt via mise).
+  `C-c f` formats the buffer **once**; format-on-save stays OFF unless you
+  toggle `M-x apheleia-global-mode` for the session.
+- **grip-mode** — GitHub-accurate live preview of the current markdown buffer
+  in a browser (needs the `grip` CLI: `uv tool install grip`).
+
 ## Notes
 
 - **Keymap column**: `global` bindings work everywhere.
