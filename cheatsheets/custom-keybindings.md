@@ -54,5 +54,5 @@ One-liners for when the command name isn't enough; full write-ups in
   pop up. `C-h b` lists all bindings in the current buffer.
 - **paredit** adds no `:bind` entries — it installs its own keymap via hooks
   in lisp buffers. See [paredit-cheatsheet.svg](paredit-cheatsheet.svg).
-- **Fundamentals** (kill/yank, mark/region, windows, search):
-  [gnu-emacs-refcard.pdf](gnu-emacs-refcard.pdf).
+- **Fundamentals** (kill/yank, mark/region, dired, GNU refcard links):
+  [emacs-fundamentals.md](emacs-fundamentals.md).

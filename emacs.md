@@ -152,9 +152,9 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 ```
 
 Reference cards for the muscle-memory stuff live alongside it:
-[paredit](cheatsheets/paredit-cheatsheet.svg) (structural lisp editing) and the
-[GNU Emacs refcard](cheatsheets/gnu-emacs-refcard.pdf) (kill/yank, mark/region,
-windows, search). Index: [cheatsheets/README.md](cheatsheets/README.md).
+[paredit](cheatsheets/paredit-cheatsheet.svg) (structural lisp editing) and
+[fundamentals](cheatsheets/emacs-fundamentals.md) (kill/yank, mark/region,
+dired + GNU refcard links). Index: [cheatsheets/README.md](cheatsheets/README.md).
 
 ---
 

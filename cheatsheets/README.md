@@ -9,7 +9,7 @@ Source-only: listed in `.chezmoiignore`, never deployed to `$HOME`.
 |------|------|--------|
 | [custom-keybindings.md](custom-keybindings.md) | Every keybinding this config adds (fzf, ghostel, magit, apheleia, grip) | **Generated** from init.el — see below |
 | [paredit-cheatsheet.svg](paredit-cheatsheet.svg) | Structural editing commands for lisp buffers (paredit is hook-enabled in this config) | [joelittlejohn/paredit-cheatsheet](https://github.com/joelittlejohn/paredit-cheatsheet) |
-| [gnu-emacs-refcard.pdf](gnu-emacs-refcard.pdf) | Official GNU Emacs 30 reference card: kill/yank, mark/region, buffers, windows, search — the fundamentals | [gnu.org refcards](https://www.gnu.org/software/emacs/refcards/) |
+| [emacs-fundamentals.md](emacs-fundamentals.md) | Links to the official GNU refcards + crib tables for kill/yank/mark and dired | [gnu.org refcards](https://www.gnu.org/software/emacs/refcards/) |
 
 ## Keeping custom-keybindings.md up to date
 
@@ -30,5 +30,3 @@ won't be picked up — prefer `:bind` for anything user-facing.
 - `paredit-cheatsheet.svg` © 2013 Joe Littlejohn, © 2008 drewr.usma.edu —
   GNU Free Documentation License, vendored unmodified from
   <https://github.com/joelittlejohn/paredit-cheatsheet>.
-- `gnu-emacs-refcard.pdf` © Free Software Foundation — GPL, vendored
-  unmodified from <https://www.gnu.org/software/emacs/refcards/pdf/refcard.pdf>.
