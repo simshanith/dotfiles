@@ -157,7 +157,29 @@
   (unless (package-installed-p 'ghostel)
     (package-refresh-contents))
   (use-package ghostel
-    :bind ("C-c t" . ghostel)))
+    :bind ("C-c t" . ghostel)
+    ;; ghostel renders ANSI colors through these faces (each inherits the stock
+    ;; ansi-color-*), so the palette follows the Emacs theme, NOT
+    ;; ~/.config/ghostty. Pin all 16 + default fg/bg to the Ghostty "iTerm2
+    ;; Solarized Dark" hexes so the embedded terminal matches standalone Ghostty.
+    :custom-face
+    (ghostel-default              ((t (:foreground "#839496" :background "#002b36"))))
+    (ghostel-color-black          ((t (:foreground "#073642"))))
+    (ghostel-color-red            ((t (:foreground "#dc322f"))))
+    (ghostel-color-green          ((t (:foreground "#859900"))))
+    (ghostel-color-yellow         ((t (:foreground "#b58900"))))
+    (ghostel-color-blue           ((t (:foreground "#268bd2"))))
+    (ghostel-color-magenta        ((t (:foreground "#d33682"))))
+    (ghostel-color-cyan           ((t (:foreground "#2aa198"))))
+    (ghostel-color-white          ((t (:foreground "#eee8d5"))))
+    (ghostel-color-bright-black   ((t (:foreground "#335e69"))))
+    (ghostel-color-bright-red     ((t (:foreground "#cb4b16"))))
+    (ghostel-color-bright-green   ((t (:foreground "#586e75"))))
+    (ghostel-color-bright-yellow  ((t (:foreground "#657b83"))))
+    (ghostel-color-bright-blue    ((t (:foreground "#839496"))))
+    (ghostel-color-bright-magenta ((t (:foreground "#6c71c4"))))
+    (ghostel-color-bright-cyan    ((t (:foreground "#93a1a1"))))
+    (ghostel-color-bright-white   ((t (:foreground "#fdf6e3"))))))
 
 ;;; Fuzzy finding — fzf.el -----------------------------------------------------
 ;; Terminal `fzf` driven from a popup term buffer. Complements the minibuffer
