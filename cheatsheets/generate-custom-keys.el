@@ -81,6 +81,15 @@ Walks nested forms so packages wrapped in `when' etc. are found too."
             (setq rest (cdr rest))))))
     rows))
 
+(defun gck-kbd (key)
+  "Render KEY as <kbd> keycaps: one per chord, multi-chord sequences
+nested inside a grouping outer <kbd> (MDN pattern)."
+  (let ((chords (split-string key " " t)))
+    (if (cdr chords)
+        (format "<kbd>%s</kbd>"
+                (mapconcat (lambda (c) (format "<kbd>%s</kbd>" c)) chords " "))
+      (format "<kbd>%s</kbd>" key))))
+
 (defun gck-table ()
   "Render the bindings as a GFM table."
   (concat
@@ -89,8 +98,8 @@ Walks nested forms so packages wrapped in `when' etc. are found too."
    (mapconcat
     (lambda (row)
       (pcase-let ((`(,pkg ,key ,cmd ,map) row))
-        (format "| <kbd>%s</kbd> | `%s` | %s | %s |"
-                key cmd pkg (if map (format "`%s`" map) "global"))))
+        (format "| %s | `%s` | %s | %s |"
+                (gck-kbd key) cmd pkg (if map (format "`%s`" map) "global"))))
     (gck-bindings) "\n")
    "\n"))
 
