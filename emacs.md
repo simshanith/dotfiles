@@ -54,8 +54,8 @@ On a fresh machine, after `chezmoi apply` + `mise install`:
 ### Markdown
 - **markdown-mode** — `.md`/`README.md` open in `gfm-mode` (GitHub-flavored);
   `markdown-command` = `pandoc`; fenced code blocks highlight natively.
-- **grip-mode** — GitHub-accurate live preview (needs `grip`:
-  `uv tool install grip`). Bound to `g` in the markdown command map.
+- **grip-mode** — GitHub-accurate live preview (needs `grip`, in the mise
+  baseline as `pipx:grip`). Bound to `g` in the markdown command map.
 
 ### LSP — Eglot (built-in)
 `eglot-ensure` is hooked into: `typescript-ts-mode`, `tsx-ts-mode`,
@@ -143,17 +143,18 @@ missing: `rustup component add rust-analyzer rustfmt`.
 
 ## Keybindings (non-default)
 
-| Key | Action |
-|-----|--------|
-| `C-x g` | `magit-status` |
-| `C-c f` | `apheleia-format-buffer` (format once) |
-| `C-c z f` | `fzf-find-file` |
-| `C-c z g` | `fzf-git-files` |
-| `C-c z b` | `fzf-switch-buffer` |
-| `C-c z e` | `fzf-recentf` |
-| `C-c z r` | `fzf-grep-dwim` (ripgrep, symbol at point) |
-| `C-c z R` | `fzf-grep` (ripgrep, prompt) |
-| `g` (markdown command map) | `grip-mode` preview |
+See [cheatsheets/custom-keybindings.md](cheatsheets/custom-keybindings.md) —
+the table there is generated from the `:bind` declarations in init.el, so it
+can't drift. After changing any `:bind`, regenerate with:
+
+```bash
+emacs --batch -l cheatsheets/generate-custom-keys.el
+```
+
+Reference cards for the muscle-memory stuff live alongside it:
+[paredit](cheatsheets/paredit-cheatsheet.svg) (structural lisp editing) and
+[fundamentals](cheatsheets/emacs-fundamentals.md) (kill/yank, mark/region,
+dired + GNU refcard links). Index: [cheatsheets/README.md](cheatsheets/README.md).
 
 ---
 

@@ -100,7 +100,7 @@
   (markdown-fontify-code-blocks-natively t) ; highlight fenced ```ts blocks
   :hook (markdown-mode . visual-line-mode))
 
-;; GitHub-accurate live preview (requires `grip`: uv tool install grip).
+;; GitHub-accurate live preview (requires `grip`; mise baseline "pipx:grip").
 (use-package grip-mode
   :bind (:map markdown-mode-command-map ("g" . grip-mode)))
 

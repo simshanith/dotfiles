@@ -8,6 +8,9 @@
 # when mise fetches release metadata for aqua/ubi-backed tools.
 credential_command = "gh auth token"
 
+[settings.pipx]
+uvx = true  # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (default when uv present)
+
 [tools]
 # Languages
 bun  = "latest"
@@ -15,9 +18,8 @@ go   = "latest"
 node = "22"
 rust = "latest"
 
-# Python: managed by uv, not mise. `uv` owns interpreters, venvs, and
-# pipx-style CLI tool installs (`uv tool install <pkg>`). For one-off
-# scripts use `uv run script.py` or `uv run --python 3.13 ...`.
+# Python: uv owns interpreters, venvs, and `uv run` scripts. CLI tools are "pipx:<pkg>".
+# Ad-hoc analog of `uv tool install <pkg>`: `mise use -g pipx:<pkg>`, then promote here.
 uv = "latest"
 
 # Modern CLI
@@ -64,6 +66,7 @@ chezmoi = "latest"
 "npm:bash-language-server"              = "latest"  # Bash / sh
 "npm:dockerfile-language-server-nodejs" = "latest"  # Dockerfile
 marksman = "latest"  # Markdown LSP
+"pipx:grip" = "latest"  # GitHub-accurate markdown preview (Emacs grip-mode)
 # Formatters for apheleia (format-on-save off by default; C-c f formats once):
 prettier = "latest"  # TS / JSON / YAML / Markdown
 shfmt    = "latest"  # shell
