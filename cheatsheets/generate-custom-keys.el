@@ -89,7 +89,7 @@ Walks nested forms so packages wrapped in `when' etc. are found too."
    (mapconcat
     (lambda (row)
       (pcase-let ((`(,pkg ,key ,cmd ,map) row))
-        (format "| `%s` | `%s` | %s | %s |"
+        (format "| <kbd>%s</kbd> | `%s` | %s | %s |"
                 key cmd pkg (if map (format "`%s`" map) "global"))))
     (gck-bindings) "\n")
    "\n"))

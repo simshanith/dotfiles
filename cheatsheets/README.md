@@ -13,10 +13,7 @@ Source-only: listed in `.chezmoiignore`, never deployed to `$HOME`.
 
 ## Paredit at a glance
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="paredit-cheatsheet-dark.svg">
-  <img alt="Paredit cheatsheet: structural editing commands with before/after examples" src="paredit-cheatsheet.svg">
-</picture>
+![Paredit cheatsheet: structural editing commands with before/after examples](paredit-cheatsheet.svg)
 
 ## Keeping custom-keybindings.md up to date
 
@@ -35,7 +32,7 @@ won't be picked up — prefer `:bind` for anything user-facing.
 ## Attribution
 
 - `paredit-cheatsheet.svg` © 2013 Joe Littlejohn, © 2008 drewr.usma.edu —
-  GNU Free Documentation License, vendored unmodified from
-  <https://github.com/joelittlejohn/paredit-cheatsheet>.
-  `paredit-cheatsheet-dark.svg` is the same file with one modification: an
-  added `#fdf6e3` background rect, so it stays readable in dark mode.
+  GNU Free Documentation License, vendored from
+  <https://github.com/joelittlejohn/paredit-cheatsheet> with one modification:
+  an added `#fdf6e3` background rect (upstream is transparent, unreadable on
+  dark backgrounds).

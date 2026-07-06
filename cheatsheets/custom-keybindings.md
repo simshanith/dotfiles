@@ -15,16 +15,16 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 <!-- BEGIN GENERATED — edit init.el, not this table -->
 | Key | Command | Package | Keymap |
 |-----|---------|---------|--------|
-| `g` | `grip-mode` | grip-mode | `markdown-mode-command-map` |
-| `C-x g` | `magit-status` | magit | global |
-| `C-c t` | `ghostel` | ghostel | global |
-| `C-c z f` | `fzf-find-file` | fzf | global |
-| `C-c z g` | `fzf-git-files` | fzf | global |
-| `C-c z b` | `fzf-switch-buffer` | fzf | global |
-| `C-c z e` | `fzf-recentf` | fzf | global |
-| `C-c z r` | `fzf-grep-dwim` | fzf | global |
-| `C-c z R` | `fzf-grep` | fzf | global |
-| `C-c f` | `apheleia-format-buffer` | apheleia | global |
+| <kbd>g</kbd> | `grip-mode` | grip-mode | `markdown-mode-command-map` |
+| <kbd>C-x g</kbd> | `magit-status` | magit | global |
+| <kbd>C-c t</kbd> | `ghostel` | ghostel | global |
+| <kbd>C-c z f</kbd> | `fzf-find-file` | fzf | global |
+| <kbd>C-c z g</kbd> | `fzf-git-files` | fzf | global |
+| <kbd>C-c z b</kbd> | `fzf-switch-buffer` | fzf | global |
+| <kbd>C-c z e</kbd> | `fzf-recentf` | fzf | global |
+| <kbd>C-c z r</kbd> | `fzf-grep-dwim` | fzf | global |
+| <kbd>C-c z R</kbd> | `fzf-grep` | fzf | global |
+| <kbd>C-c f</kbd> | `apheleia-format-buffer` | apheleia | global |
 <!-- END GENERATED -->
 
 ## What each package does
@@ -32,26 +32,27 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 One-liners for when the command name isn't enough; full write-ups in
 [emacs.md](../emacs.md) under "What's installed and why".
 
-- **magit** — the git porcelain. `C-x g` opens the status buffer; everything
-  else keys off it.
+- **magit** — the git porcelain. <kbd>C-x g</kbd> opens the status buffer;
+  everything else keys off it.
 - **ghostel** — embedded terminal on libghostty-vt (Ghostty's VT engine),
-  themed to match standalone Ghostty. `C-c t` opens one.
+  themed to match standalone Ghostty. <kbd>C-c t</kbd> opens one.
 - **fzf** — terminal `fzf` in a popup buffer for file/buffer jumps and
   whole-repo ripgrep. Complements (doesn't replace) the vertico minibuffer.
 - **apheleia** — code formatter (prettier/shfmt/taplo/rustfmt via mise).
-  `C-c f` formats the buffer **once**; format-on-save stays OFF unless you
-  toggle `M-x apheleia-global-mode` for the session.
+  <kbd>C-c f</kbd> formats the buffer **once**; format-on-save stays OFF
+  unless you toggle <kbd>M-x</kbd> `apheleia-global-mode` for the session.
 - **grip-mode** — GitHub-accurate live preview of the current markdown buffer
   in a browser (the `grip` CLI is in the mise baseline as `pipx:grip`).
 
 ## Notes
 
 - **Keymap column**: `global` bindings work everywhere.
-  `markdown-mode-command-map` hangs off the `C-c C-c` prefix in markdown
-  buffers, so grip-mode is really `C-c C-c g` there.
+  `markdown-mode-command-map` hangs off the <kbd>C-c C-c</kbd> prefix in
+  markdown buffers, so grip-mode is really <kbd>C-c C-c g</kbd> there.
 - **Discovery**: `which-key-mode` is on (built-in since Emacs 30) — pause
-  after any prefix (`C-c z`, `C-x`, `C-c C-c`) and the available continuations
-  pop up. `C-h b` lists all bindings in the current buffer.
+  after any prefix (<kbd>C-c z</kbd>, <kbd>C-x</kbd>, <kbd>C-c C-c</kbd>) and
+  the available continuations pop up. <kbd>C-h b</kbd> lists all bindings in
+  the current buffer.
 - **paredit** adds no `:bind` entries — it installs its own keymap via hooks
   in lisp buffers. See [paredit-cheatsheet.svg](paredit-cheatsheet.svg).
 - **Fundamentals** (kill/yank, mark/region, dired, GNU refcard links):

@@ -11,35 +11,35 @@ Official GNU reference cards — linked, not vendored (they track Emacs releases
 
 | Key | Action |
 |-----|--------|
-| `C-SPC` | set mark; start selecting a region |
-| `C-x C-x` | swap point and mark (see both ends of region) |
-| `C-u C-SPC` | jump back to previous mark |
-| `M-h` / `C-x h` | mark paragraph / whole buffer |
-| `C-w` | kill (cut) region |
-| `M-w` | copy region to kill ring |
-| `C-k` | kill to end of line |
-| `M-d` / `M-DEL` | kill word forward / backward |
-| `C-y` | yank (paste) most recent kill |
-| `M-y` | right after `C-y`: cycle back through earlier kills |
-| `C-/` | undo (also `C-x u`) |
+| <kbd>C-SPC</kbd> | set mark; start selecting a region |
+| <kbd>C-x C-x</kbd> | swap point and mark (see both ends of region) |
+| <kbd>C-u C-SPC</kbd> | jump back to previous mark |
+| <kbd>M-h</kbd> / <kbd>C-x h</kbd> | mark paragraph / whole buffer |
+| <kbd>C-w</kbd> | kill (cut) region |
+| <kbd>M-w</kbd> | copy region to kill ring |
+| <kbd>C-k</kbd> | kill to end of line |
+| <kbd>M-d</kbd> / <kbd>M-DEL</kbd> | kill word forward / backward |
+| <kbd>C-y</kbd> | yank (paste) most recent kill |
+| <kbd>M-y</kbd> | right after <kbd>C-y</kbd>: cycle back through earlier kills |
+| <kbd>C-/</kbd> | undo (also <kbd>C-x u</kbd>) |
 
-Everything killed lands on the **kill ring** — `C-y` then repeated `M-y` walks the whole history, so "clipboard" is plural in Emacs.
+Everything killed lands on the **kill ring** — <kbd>C-y</kbd> then repeated <kbd>M-y</kbd> walks the whole history, so "clipboard" is plural in Emacs.
 
 ## Dired essentials
 
-`C-x d` (or visit any directory) opens dired. Inside the buffer:
+<kbd>C-x d</kbd> (or visit any directory) opens dired. Inside the buffer:
 
 | Key | Action |
 |-----|--------|
-| `RET` / `o` | visit file (same / other window) |
-| `^` | up to parent directory |
-| `g` | refresh listing |
-| `m` / `u` / `U` | mark file / unmark / unmark all |
-| `% m` | mark files matching regexp |
-| `d` then `x` | flag for deletion, then execute flags |
-| `C` / `R` | copy / rename-or-move (marked files or file at point) |
-| `+` | create directory |
-| `!` / `&` | run shell command on file(s) (sync / async) |
-| `q` | quit dired buffer |
+| <kbd>RET</kbd> / <kbd>o</kbd> | visit file (same / other window) |
+| <kbd>^</kbd> | up to parent directory |
+| <kbd>g</kbd> | refresh listing |
+| <kbd>m</kbd> / <kbd>u</kbd> / <kbd>U</kbd> | mark file / unmark / unmark all |
+| <kbd>% m</kbd> | mark files matching regexp |
+| <kbd>d</kbd> then <kbd>x</kbd> | flag for deletion, then execute flags |
+| <kbd>C</kbd> / <kbd>R</kbd> | copy / rename-or-move (marked files or file at point) |
+| <kbd>+</kbd> | create directory |
+| <kbd>!</kbd> / <kbd>&</kbd> | run shell command on file(s) (sync / async) |
+| <kbd>q</kbd> | quit dired buffer |
 
-Operations act on the **marked** files if any, else the file at point — the `m`-then-`C`/`R`/`!` pattern is the batch workflow.
+Operations act on the **marked** files if any, else the file at point — the <kbd>m</kbd>-then-<kbd>C</kbd>/<kbd>R</kbd>/<kbd>!</kbd> pattern is the batch workflow.
