@@ -18,10 +18,25 @@ unset f
 # ============================================================
 # Completions
 # ============================================================
+# fpath hygiene. A long-lived tmux server can carry a stale *exported* FPATH
+# (zsh ties it as `export -T FPATH fpath`) pointing at a previous zsh version's
+# functions dir (e.g. .../zsh/5.9/... after upgrading to 5.9.1). An exported
+# FPATH overrides zsh's built-in fpath, so autoload of compinit/add-zsh-hook/
+# is-at-least fails with "function definition file not found" — but only inside
+# tmux, since a fresh terminal starts from a clean env. Rebuild fpath from the
+# running zsh's real defaults (recovered via a clean subshell), prune dead dirs,
+# dedupe, and drop the export attribute so the stale value stops propagating.
+typeset -U fpath
+fpath=(
+    ${(f)"$(/usr/bin/env -u FPATH zsh -fc 'print -rl -- $fpath')"}
+    $fpath
+)
 # Homebrew completions (Apple Silicon path) - must be before compinit
 if type brew &>/dev/null; then
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+    fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
 fi
+fpath=($^fpath(N/))          # keep only directories that actually exist
+export -n FPATH 2>/dev/null  # stop the stale FPATH leaking into child shells
 
 autoload -Uz compinit
 # Rebuild completion cache once per day
