@@ -54,8 +54,8 @@ On a fresh machine, after `chezmoi apply` + `mise install`:
 ### Markdown
 - **markdown-mode** — `.md`/`README.md` open in `gfm-mode` (GitHub-flavored);
   `markdown-command` = `pandoc`; fenced code blocks highlight natively.
-- **grip-mode** — GitHub-accurate live preview (needs `grip`:
-  `uv tool install grip`). Bound to `g` in the markdown command map.
+- **grip-mode** — GitHub-accurate live preview (needs `grip`, in the mise
+  baseline as `pipx:grip`). Bound to `g` in the markdown command map.
 
 ### LSP — Eglot (built-in)
 `eglot-ensure` is hooked into: `typescript-ts-mode`, `tsx-ts-mode`,

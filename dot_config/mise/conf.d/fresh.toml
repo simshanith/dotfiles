@@ -8,6 +8,12 @@
 # when mise fetches release metadata for aqua/ubi-backed tools.
 credential_command = "gh auth token"
 
+[settings.pipx]
+# "pipx:<pkg>" tools install via `uv tool` (no pipx binary needed) — uv is in
+# the baseline below. This is mise's default when uv is present; set
+# explicitly to document intent. https://mise.jdx.dev/dev-tools/backends/pipx
+uvx = true
+
 [tools]
 # Languages
 bun  = "latest"
@@ -15,9 +21,11 @@ go   = "latest"
 node = "22"
 rust = "latest"
 
-# Python: managed by uv, not mise. `uv` owns interpreters, venvs, and
-# pipx-style CLI tool installs (`uv tool install <pkg>`). For one-off
-# scripts use `uv run script.py` or `uv run --python 3.13 ...`.
+# Python: uv owns interpreters, venvs, and one-off scripts (`uv run script.py`,
+# `uv run --python 3.13 ...`). Python CLI *tools* are declared here as
+# "pipx:<pkg>" — mise's pipx backend delegates to `uv tool install` (see
+# [settings.pipx] above), keeping them declarative like the rest of this
+# baseline instead of imperative `uv tool install` one-offs.
 uv = "latest"
 
 # Modern CLI
@@ -64,6 +72,7 @@ chezmoi = "latest"
 "npm:bash-language-server"              = "latest"  # Bash / sh
 "npm:dockerfile-language-server-nodejs" = "latest"  # Dockerfile
 marksman = "latest"  # Markdown LSP
+"pipx:grip" = "latest"  # GitHub-accurate markdown preview (Emacs grip-mode)
 # Formatters for apheleia (format-on-save off by default; C-c f formats once):
 prettier = "latest"  # TS / JSON / YAML / Markdown
 shfmt    = "latest"  # shell

@@ -47,7 +47,7 @@ Four tools, clear lanes:
 |------|------|----------|
 | **chezmoi** (`mode = symlink`) | dotfiles, templates, per-machine data | repo root (`dot_*`, `private_*`, `*.tmpl`) |
 | **mise** | CLI toolchain (node, rust, go, bun, starship, ripgrep, chezmoi itself, LSP servers…) | `dot_config/mise/conf.d/fresh.toml` (shared) + `config.local.toml` (per-machine) |
-| **uv** | Python interpreters, venvs, pipx-style tools (`uv tool install`) | n/a (uv-managed) |
+| **uv** | Python interpreters, venvs, one-off scripts (`uv run`); executes mise's `pipx:` tools | declared as `pipx:<pkg>` in `fresh.toml` |
 | **Homebrew** | shells, system PATH replacements, GUI casks, fonts, terminfo, keychain-integrated tools | `Brewfile` (+ `Brewfile.optional`) |
 
 ### chezmoi source naming

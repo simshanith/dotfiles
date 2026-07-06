@@ -42,7 +42,7 @@ One-liners for when the command name isn't enough; full write-ups in
   `C-c f` formats the buffer **once**; format-on-save stays OFF unless you
   toggle `M-x apheleia-global-mode` for the session.
 - **grip-mode** — GitHub-accurate live preview of the current markdown buffer
-  in a browser (needs the `grip` CLI: `uv tool install grip`).
+  in a browser (the `grip` CLI is in the mise baseline as `pipx:grip`).
 
 ## Notes
 
