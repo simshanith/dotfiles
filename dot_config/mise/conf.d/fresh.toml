@@ -9,10 +9,7 @@
 credential_command = "gh auth token"
 
 [settings.pipx]
-# "pipx:<pkg>" tools install via `uv tool` (no pipx binary needed) — uv is in
-# the baseline below. This is mise's default when uv is present; set
-# explicitly to document intent. https://mise.jdx.dev/dev-tools/backends/pipx
-uvx = true
+uvx = true  # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (default when uv present)
 
 [tools]
 # Languages
@@ -21,11 +18,8 @@ go   = "latest"
 node = "22"
 rust = "latest"
 
-# Python: uv owns interpreters, venvs, and one-off scripts (`uv run script.py`,
-# `uv run --python 3.13 ...`). Python CLI *tools* are declared here as
-# "pipx:<pkg>" — mise's pipx backend delegates to `uv tool install` (see
-# [settings.pipx] above), keeping them declarative like the rest of this
-# baseline instead of imperative `uv tool install` one-offs.
+# Python: uv owns interpreters, venvs, and `uv run` scripts. CLI tools are "pipx:<pkg>".
+# Ad-hoc analog of `uv tool install <pkg>`: `mise use -g pipx:<pkg>`, then promote here.
 uv = "latest"
 
 # Modern CLI
