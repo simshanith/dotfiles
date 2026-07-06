@@ -129,6 +129,14 @@ rtk init --show      # verify: all rows [ok]
 Idempotent — safe to re-run. Skips automation in the dotfiles repo on purpose so
 chezmoi never fights rtk over `~/.claude/CLAUDE.md` and `settings.json`.
 
+rtk's own config *is* chezmoi-managed (`.chezmoitemplates/rtk-config.toml`, one
+template → `~/.config/rtk/` on linux, `~/Library/Application Support/rtk/` on
+darwin). It dials the hook back to where filtering measurably pays off: `rg`,
+`grep`, `curl`, `diff` excluded (silent-failure risk or ~zero savings) and git
+restricted to `commit`/`fetch` via `transparent_prefixes` (compact filters
+stripped output the model needed, e.g. `git stash` SHAs). Verify a rewrite
+decision anytime with `rtk hook check "<cmd>"`.
+
 ## Verification
 
 ```bash

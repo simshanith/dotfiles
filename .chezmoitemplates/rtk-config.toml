@@ -1,0 +1,87 @@
+[tracking]
+enabled = true
+history_days = 90
+
+[display]
+colors = true
+emoji = true
+max_width = 120
+
+[filters]
+ignore_dirs = [
+    ".git",
+    "node_modules",
+    "target",
+    "__pycache__",
+    ".venv",
+    "vendor",
+]
+ignore_files = [
+    "*.lock",
+    "*.min.js",
+    "*.min.css",
+]
+
+[tee]
+enabled = true
+mode = "failures"
+max_files = 20
+max_file_size = 1048576
+
+[telemetry]
+enabled = false
+consent_given = false
+consent_date = "2026-06-21T06:05:58.603291+00:00"
+
+[hooks]
+exclude_commands = [
+    "rg",  # rtk grep backend is BSD grep on macOS; rg flags break silently (exit 0)
+    "grep",  # 254/287 parse failures; 6.1K lifetime savings vs silent zero-match risk
+    "curl",  # 2 tokens saved on 138K input; schema-compaction risks mangling API responses
+    "diff",  # 28 parse failures vs 8 filtered runs; condensing strips hunk context
+]
+# git restricted to commit/fetch: compact filters strip output the model needs (e.g. stash SHA)
+transparent_prefixes = [
+    "git stash",
+    "git status",
+    "git log",
+    "git diff",
+    "git add",
+    "git push",
+    "git pull",
+    "git branch",
+    "git show",
+    "git worktree",
+    "git checkout",
+    "git switch",
+    "git restore",
+    "git reset",
+    "git merge",
+    "git rebase",
+    "git remote",
+    "git rev-parse",
+    "git tag",
+    "git blame",
+    "git ls-files",
+    "git ls-remote",
+    "git reflog",
+    "git cherry-pick",
+    "git describe",
+    "git config",
+    "git check-attr",
+    "git submodule",
+    "git clean",
+    "git rm",
+    "git mv",
+    "git init",
+    "git clone",
+    "git apply",
+    "git bisect",
+]
+
+[limits]
+grep_max_results = 200
+grep_max_per_file = 25
+status_max_files = 15
+status_max_untracked = 10
+passthrough_max_chars = 2000

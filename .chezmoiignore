@@ -32,3 +32,7 @@ iterm2-preferences
 # (.chezmoiignore is itself templated; stat is re-evaluated every apply, so this
 # self-corrects after `brew bundle` installs the app, or if it's removed).
 {{ if or (ne .chezmoi.os "darwin") (not (stat "/Applications/Sublime Text.app")) }}bin/subl{{ end }}
+
+# rtk config: one shared template, two OS-specific targets. rtk hard-wires
+# ~/Library/Application Support on darwin (ignores XDG) and ~/.config elsewhere.
+{{ if ne .chezmoi.os "darwin" }}Library{{ else }}.config/rtk{{ end }}
