@@ -143,17 +143,18 @@ missing: `rustup component add rust-analyzer rustfmt`.
 
 ## Keybindings (non-default)
 
-| Key | Action |
-|-----|--------|
-| `C-x g` | `magit-status` |
-| `C-c f` | `apheleia-format-buffer` (format once) |
-| `C-c z f` | `fzf-find-file` |
-| `C-c z g` | `fzf-git-files` |
-| `C-c z b` | `fzf-switch-buffer` |
-| `C-c z e` | `fzf-recentf` |
-| `C-c z r` | `fzf-grep-dwim` (ripgrep, symbol at point) |
-| `C-c z R` | `fzf-grep` (ripgrep, prompt) |
-| `g` (markdown command map) | `grip-mode` preview |
+See [cheatsheets/custom-keybindings.md](cheatsheets/custom-keybindings.md) —
+the table there is generated from the `:bind` declarations in init.el, so it
+can't drift. After changing any `:bind`, regenerate with:
+
+```bash
+emacs --batch -l cheatsheets/generate-custom-keys.el
+```
+
+Reference cards for the muscle-memory stuff live alongside it:
+[paredit](cheatsheets/paredit-cheatsheet.svg) (structural lisp editing) and the
+[GNU Emacs refcard](cheatsheets/gnu-emacs-refcard.pdf) (kill/yank, mark/region,
+windows, search). Index: [cheatsheets/README.md](cheatsheets/README.md).
 
 ---
 
