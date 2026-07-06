@@ -11,6 +11,10 @@ Source-only: listed in `.chezmoiignore`, never deployed to `$HOME`.
 | [paredit-cheatsheet.svg](paredit-cheatsheet.svg) | Structural editing commands for lisp buffers (paredit is hook-enabled in this config) | [joelittlejohn/paredit-cheatsheet](https://github.com/joelittlejohn/paredit-cheatsheet) |
 | [emacs-fundamentals.md](emacs-fundamentals.md) | Links to the official GNU refcards + crib tables for kill/yank/mark and dired | [gnu.org refcards](https://www.gnu.org/software/emacs/refcards/) |
 
+## Paredit at a glance
+
+![Paredit cheatsheet: structural editing commands with before/after examples](paredit-cheatsheet.svg)
+
 ## Keeping custom-keybindings.md up to date
 
 The table in custom-keybindings.md is regenerated from the `:bind`
