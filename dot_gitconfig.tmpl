@@ -139,3 +139,16 @@
   # initial empty commit
   empty = "!git commit -am\"[empty] Initial commit\" --allow-empty"
 # {{ "}}}" }}
+
+# GitHub HTTPS auth via gh, resolved through mise (version- and PATH-agnostic).
+# Gated on gh being resolvable through mise (not just on PATH), so this is a
+# no-op on machines lacking mise or the gh tool, and correct even when mise
+# isn't shell-activated during `chezmoi apply`.
+{{ if output "sh" "-c" "mise which gh 2>/dev/null || true" | trim -}}
+[credential "https://github.com"]
+	helper =
+	helper = !mise exec -- gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !mise exec -- gh auth git-credential
+{{ end -}}
