@@ -47,6 +47,7 @@ starship = "latest"
 # AI coding agents
 codex    = "latest"  # openai/codex
 opencode = "latest"  # anomalyco/opencode
+rtk      = "latest"  # aqua:rtk-ai/rtk — token-optimizing CLI proxy for Claude Code.
 
 # Dotfiles management — must be in the committed baseline so a fresh machine's
 # install.sh (mise install -> chezmoi init) can bootstrap. (Previously chezmoi

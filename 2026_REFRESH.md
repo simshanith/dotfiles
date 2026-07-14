@@ -61,6 +61,7 @@ Old bash-specific files removed (git history preserved).
 | ripgrep (rg) | Better grep |
 | fzf | Fuzzy finder |
 | git-delta | Better git diff |
+| rtk | Token-optimizing CLI proxy for Claude Code (one-time `rtk init -g`, see below) |
 
 ### Brewfile Pared Down
 
@@ -113,6 +114,28 @@ cd ~/.dotfiles
 ./install.sh
 exec zsh
 ```
+
+### Post-install: wire rtk into Claude Code (one-time, per machine)
+
+`rtk` (the token-optimizing Claude Code proxy) installs fleet-wide via the mise
+baseline, but its Claude integration writes to `~/.claude/` — which chezmoi does
+not manage — so it needs a single manual step after install:
+
+```bash
+rtk init -g          # hook + RTK.md + @RTK.md in ~/.claude/CLAUDE.md + settings.json
+rtk init --show      # verify: all rows [ok]
+```
+
+Idempotent — safe to re-run. Skips automation in the dotfiles repo on purpose so
+chezmoi never fights rtk over `~/.claude/CLAUDE.md` and `settings.json`.
+
+rtk's own config *is* chezmoi-managed (`.chezmoitemplates/rtk-config.toml`, one
+template → `~/.config/rtk/` on linux, `~/Library/Application Support/rtk/` on
+darwin). It dials the hook back to where filtering measurably pays off: `rg`,
+`grep`, `curl`, `diff` excluded (silent-failure risk or ~zero savings) and git
+restricted to `commit`/`fetch` via `transparent_prefixes` (compact filters
+stripped output the model needed, e.g. `git stash` SHAs). Verify a rewrite
+decision anytime with `rtk hook check "<cmd>"`.
 
 ## Verification
 
