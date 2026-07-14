@@ -82,9 +82,29 @@ fi
 # ============================================================
 # Key bindings
 # ============================================================
-# Word navigation (Option + arrow keys in iTerm2)
+# Word navigation (Option + arrow keys; sequences are what the terminal sends)
 bindkey "[D" backward-word    # opt-left
 bindkey "[C" forward-word     # opt-right
+
+# Ctrl-U kills from the cursor to the start of the line (bash behavior),
+# not zsh's default kill-whole-line. To clear the whole line, use a two-stroke:
+#   C-u C-k  (kill back, then kill forward -- works from any cursor position)
+#   C-e C-u  (go to end, kill back to start)  or  C-a C-k  (go to start, kill to end)
+# Killed text goes to zle's kill ring (not the macOS pasteboard); consecutive
+# kills merge into one entry, so C-y yanks the whole line back.
+bindkey "^U" backward-kill-line
+
+# More emacs-style kill/yank (these are zsh defaults, noted here as a cheatsheet):
+#   C-w  backward-kill-word   M-d  kill-word (forward)   -- both feed the kill ring
+#   C-y  yank last kill       M-y  yank-pop: cycle older kill-ring entries after C-y
+#
+# Undo/redo: C-_ (and C-x C-u) undo, M-_ redo.
+
+# C-x C-e: edit the current command line in $EDITOR (zsh doesn't wire this up
+# by default the way bash does).
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey "^X^E" edit-command-line
 
 # History search with up/down arrows (if substring-search loaded)
 if (( $+functions[history-substring-search-up] )); then
