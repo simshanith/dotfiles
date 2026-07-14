@@ -45,7 +45,7 @@ starship = "latest"
 "aqua:iffse/pay-respects" = "latest"
 
 # AI coding agents
-codex    = "latest"  # openai/codex
+"aqua:openai/codex" = "latest"  # native binary; bare `codex` picks the npm backend, which warns on bin-path listing (no aqua-registry for @openai/codex)
 opencode = "latest"  # anomalyco/opencode
 
 # Dotfiles management — must be in the committed baseline so a fresh machine's
