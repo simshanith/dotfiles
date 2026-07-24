@@ -15,7 +15,7 @@ uvx = true  # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (defaul
 # Languages
 bun  = "latest"
 go   = "latest"
-node = "22"
+node = "lts"  # system default only; projects override via .nvmrc / .node-version / mise.toml
 rust = "latest"
 
 # Python: uv owns interpreters, venvs, and `uv run` scripts. CLI tools are "pipx:<pkg>".
