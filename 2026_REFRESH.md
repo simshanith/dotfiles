@@ -139,8 +139,42 @@ stripped output the model needed, e.g. `git stash` SHAs). The whole JS toolchain
 rtk drops the package-manager wrapper and substitutes its own handler, so
 `pnpm lint` ran rtk's eslint instead of the project's `lint` script and
 `pnpm exec prettier` resolved `prettier` off `PATH` instead of `node_modules/.bin`.
-Across 90 days those commands saved 0.1% of their input tokens. Verify a rewrite
-decision anytime with `rtk hook check "<cmd>"`.
+Across 90 days those commands saved 0.1% of their input tokens.
+
+Denylisting is a losing game though, because rtk has no opt-in mode — every
+handler it ships is armed by default and each release re-arms the surface. Of
+the 33 handlers it hooks, 21 had been invoked *zero* times in 90 days while
+still being able to rewrite. So the Bash `PreToolUse` hook points at
+`~/bin/rtk-allowlist-hook` instead of `rtk hook claude` directly:
+
+```
+Claude Bash call -> rtk-allowlist-hook -> (allowed?) -> rtk hook claude
+                                       -> (else)    -> no rewrite
+```
+
+rtk stays the rewrite engine; the wrapper only decides *whether it is consulted*.
+The allowlist is `~/.config/rtk-allowlist.toml` (chezmoi-managed), holding the
+~11 commands with measured savings plus `git commit`/`git fetch`. Everything
+else passes through. It also refuses to touch compound commands (pipes, `&&`,
+redirection), since rtk parses only the leading command. It fails open on every
+error path — bad JSON, missing rtk, timeout — so a broken hook can never block a
+command, and falls back to built-in defaults if the TOML is missing or malformed
+rather than reverting to rtk's wide-open behavior.
+
+Setting `commands = []` in that TOML disables rewriting entirely while leaving
+`rtk gain` and manual `rtk <cmd>` usage intact.
+
+Verify the engine's view with `rtk hook check "<cmd>"`, and the *actual* decision
+(which is what matters) with:
+
+```bash
+echo '{"tool_name":"Bash","tool_input":{"command":"ls -la"}}' | ~/bin/rtk-allowlist-hook
+# prints the rewrite, or nothing at all if the command is not allowlisted
+```
+
+Caveat: `~/.claude/settings.json` is owned by `rtk init -g`, not chezmoi, so
+re-running it points the Bash hook back at `rtk hook claude`. Re-apply the
+wrapper afterwards.
 
 ## Verification
 

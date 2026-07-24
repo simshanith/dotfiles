@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+"""Allowlist gate in front of `rtk hook claude` (Claude Code PreToolUse, Bash).
+
+rtk only offers denylists (`exclude_commands`, `transparent_prefixes`), so every
+handler it ships is armed by default and each new release re-arms the surface.
+Its handlers *substitute* rather than filter -- they drop the wrapper and any
+argument they do not recognize:
+
+    pnpm lint          -> rtk lint     (rtk's eslint, not the project script)
+    pnpm exec prettier -> rtk prettier (PATH, not node_modules/.bin)
+    pnpm vitest run    -> rtk vitest   (drops `run`)
+    next build         -> rtk next     (drops `build`)
+
+This flips the polarity: nothing is rewritten unless it is named in ALLOW, and
+the entry has earned it in `rtk gain` history. rtk stays the rewrite engine --
+we only decide *whether* it gets consulted.
+
+Fails open everywhere. Any parse error, missing rtk, timeout, or unexpected
+exception prints nothing and exits 0, which Claude Code reads as "no rewrite".
+A hook that breaks must never break the user's command.
+"""
+
+import json
+import os
+import re
+import shlex
+import subprocess
+import sys
+
+CONFIG_PATH = os.environ.get(
+    "RTK_ALLOWLIST_CONFIG",
+    os.path.expanduser("~/.config/rtk-allowlist.toml"),
+)
+
+# Used when the config is missing or unreadable, so a lost file degrades to the
+# known-good set rather than to rtk's wide-open default.
+DEFAULT_ALLOW = {
+    "cat", "head", "tail", "ls", "gh", "find", "wc", "du", "ps", "vitest", "cargo",
+}
+DEFAULT_SUBCOMMANDS = {"git": {"commit", "fetch"}}
+
+# Shell syntax that makes this more than one simple command. rtk parses only the
+# leading command, so on a pipeline or list it would rewrite the head and leave
+# the rest -- or mangle the whole string. We decline instead of guessing.
+SHELL_METACHARS = ("&&", "||", ";", "|", "`", "$(", ">", "<", "&", "\n")
+
+RTK_TIMEOUT_SECONDS = 10
+
+_ARRAY_RE = re.compile(r"^([A-Za-z0-9_-]+)\s*=\s*\[(.*?)\]", re.DOTALL | re.MULTILINE)
+_SECTION_RE = re.compile(r"^\s*\[([A-Za-z0-9_.-]+)\]\s*$", re.MULTILINE)
+_STRING_RE = re.compile(r'"([^"]*)"')
+
+
+def _parse_toml_subset(text: str) -> dict:
+    """Parse the `key = [...]` / `[section]` subset this config uses.
+
+    Only needed on Python < 3.11, which has no tomllib. Deliberately narrow: it
+    understands string arrays and one level of section, which is the whole
+    schema. Anything richer belongs in tomllib, not here.
+    """
+    # Strip comments, but not a '#' inside a quoted string.
+    lines = []
+    for line in text.splitlines():
+        out, in_string, index = [], False, 0
+        while index < len(line):
+            char = line[index]
+            if char == '"':
+                in_string = not in_string
+            elif char == "#" and not in_string:
+                break
+            out.append(char)
+            index += 1
+        lines.append("".join(out))
+    stripped = "\n".join(lines)
+
+    # Split into (section_name, body) chunks; the pre-header body is top level.
+    chunks, last_end, current = [], 0, None
+    for match in _SECTION_RE.finditer(stripped):
+        chunks.append((current, stripped[last_end:match.start()]))
+        current, last_end = match.group(1), match.end()
+    chunks.append((current, stripped[last_end:]))
+
+    result: dict = {}
+    for section, body in chunks:
+        target = result if section is None else result.setdefault(section, {})
+        if not isinstance(target, dict):
+            continue
+        for match in _ARRAY_RE.finditer(body):
+            target[match.group(1)] = _STRING_RE.findall(match.group(2))
+    return result
+
+
+def load_config(path: str = CONFIG_PATH):
+    """Return (allow_set, subcommand_map), falling back to the built-in defaults."""
+    try:
+        with open(path, "rb") as handle:
+            raw = handle.read()
+    except Exception:
+        return set(DEFAULT_ALLOW), {k: set(v) for k, v in DEFAULT_SUBCOMMANDS.items()}
+
+    data = None
+    try:
+        import tomllib  # Python 3.11+
+
+        data = tomllib.loads(raw.decode("utf-8"))
+    except ImportError:
+        try:
+            data = _parse_toml_subset(raw.decode("utf-8"))
+        except Exception:
+            data = None
+    except Exception:
+        data = None  # malformed TOML -- prefer the safe defaults over a wrong list
+
+    if not isinstance(data, dict):
+        return set(DEFAULT_ALLOW), {k: set(v) for k, v in DEFAULT_SUBCOMMANDS.items()}
+
+    commands = data.get("commands")
+    allow = (
+        {c for c in commands if isinstance(c, str) and c}
+        if isinstance(commands, list)
+        else set(DEFAULT_ALLOW)
+    )
+
+    subcommands = {}
+    raw_subcommands = data.get("subcommands")
+    if isinstance(raw_subcommands, dict):
+        for name, values in raw_subcommands.items():
+            if isinstance(values, list):
+                subcommands[name] = {v for v in values if isinstance(v, str) and v}
+
+    return allow, subcommands
+
+
+ALLOW, SUBCOMMANDS = load_config()
+
+# Global flags that consume the next token, so the subcommand scan skips past
+# their value instead of mistaking it for the subcommand.
+VALUE_FLAGS = ("-C", "-c", "--git-dir", "--work-tree", "--namespace")
+
+
+def is_allowed(command: str) -> bool:
+    """True only if `command` is a single simple command named in the allowlist."""
+    if not command or not command.strip():
+        return False
+
+    if any(tok in command for tok in SHELL_METACHARS):
+        return False
+
+    try:
+        tokens = shlex.split(command)
+    except ValueError:
+        return False  # unbalanced quotes -- not ours to interpret
+
+    if not tokens:
+        return False
+
+    # Strip a leading `env`-style VAR=value prefix so `FOO=1 ls` still resolves.
+    while tokens and "=" in tokens[0] and not tokens[0].startswith("-"):
+        name = tokens[0].split("=", 1)[0]
+        if name and name.replace("_", "").isalnum():
+            tokens = tokens[1:]
+        else:
+            break
+
+    if not tokens:
+        return False
+
+    head = os.path.basename(tokens[0])
+
+    if head in SUBCOMMANDS:
+        # First non-flag token after the command is the subcommand. Value-taking
+        # global flags are skipped, so `git -C /tmp commit` resolves to `commit`
+        # rather than reading the path as the subcommand.
+        allowed = SUBCOMMANDS[head]
+        rest, index = tokens[1:], 0
+        while index < len(rest):
+            token = rest[index]
+            if not token.startswith("-"):
+                return token in allowed
+            index += 2 if token in VALUE_FLAGS else 1
+        return False  # bare `git` with no subcommand
+
+    return head in ALLOW
+
+
+def main() -> int:
+    try:
+        raw = sys.stdin.read()
+    except Exception:
+        return 0
+
+    try:
+        payload = json.loads(raw)
+    except Exception:
+        return 0
+
+    if not isinstance(payload, dict):
+        return 0
+    if payload.get("tool_name") != "Bash":
+        return 0
+
+    tool_input = payload.get("tool_input")
+    if not isinstance(tool_input, dict):
+        return 0
+
+    command = tool_input.get("command")
+    if not isinstance(command, str) or not is_allowed(command):
+        return 0  # no output == no rewrite
+
+    # Allowed: hand the untouched payload to rtk and relay its verdict verbatim.
+    try:
+        result = subprocess.run(
+            ["rtk", "hook", "claude"],
+            input=raw,
+            capture_output=True,
+            text=True,
+            timeout=RTK_TIMEOUT_SECONDS,
+        )
+    except Exception:
+        return 0  # rtk missing, not on PATH, or hung -- fall through to no rewrite
+
+    if result.returncode == 0 and result.stdout.strip():
+        sys.stdout.write(result.stdout)
+
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except Exception:
+        sys.exit(0)  # never let a hook failure block a command
