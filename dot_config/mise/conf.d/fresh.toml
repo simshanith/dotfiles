@@ -3,6 +3,13 @@
 # Machine-local entry point: ~/.config/mise/config.toml (seeded once, edit freely).
 # Per-machine overrides: ~/.config/mise/config.local.toml.
 
+[settings]
+# Read node's version from a project's .nvmrc / .node-version instead of pinning
+# it below. mise reads mise.toml / .tool-versions natively, but these "idiomatic"
+# per-language files are opt-in and an empty list means off, not unrestricted.
+# Same setting lit-ui-router sets in its own .config/mise/config.toml.
+idiomatic_version_file_enable_tools = ["node"]
+
 [settings.github]
 # Pull a GitHub token on demand from gh CLI to avoid API rate limits
 # when mise fetches release metadata for aqua/ubi-backed tools.
@@ -15,7 +22,7 @@ uvx = true  # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (defaul
 # Languages
 bun  = "latest"
 go   = "latest"
-node = "22"
+node = "lts"  # system default only; projects override via .nvmrc / .node-version / mise.toml
 rust = "latest"
 
 # Python: uv owns interpreters, venvs, and `uv run` scripts. CLI tools are "pipx:<pkg>".
