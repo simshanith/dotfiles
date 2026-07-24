@@ -1,0 +1,56 @@
+# rtk (Rust Token Killer)
+
+Token-optimizing CLI proxy. A `PreToolUse` hook rewrites a **small allowlist** of
+Bash commands to their `rtk` equivalent. Do not invoke `rtk <cmd>` by hand for
+these — the hook already does it, and typing it yourself just adds tokens.
+
+## What is rewritten
+
+Only these, and only as the head of a **single simple command**:
+
+`cat` `head` `tail` `ls` `gh` `find` `wc` `du` `ps` `vitest` `cargo`,
+plus `git commit` and `git fetch`.
+
+Everything else runs untouched — including `git status`, `git diff`, `git stash`,
+`rg`, `grep`, `curl`, `diff`, and the whole JS toolchain (`pnpm`, `npm`, `npx`,
+`yarn`, `tsc`, `eslint`, `prettier`). Anything with a pipe, `&&`, `;`, or a
+redirect is never rewritten, even if its first word is on the list.
+
+Write commands normally. The hook handles the rest.
+
+## Why the list is short
+
+rtk's handlers *substitute* rather than filter — they drop the wrapper and any
+argument they don't recognize (`pnpm lint` ran rtk's eslint instead of the
+project's script; `next build` dropped `build`). Commands are on the list only
+where they measurably saved tokens without changing behavior.
+
+To change what is rewritten, edit `~/.config/rtk-allowlist.toml` — not this file,
+and not rtk's own config.
+
+## Meta commands (run these directly)
+
+```bash
+rtk gain              # token savings analytics
+rtk gain --history    # per-command history with savings
+rtk proxy <cmd>       # run a command through rtk without filtering (debugging)
+```
+
+Check what the hook would actually do with a command:
+
+```bash
+echo '{"tool_name":"Bash","tool_input":{"command":"ls -la"}}' | ~/bin/rtk-allowlist-hook
+# prints the rewrite, or nothing at all when the command is not allowlisted
+```
+
+`rtk hook check "<cmd>"` shows rtk's *engine* view, which ignores the allowlist —
+it will report rewrites for commands the hook actually leaves alone.
+
+## Do not run `rtk init -g`
+
+It overwrites this file and repoints the Bash hook straight at `rtk hook claude`,
+re-arming every handler rtk ships. The wiring is managed by chezmoi instead;
+`chezmoi apply` re-asserts it.
+
+⚠️ Name collision: if `rtk gain` fails, you may have reachingforthejack/rtk
+(Rust Type Kit) installed instead of the token proxy.

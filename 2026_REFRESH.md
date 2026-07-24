@@ -61,7 +61,7 @@ Old bash-specific files removed (git history preserved).
 | ripgrep (rg) | Better grep |
 | fzf | Fuzzy finder |
 | git-delta | Better git diff |
-| rtk | Token-optimizing CLI proxy for Claude Code (one-time `rtk init -g`, see below) |
+| rtk | Token-optimizing CLI proxy for Claude Code (allowlist-gated, see below) |
 
 ### Brewfile Pared Down
 
@@ -115,66 +115,74 @@ cd ~/.dotfiles
 exec zsh
 ```
 
-### Post-install: wire rtk into Claude Code (one-time, per machine)
+### rtk in Claude Code (no manual step)
 
-`rtk` (the token-optimizing Claude Code proxy) installs fleet-wide via the mise
-baseline, but its Claude integration writes to `~/.claude/` — which chezmoi does
-not manage — so it needs a single manual step after install:
+`rtk` (the token-optimizing proxy) installs fleet-wide via the mise baseline, and
+its Claude Code wiring is handled by `run_after_20-claude-rtk-hook.sh` on every
+`chezmoi apply`. There is nothing to run by hand.
 
-```bash
-rtk init -g          # hook + RTK.md + @RTK.md in ~/.claude/CLAUDE.md + settings.json
-rtk init --show      # verify: all rows [ok]
-```
+**Do not run `rtk init -g`.** It points the Bash `PreToolUse` hook straight at
+`rtk hook claude` and overwrites `~/.claude/RTK.md` with guidance claiming every
+command is rewritten. Both are wrong for this setup, and the run-script undoes
+them on the next apply.
 
-Idempotent — safe to re-run. Skips automation in the dotfiles repo on purpose so
-chezmoi never fights rtk over `~/.claude/CLAUDE.md` and `settings.json`.
+#### Why it is an allowlist
 
-rtk's own config *is* chezmoi-managed (`.chezmoitemplates/rtk-config.toml`, one
-template → `~/.config/rtk/` on linux, `~/Library/Application Support/rtk/` on
-darwin). It dials the hook back to where filtering measurably pays off: `rg`,
-`grep`, `curl`, `diff` excluded (silent-failure risk or ~zero savings) and git
-restricted to `commit`/`fetch` via `transparent_prefixes` (compact filters
-stripped output the model needed, e.g. `git stash` SHAs). The whole JS toolchain
-(`pnpm`, `npm`, `npx`, `yarn`, `bun`, `tsc`, `eslint`, `prettier`) is excluded too:
-rtk drops the package-manager wrapper and substitutes its own handler, so
-`pnpm lint` ran rtk's eslint instead of the project's `lint` script and
-`pnpm exec prettier` resolved `prettier` off `PATH` instead of `node_modules/.bin`.
-Across 90 days those commands saved 0.1% of their input tokens.
+rtk has no opt-in mode — `exclude_commands` and `transparent_prefixes` are both
+denylists, so every handler it ships is armed by default and each release re-arms
+the surface. Of the 33 handlers it hooks, 21 had been invoked *zero* times in 90
+days while still able to rewrite.
 
-Denylisting is a losing game though, because rtk has no opt-in mode — every
-handler it ships is armed by default and each release re-arms the surface. Of
-the 33 handlers it hooks, 21 had been invoked *zero* times in 90 days while
-still being able to rewrite. So the Bash `PreToolUse` hook points at
-`~/bin/rtk-allowlist-hook` instead of `rtk hook claude` directly:
+They are not harmless: rtk *substitutes* rather than filters, dropping the wrapper
+and any argument it does not recognize. `pnpm lint` ran rtk's eslint instead of
+the project's `lint` script, `pnpm exec prettier` resolved `prettier` off `PATH`
+instead of `node_modules/.bin`, and `next build` dropped `build` outright. So the
+hook points at a wrapper instead:
 
 ```
-Claude Bash call -> rtk-allowlist-hook -> (allowed?) -> rtk hook claude
-                                       -> (else)    -> no rewrite
+Claude Bash call -> rtk-allowlist-hook -> allowed? -> rtk hook claude -> rewrite
+                                       -> else    -> no output ------> unchanged
 ```
 
 rtk stays the rewrite engine; the wrapper only decides *whether it is consulted*.
-The allowlist is `~/.config/rtk-allowlist.toml` (chezmoi-managed), holding the
-~11 commands with measured savings plus `git commit`/`git fetch`. Everything
-else passes through. It also refuses to touch compound commands (pipes, `&&`,
-redirection), since rtk parses only the leading command. It fails open on every
-error path — bad JSON, missing rtk, timeout — so a broken hook can never block a
-command, and falls back to built-in defaults if the TOML is missing or malformed
-rather than reverting to rtk's wide-open behavior.
 
-Setting `commands = []` in that TOML disables rewriting entirely while leaving
-`rtk gain` and manual `rtk <cmd>` usage intact.
+#### The pieces
 
-Verify the engine's view with `rtk hook check "<cmd>"`, and the *actual* decision
-(which is what matters) with:
+| file | role |
+|---|---|
+| `~/.config/rtk-allowlist.toml` | the allowlist — the only file to edit |
+| `~/bin/rtk-allowlist-hook` | the gate; relays allowed commands to rtk |
+| `~/.claude/RTK.md` | in-session guidance, kept honest about what is rewritten |
+| rtk's own config | deliberately minimal — no `[hooks]` section at all |
+
+The allowlist holds the ~11 commands with measured savings plus `git commit` and
+`git fetch`, which is 99.55% of lifetime savings (4.66M of 4.68M tokens).
+Compound commands (pipes, `&&`, redirection) are never rewritten, since rtk parses
+only the leading command. The gate fails open on every error path — bad JSON,
+missing rtk, timeout — so it can never block a command, and falls back to built-in
+defaults if the TOML is missing or malformed rather than reverting to rtk's
+wide-open behavior.
+
+rtk's own config pins only `[tracking]` and `[telemetry]`; everything else was
+byte-for-byte its default. It carries no denylists on purpose — with the gate in
+front they would be unreachable policy *and* a second place to edit, where
+allowing something in the allowlist stayed silently inert because rtk still
+excluded it. One list, one file.
+
+Setting `commands = []` disables rewriting entirely while leaving `rtk gain` and
+manual `rtk <cmd>` usage intact.
+
+#### Verifying
 
 ```bash
+# the actual decision (what matters):
 echo '{"tool_name":"Bash","tool_input":{"command":"ls -la"}}' | ~/bin/rtk-allowlist-hook
-# prints the rewrite, or nothing at all if the command is not allowlisted
+# prints the rewrite, or nothing at all when the command is not allowlisted
 ```
 
-Caveat: `~/.claude/settings.json` is owned by `rtk init -g`, not chezmoi, so
-re-running it points the Bash hook back at `rtk hook claude`. Re-apply the
-wrapper afterwards.
+`rtk hook check "<cmd>"` shows rtk's *engine* view, which ignores the allowlist —
+it reports rewrites for commands the hook actually leaves alone. That gap is
+expected, not a bug.
 
 ## Verification
 
