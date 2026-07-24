@@ -134,7 +134,12 @@ template → `~/.config/rtk/` on linux, `~/Library/Application Support/rtk/` on
 darwin). It dials the hook back to where filtering measurably pays off: `rg`,
 `grep`, `curl`, `diff` excluded (silent-failure risk or ~zero savings) and git
 restricted to `commit`/`fetch` via `transparent_prefixes` (compact filters
-stripped output the model needed, e.g. `git stash` SHAs). Verify a rewrite
+stripped output the model needed, e.g. `git stash` SHAs). The whole JS toolchain
+(`pnpm`, `npm`, `npx`, `yarn`, `bun`, `tsc`, `eslint`, `prettier`) is excluded too:
+rtk drops the package-manager wrapper and substitutes its own handler, so
+`pnpm lint` ran rtk's eslint instead of the project's `lint` script and
+`pnpm exec prettier` resolved `prettier` off `PATH` instead of `node_modules/.bin`.
+Across 90 days those commands saved 0.1% of their input tokens. Verify a rewrite
 decision anytime with `rtk hook check "<cmd>"`.
 
 ## Verification
