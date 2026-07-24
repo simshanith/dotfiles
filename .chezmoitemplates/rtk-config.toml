@@ -39,6 +39,20 @@ exclude_commands = [
     "grep",  # 254/287 parse failures; 6.1K lifetime savings vs silent zero-match risk
     "curl",  # 2 tokens saved on 138K input; schema-compaction risks mangling API responses
     "diff",  # 28 parse failures vs 8 filtered runs; condensing strips hunk context
+    # JS toolchain: rtk drops the package-manager wrapper and substitutes its own
+    # handler, e.g. `pnpm lint` -> `rtk lint` (runs rtk's eslint, not your script),
+    # `pnpm exec prettier` -> `rtk prettier` (resolves PATH, not node_modules/.bin),
+    # `pnpm vitest run` -> `rtk vitest` (drops `run`; watch-mode hang in a non-TTY).
+    # It also only fires on some flag shapes -- `pnpm run lint` rewrites but
+    # `pnpm --filter web run lint` does not -- so behavior is unpredictable.
+    "pnpm",  # 43 of 54 calls saved zero; all savings were `pnpm install` alone
+    "npm",  # 2 calls, 26 tokens
+    "npx",  # 32 calls, 103.7K input tokens, 58 saved (0.1%)
+    "yarn",  # no handler today; excluded so a future one can't substitute
+    "bun",  # same
+    "tsc",  # 7 calls, 0 tokens saved, wrong-binary risk outside pnpm exec
+    "eslint",  # rtk lint: 3 calls; substitutes for project lint config
+    "prettier",  # 3 calls, 11 tokens saved
 ]
 # git restricted to commit/fetch: compact filters strip output the model needs (e.g. stash SHA)
 transparent_prefixes = [
