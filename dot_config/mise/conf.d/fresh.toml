@@ -54,7 +54,9 @@ starship = "latest"
 # AI coding agents
 "aqua:openai/codex" = "latest"
 opencode = "latest"  # anomalyco/opencode
-rtk      = "latest"  # aqua:rtk-ai/rtk — token-optimizing CLI proxy for Claude Code.
+# rtk (token-optimizing proxy) was removed — it rewrote commands into the wrong
+# binary and dropped arguments. See 2026_REFRESH.md; `mise run rtk:uninstall`
+# cleans up machines that already have it.
 
 # Dotfiles management — must be in the committed baseline so a fresh machine's
 # install.sh (mise install -> chezmoi init) can bootstrap. (Previously chezmoi
@@ -91,3 +93,11 @@ taplo    = "latest"  # TOML
 # leiningen = "latest"  # optional: classic build tool, only if a project needs it
 # cljs builds run through shadow-cljs (npm, per-project) or figwheel; CIDER
 # connects to that REPL — no extra global tool needed.
+
+# --- Tasks -------------------------------------------------------------------
+# conf.d/*.toml counts as *global* mise config, so tasks defined here are global
+# tasks: runnable from any directory, no project file needed (mise 2026.7.5).
+
+[tasks."rtk:uninstall"]
+description = "Remove rtk and undo its Claude Code wiring (dry run; pass -- --yes to apply)"
+run = '"$HOME/bin/rtk-uninstall"'

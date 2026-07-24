@@ -1,0 +1,245 @@
+#!/usr/bin/env bash
+# Remove rtk and everything it wired into Claude Code.
+#
+# rtk installs itself into places chezmoi does not manage -- most importantly a
+# PreToolUse hook in ~/.claude/settings.json and an @RTK.md include in
+# ~/.claude/CLAUDE.md, both written by `rtk init -g`. Dropping rtk from the mise
+# baseline stops new machines getting it but leaves that wiring behind on every
+# machine that already ran the installer, where a dangling hook fails on every
+# Bash call. This cleans it up.
+#
+# Dry run by default -- prints what it would do and changes nothing. Pass --yes
+# to actually remove. Safe to re-run; every step no-ops when already clean.
+#
+#   mise run rtk:uninstall          # preview
+#   mise run rtk:uninstall -- --yes # do it
+#
+# Also runnable directly as `rtk-uninstall` (~/bin is on PATH).
+
+set -uo pipefail
+
+APPLY=0
+KEEP_BINARY=0
+
+usage() {
+	cat <<'EOF'
+Usage: rtk-uninstall [--yes] [--keep-binary]
+
+  --yes           Actually remove things (default is a dry run).
+  --keep-binary   Leave the rtk binary installed; only undo the Claude Code
+                  wiring and delete config/history. Useful if you still want
+                  `rtk gain` or manual `rtk <cmd>` without the hook.
+  -h, --help      Show this help.
+EOF
+}
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+	--yes | -y) APPLY=1 ;;
+	--keep-binary) KEEP_BINARY=1 ;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		echo "rtk-uninstall: unknown option: $1" >&2
+		usage >&2
+		exit 2
+		;;
+	esac
+	shift
+done
+
+# Ordinary terminals get color; pipes and dumb terminals get none.
+if [ -t 1 ] && [ "${TERM:-dumb}" != "dumb" ]; then
+	BOLD=$(tput bold) DIM=$(tput dim) RESET=$(tput sgr0)
+else
+	BOLD="" DIM="" RESET=""
+fi
+
+DID_ANYTHING=0
+say() { printf '%s\n' "$*"; }
+step() { printf '%s==>%s %s\n' "$BOLD" "$RESET" "$*"; }
+skip() { printf '    %sskip%s  %s\n' "$DIM" "$RESET" "$*"; }
+plan() {
+	DID_ANYTHING=1
+	if [ "$APPLY" -eq 1 ]; then
+		printf '    remove %s\n' "$*"
+	else
+		printf '    would remove %s\n' "$*"
+	fi
+}
+
+# rtk stores config and history under the OS-native app dir; it ignores XDG on
+# darwin. Both are listed because a machine may carry either.
+case "$(uname -s)" in
+Darwin) RTK_DATA_DIRS=("$HOME/Library/Application Support/rtk") ;;
+*) RTK_DATA_DIRS=("${XDG_CONFIG_HOME:-$HOME/.config}/rtk" "${XDG_DATA_HOME:-$HOME/.local/share}/rtk") ;;
+esac
+
+CLAUDE_DIR="$HOME/.claude"
+SETTINGS="$CLAUDE_DIR/settings.json"
+
+# ---------------------------------------------------------------------------
+say ""
+if [ "$APPLY" -eq 0 ]; then
+	printf '%sDry run%s -- nothing will be changed. Re-run with --yes to apply.\n\n' "$BOLD" "$RESET"
+fi
+
+# 1. The Claude Code Bash hook -----------------------------------------------
+# Matches both shapes this repo has shipped: rtk's own `rtk hook claude`, and
+# the ~/bin/rtk-allowlist-hook wrapper. Foreign hooks are left strictly alone,
+# so an unrelated SessionStart or PreToolUse entry survives untouched.
+step "Claude Code PreToolUse hook ($SETTINGS)"
+if [ ! -f "$SETTINGS" ]; then
+	skip "no settings.json"
+elif ! command -v python3 >/dev/null 2>&1; then
+	skip "python3 not available -- remove the rtk hook entry by hand"
+else
+	python3 - "$SETTINGS" "$APPLY" <<'PY'
+import json, os, shutil, sys
+
+path, apply = sys.argv[1], sys.argv[2] == "1"
+RTK_MARKERS = ("rtk hook claude", "rtk-allowlist-hook")
+
+try:
+    with open(path) as fh:
+        data = json.load(fh)
+except Exception as exc:
+    # An unparseable settings.json is never rewritten -- that would risk
+    # destroying hand-edited config to remove one hook.
+    print(f"    skip  could not parse settings.json ({exc}); leaving it alone")
+    sys.exit(0)
+
+hooks = data.get("hooks")
+if not isinstance(hooks, dict):
+    print("    skip  no hooks configured")
+    sys.exit(0)
+
+removed = []
+for event, groups in list(hooks.items()):
+    if not isinstance(groups, list):
+        continue
+    kept_groups = []
+    for group in groups:
+        entries = group.get("hooks") if isinstance(group, dict) else None
+        if not isinstance(entries, list):
+            kept_groups.append(group)
+            continue
+        kept = [e for e in entries
+                if not (isinstance(e, dict)
+                        and any(m in str(e.get("command", "")) for m in RTK_MARKERS))]
+        if len(kept) != len(entries):
+            removed.append(f"{event}[{group.get('matcher', '*')}]")
+        if kept:
+            group["hooks"] = kept
+            kept_groups.append(group)
+        # A group whose only entry was rtk's is dropped entirely rather than
+        # left as an empty matcher shell.
+    if kept_groups:
+        hooks[event] = kept_groups
+    else:
+        del hooks[event]
+
+if not removed:
+    print("    skip  no rtk hook entries found")
+    sys.exit(0)
+
+for r in removed:
+    print(f"    {'remove' if apply else 'would remove'} hook entry {r}")
+
+# Exit 10 signals "found something" so the caller's summary line is accurate
+# even when the hook is the only thing left to clean up.
+if not apply:
+    sys.exit(10)
+
+if not hooks:
+    data.pop("hooks", None)
+
+shutil.copyfile(path, path + ".rtk-uninstall.bak")
+tmp = path + ".tmp"
+with open(tmp, "w") as fh:
+    json.dump(data, fh, indent=2)
+    fh.write("\n")
+os.replace(tmp, path)          # atomic; never a half-written settings.json
+print(f"    backed up to {os.path.basename(path)}.rtk-uninstall.bak")
+sys.exit(10)
+PY
+	[ $? -eq 10 ] && DID_ANYTHING=1
+fi
+
+# 2. The @RTK.md include ------------------------------------------------------
+step "@RTK.md include in $CLAUDE_DIR/CLAUDE.md"
+CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
+if [ ! -f "$CLAUDE_MD" ]; then
+	skip "no CLAUDE.md"
+elif ! grep -q '^@RTK\.md[[:space:]]*$' "$CLAUDE_MD"; then
+	skip "no @RTK.md line"
+else
+	plan "the @RTK.md line"
+	if [ "$APPLY" -eq 1 ]; then
+		cp "$CLAUDE_MD" "$CLAUDE_MD.rtk-uninstall.bak"
+		# Drop the include and any blank line it left stranded at the top.
+		grep -v '^@RTK\.md[[:space:]]*$' "$CLAUDE_MD" | awk 'NF {p=1} p' >"$CLAUDE_MD.tmp" &&
+			mv "$CLAUDE_MD.tmp" "$CLAUDE_MD"
+		say "    backed up to CLAUDE.md.rtk-uninstall.bak"
+	fi
+fi
+
+# 3. Files rtk and this repo dropped into ~ ----------------------------------
+step "rtk files"
+for f in \
+	"$CLAUDE_DIR/RTK.md" \
+	"$HOME/bin/rtk-allowlist-hook" \
+	"$HOME/.config/rtk-allowlist.toml"; do
+	if [ -e "$f" ]; then
+		plan "${f/#$HOME/\~}"
+		[ "$APPLY" -eq 1 ] && rm -f "$f"
+	fi
+done
+
+for d in "${RTK_DATA_DIRS[@]}"; do
+	if [ -d "$d" ]; then
+		plan "${d/#$HOME/\~}  (config + 90-day history.db)"
+		[ "$APPLY" -eq 1 ] && rm -rf "$d"
+	fi
+done
+
+# chezmoi used to manage rtk's config.toml. If this machine has not yet applied
+# the commit that drops it, deleting the file now just means the next
+# `chezmoi apply` puts it straight back -- so say so instead of looking clean.
+if command -v chezmoi >/dev/null 2>&1; then
+	if chezmoi managed 2>/dev/null | grep -q 'rtk'; then
+		say ""
+		say "    ${BOLD}note${RESET} chezmoi still manages an rtk path on this machine."
+		say "         Run \`chezmoi update\` (or apply this branch) or the next"
+		say "         apply will recreate rtk's config."
+	fi
+fi
+
+# 4. The binary ---------------------------------------------------------------
+step "rtk binary"
+if [ "$KEEP_BINARY" -eq 1 ]; then
+	skip "--keep-binary given"
+elif ! command -v mise >/dev/null 2>&1; then
+	skip "mise not found -- remove rtk however it was installed"
+elif ! mise ls --installed 2>/dev/null | grep -q '^rtk[[:space:]]'; then
+	skip "rtk not installed via mise"
+else
+	plan "the mise-installed rtk toolchain"
+	if [ "$APPLY" -eq 1 ]; then
+		# --all covers every installed version, not just the active one.
+		mise uninstall --all rtk 2>&1 | sed 's/^/    /'
+	fi
+fi
+
+# ---------------------------------------------------------------------------
+say ""
+if [ "$DID_ANYTHING" -eq 0 ]; then
+	say "Nothing to do -- rtk is already gone."
+elif [ "$APPLY" -eq 1 ]; then
+	say "${BOLD}Done.${RESET} Restart Claude Code so it reloads settings.json."
+else
+	say "Re-run with ${BOLD}--yes${RESET} to apply:  mise run rtk:uninstall -- --yes"
+fi
+say ""

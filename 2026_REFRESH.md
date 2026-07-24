@@ -50,6 +50,7 @@ Old bash-specific files removed (git history preserved).
 | fasd | zoxide | Faster, maintained, better algorithm |
 | hub | gh | Official GitHub CLI |
 | reattach-to-user-namespace | (removed) | Not needed since tmux 2.6 |
+| rtk | (removed) | Rewrote commands into the wrong binary; see below |
 | Python 2 http.server | Python 3 | Python 2 EOL |
 
 ### Tools Added
@@ -61,7 +62,6 @@ Old bash-specific files removed (git history preserved).
 | ripgrep (rg) | Better grep |
 | fzf | Fuzzy finder |
 | git-delta | Better git diff |
-| rtk | Token-optimizing CLI proxy for Claude Code (one-time `rtk init -g`, see below) |
 
 ### Brewfile Pared Down
 
@@ -115,27 +115,45 @@ cd ~/.dotfiles
 exec zsh
 ```
 
-### Post-install: wire rtk into Claude Code (one-time, per machine)
+### Removing rtk (was: a Claude Code token proxy)
 
-`rtk` (the token-optimizing Claude Code proxy) installs fleet-wide via the mise
-baseline, but its Claude integration writes to `~/.claude/` — which chezmoi does
-not manage — so it needs a single manual step after install:
+`rtk` used to install fleet-wide and wire a `PreToolUse` hook into Claude Code
+that rewrote Bash commands to token-cheaper equivalents. It has been dropped.
+
+**Why.** rtk *substitutes* rather than filters: it drops the wrapper and any
+argument it does not recognize. `pnpm lint` ran rtk's own eslint instead of the
+project's `lint` script, `pnpm exec prettier` resolved `prettier` off `PATH`
+instead of `node_modules/.bin`, and `next build` dropped `build` outright. A
+`grep` rewrite could hit a usage error that rtk swallowed with exit 0, so a
+search silently returned nothing. Those are correctness bugs, and they cost more
+than the tokens saved — a single silently-wrong result outweighs the filtering.
+
+The shape of the problem is structural: rtk ships only denylists
+(`exclude_commands`, `transparent_prefixes`), so every handler it has is armed by
+default and each release re-arms the surface. 0.43.0 added three new rewrite
+paths with no action on our side.
+
+**Uninstalling.** Dropping rtk from the mise baseline stops *new* machines
+getting it, but chezmoi does not manage `~/.claude/`, so the hook and the
+`@RTK.md` include survive on every machine that already ran `rtk init -g` — where
+a dangling hook then fails on every Bash call. Removing the config from chezmoi's
+source likewise only *unmanages* it; the file stays on disk. Hence an explicit
+helper:
 
 ```bash
-rtk init -g          # hook + RTK.md + @RTK.md in ~/.claude/CLAUDE.md + settings.json
-rtk init --show      # verify: all rows [ok]
+mise run rtk:uninstall             # dry run — prints exactly what it would remove
+mise run rtk:uninstall -- --yes    # apply
 ```
 
-Idempotent — safe to re-run. Skips automation in the dotfiles repo on purpose so
-chezmoi never fights rtk over `~/.claude/CLAUDE.md` and `settings.json`.
+It unwires the `PreToolUse` hook from `~/.claude/settings.json` (leaving
+unrelated hooks alone), drops the `@RTK.md` include, deletes `~/.claude/RTK.md`
+and rtk's config + history directory, and runs `mise uninstall --all rtk`. It
+backs up any file it edits, is safe to re-run, and no-ops once clean. Pass
+`--keep-binary` to undo only the Claude wiring and keep `rtk` runnable by hand.
 
-rtk's own config *is* chezmoi-managed (`.chezmoitemplates/rtk-config.toml`, one
-template → `~/.config/rtk/` on linux, `~/Library/Application Support/rtk/` on
-darwin). It dials the hook back to where filtering measurably pays off: `rg`,
-`grep`, `curl`, `diff` excluded (silent-failure risk or ~zero savings) and git
-restricted to `commit`/`fetch` via `transparent_prefixes` (compact filters
-stripped output the model needed, e.g. `git stash` SHAs). Verify a rewrite
-decision anytime with `rtk hook check "<cmd>"`.
+Runnable directly as `rtk-uninstall` too — the task is a thin wrapper over
+`~/bin/rtk-uninstall`. Both can be deleted from this repo once the fleet is
+clean.
 
 ## Verification
 
