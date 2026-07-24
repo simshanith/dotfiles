@@ -130,8 +130,13 @@ them on the next apply.
 
 rtk has no opt-in mode — `exclude_commands` and `transparent_prefixes` are both
 denylists, so every handler it ships is armed by default and each release re-arms
-the surface. Of the 33 handlers it hooks, 21 had been invoked *zero* times in 90
-days while still able to rewrite.
+the surface. rtk 0.43.0 rewrites 46 distinct commands, 25 of which had been
+invoked *zero* times in 90 days while still able to rewrite.
+
+That is not a static number, which is the whole argument: 0.43.0 added `oc` and
+`pulumi` (43 → 46) with no action on our side. Under a denylist both would have
+been live the moment mise pulled the release; under the allowlist both were
+denied by default, verified rather than assumed.
 
 They are not harmless: rtk *substitutes* rather than filters, dropping the wrapper
 and any argument it does not recognize. `pnpm lint` ran rtk's eslint instead of

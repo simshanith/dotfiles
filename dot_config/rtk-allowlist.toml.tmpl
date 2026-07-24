@@ -56,8 +56,12 @@ git = ["commit", "fetch"]
 #     rtk's eslint instead of the project script, `pnpm vitest run` dropped
 #     `run`. Combined lifetime savings: 0.1% of their input tokens.
 #   rg grep
-#     rtk shells out to BSD grep on macOS; rg-only flags hit a usage error it
-#     swallows with exit 0, so searches silently return nothing.
+#     On 0.42.4 rtk ran BSD grep even when rg was invoked, so rg-only flags hit a
+#     usage error it swallowed with exit 0 and searches silently returned nothing.
+#     Fixed in 0.43.0 -- `rg foo` now runs rg -- so this pair is the most defensible
+#     candidate to re-add. Still out for now: grep was 254 of 287 lifetime parse
+#     failures for 6.1K tokens saved, and Claude Code's native Grep tool covers the
+#     same ground without a hook. Re-measure with `rtk gain --history` before adding.
 #   curl    2 tokens saved on 138K input.
 #   diff    strips hunk context; failed to parse 28 of 36 calls.
 #   tree df wget aws psql rsync make glab docker kubectl helm terraform go
