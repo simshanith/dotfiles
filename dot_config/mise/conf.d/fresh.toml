@@ -19,11 +19,6 @@ credential_command = "gh auth token"
 uvx = true  # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (default when uv present)
 
 [settings.python]
-# Auto-activate a uv project's .venv on cd (exports VIRTUAL_ENV), creating it if absent —
-# no more `source .venv/bin/activate`. mise finds the project by walking up for uv.lock,
-# so a bare .venv is ignored: run `uv sync` (or `uv lock`) once before this does anything.
-# Boolean on purpose. The cookbook's `python.uv_venv_auto = "source"` string form parses
-# fine but is silently ignored on mise 2026.7.x — verified against `mise env` in a uv project.
 uv_venv_auto = true
 
 [tools]
