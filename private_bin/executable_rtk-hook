@@ -36,7 +36,10 @@ ALLOWLIST="${XDG_CONFIG_HOME:-$HOME/.config}/rtk-allowlist.toml"
 GATE="$HOME/bin/rtk-allowlist-hook"
 
 # Must match run_after_20-claude-rtk-hook.sh and the removal matcher below.
-WRAPPER='if [ -x "$HOME/bin/rtk-allowlist-hook" ]; then "$HOME/bin/rtk-allowlist-hook"; fi'
+# The gate's shebang is `uv run --script`, so also require uv here: if it ever
+# leaves PATH the hook skips silently (fail open) instead of erroring 127 on
+# every Bash call. Reconcile rewrites any older wired string to this one.
+WRAPPER='if command -v uv >/dev/null 2>&1 && [ -x "$HOME/bin/rtk-allowlist-hook" ]; then "$HOME/bin/rtk-allowlist-hook"; fi'
 
 usage() {
 	cat <<'EOF'
@@ -108,6 +111,13 @@ do_enable() {
 		exit 1
 	fi
 	need_python || exit 1
+	# The gate's shebang is `uv run --script` (guarantees python >= 3.11 for
+	# tomllib), so a machine without uv would wire a hook that can't run.
+	if ! command -v uv >/dev/null 2>&1; then
+		echo "rtk-hook: uv not on PATH -- the allowlist gate runs via \`uv run\`." >&2
+		echo "          It ships in the mise baseline; try \`mise install uv\`." >&2
+		exit 1
+	fi
 
 	if act && [ ! -f "$MARKER" ]; then
 		mkdir -p "$(dirname "$MARKER")"
@@ -128,7 +138,9 @@ changes = []
 
 # Only ever rewrite an entry that is already rtk's (or already ours). A Bash
 # hook pointing at some other tool belongs to that tool and is left alone.
-RTK_COMMANDS = ("rtk hook claude", wrapper)
+# Substring match, same as disable: exact equality against the current wrapper
+# would treat any older wrapper revision as foreign and wire a duplicate.
+RTK_MARKERS = ("rtk hook claude", "rtk-allowlist-hook")
 
 try:
     with open(settings_path) as fh:
@@ -150,7 +162,9 @@ if bash_entry is None:
     changes.append(f"{verb} Bash PreToolUse hook")
 else:
     inner = bash_entry.setdefault("hooks", [])
-    existing = [h for h in inner if isinstance(h, dict) and h.get("command") in RTK_COMMANDS]
+    existing = [h for h in inner
+                if isinstance(h, dict)
+                and any(m in str(h.get("command", "")) for m in RTK_MARKERS)]
     if not existing:
         inner.append({"type": "command", "command": wrapper})
         changes.append(f"{verb} allowlist hook alongside existing Bash hooks")
@@ -158,7 +172,7 @@ else:
         for hook in existing:
             if hook.get("command") != wrapper:
                 hook["command"] = wrapper
-                changes.append(f"{'would repoint' if dry else 'repointed'} Bash hook off `rtk hook claude`")
+                changes.append(f"{'would repoint' if dry else 'repointed'} Bash hook at the current wrapper")
 
 if changes and not dry:
     if os.path.exists(settings_path):

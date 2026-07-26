@@ -1,4 +1,8 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script --quiet
+# /// script
+# requires-python = ">=3.11"
+# dependencies = []
+# ///
 """Allowlist gate in front of `rtk hook claude` (Claude Code PreToolUse, Bash).
 
 rtk only offers denylists (`exclude_commands`, `transparent_prefixes`), so every
@@ -18,14 +22,20 @@ we only decide *whether* it gets consulted.
 Fails open everywhere. Any parse error, missing rtk, timeout, or unexpected
 exception prints nothing and exits 0, which Claude Code reads as "no rewrite".
 A hook that breaks must never break the user's command.
+
+Runs via `uv run --script` so the interpreter is guaranteed >= 3.11 (tomllib),
+with uv fetching a managed CPython if the system lacks one. If uv itself is
+missing the shebang fails with exit 127 -- Claude Code surfaces a hook error
+but still runs the command unmodified, so even that path fails open.
+`rtk-hook enable` refuses to wire the hook on a machine without uv.
 """
 
 import json
 import os
-import re
 import shlex
 import subprocess
 import sys
+import tomllib
 
 CONFIG_PATH = os.environ.get(
     "RTK_ALLOWLIST_CONFIG",
@@ -46,49 +56,6 @@ SHELL_METACHARS = ("&&", "||", ";", "|", "`", "$(", ">", "<", "&", "\n")
 
 RTK_TIMEOUT_SECONDS = 10
 
-_ARRAY_RE = re.compile(r"^([A-Za-z0-9_-]+)\s*=\s*\[(.*?)\]", re.DOTALL | re.MULTILINE)
-_SECTION_RE = re.compile(r"^\s*\[([A-Za-z0-9_.-]+)\]\s*$", re.MULTILINE)
-_STRING_RE = re.compile(r'"([^"]*)"')
-
-
-def _parse_toml_subset(text: str) -> dict:
-    """Parse the `key = [...]` / `[section]` subset this config uses.
-
-    Only needed on Python < 3.11, which has no tomllib. Deliberately narrow: it
-    understands string arrays and one level of section, which is the whole
-    schema. Anything richer belongs in tomllib, not here.
-    """
-    # Strip comments, but not a '#' inside a quoted string.
-    lines = []
-    for line in text.splitlines():
-        out, in_string, index = [], False, 0
-        while index < len(line):
-            char = line[index]
-            if char == '"':
-                in_string = not in_string
-            elif char == "#" and not in_string:
-                break
-            out.append(char)
-            index += 1
-        lines.append("".join(out))
-    stripped = "\n".join(lines)
-
-    # Split into (section_name, body) chunks; the pre-header body is top level.
-    chunks, last_end, current = [], 0, None
-    for match in _SECTION_RE.finditer(stripped):
-        chunks.append((current, stripped[last_end:match.start()]))
-        current, last_end = match.group(1), match.end()
-    chunks.append((current, stripped[last_end:]))
-
-    result: dict = {}
-    for section, body in chunks:
-        target = result if section is None else result.setdefault(section, {})
-        if not isinstance(target, dict):
-            continue
-        for match in _ARRAY_RE.finditer(body):
-            target[match.group(1)] = _STRING_RE.findall(match.group(2))
-    return result
-
 
 def load_config(path: str = CONFIG_PATH):
     """Return (allow_set, subcommand_map), falling back to the built-in defaults."""
@@ -98,16 +65,8 @@ def load_config(path: str = CONFIG_PATH):
     except Exception:
         return set(DEFAULT_ALLOW), {k: set(v) for k, v in DEFAULT_SUBCOMMANDS.items()}
 
-    data = None
     try:
-        import tomllib  # Python 3.11+
-
         data = tomllib.loads(raw.decode("utf-8"))
-    except ImportError:
-        try:
-            data = _parse_toml_subset(raw.decode("utf-8"))
-        except Exception:
-            data = None
     except Exception:
         data = None  # malformed TOML -- prefer the safe defaults over a wrong list
 

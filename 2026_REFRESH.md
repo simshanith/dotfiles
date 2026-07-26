@@ -168,6 +168,10 @@ The list is short on purpose — `cat` `head` `tail` `ls` `gh` `find` `wc` `du`
 `ps` `vitest` `cargo`, plus `git commit` and `git fetch` — each earning its place
 in `rtk gain`. The whole JS toolchain is deliberately absent.
 
+The gate is a `uv run --script` script (`requires-python = ">=3.11"`), so uv
+owns the interpreter and `tomllib` is always there — no vendored TOML parser
+for old Pythons. `rtk-hook enable` refuses to wire it if uv is off PATH.
+
 **How the toggle sticks.** The choice is a marker file
 (`~/.config/rtk-hook-enabled`), per-machine and uncommitted. `chezmoi apply`
 runs `run_after_20-claude-rtk-hook.sh`, which *reconciles to the marker* rather
