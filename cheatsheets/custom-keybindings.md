@@ -13,18 +13,20 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 (`--check` mode exits non-zero if it's stale: append `-- --check`.)
 
 <!-- BEGIN GENERATED — edit init.el, not this table -->
-| Key | Command | Package | Keymap |
-|-----|---------|---------|--------|
-| <kbd>g</kbd> | `grip-mode` | grip-mode | `markdown-mode-command-map` |
-| <kbd><kbd>C-x</kbd> <kbd>g</kbd></kbd> | `magit-status` | magit | global |
-| <kbd><kbd>C-c</kbd> <kbd>t</kbd></kbd> | `ghostel` | ghostel | global |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>f</kbd></kbd> | `fzf-find-file` | fzf | global |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>g</kbd></kbd> | `fzf-git-files` | fzf | global |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>b</kbd></kbd> | `fzf-switch-buffer` | fzf | global |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>e</kbd></kbd> | `fzf-recentf` | fzf | global |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>r</kbd></kbd> | `fzf-grep-dwim` | fzf | global |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>R</kbd></kbd> | `fzf-grep` | fzf | global |
-| <kbd><kbd>C-c</kbd> <kbd>f</kbd></kbd> | `apheleia-format-buffer` | apheleia | global |
+
+| Key                                                 | Command                  | Package   | Keymap                      |
+| --------------------------------------------------- | ------------------------ | --------- | --------------------------- |
+| <kbd>g</kbd>                                        | `grip-mode`              | grip-mode | `markdown-mode-command-map` |
+| <kbd><kbd>C-x</kbd> <kbd>g</kbd></kbd>              | `magit-status`           | magit     | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>t</kbd></kbd>              | `ghostel`                | ghostel   | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>f</kbd></kbd> | `fzf-find-file`          | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>g</kbd></kbd> | `fzf-git-files`          | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>b</kbd></kbd> | `fzf-switch-buffer`      | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>e</kbd></kbd> | `fzf-recentf`            | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>r</kbd></kbd> | `fzf-grep-dwim`          | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>R</kbd></kbd> | `fzf-grep`               | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>f</kbd></kbd>              | `apheleia-format-buffer` | apheleia  | global                      |
+
 <!-- END GENERATED -->
 
 ## What each package does

@@ -82,7 +82,8 @@ chezmoi = "latest"
 marksman                                = "latest" # Markdown LSP
 "pipx:grip"                             = "latest" # GitHub-accurate markdown preview (Emacs grip-mode)
 # Formatters for apheleia (format-on-save off by default; C-c f formats once):
-prettier = "latest" # TS / JSON / YAML / Markdown
+prettier = "latest" # TS / JSON / YAML
+oxfmt    = "latest" # Markdown (npm:oxfmt) — Rust-based; delegates .md to prettier
 shfmt    = "latest" # shell
 taplo    = "latest" # TOML
 # rust-analyzer + rustfmt ship with the rust toolchain. If rust-analyzer is

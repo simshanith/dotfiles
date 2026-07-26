@@ -43,12 +43,12 @@ chezmoi status           # empty = $HOME matches the repo
 
 Four tools, clear lanes:
 
-| Tool | Owns | Lives in |
-|------|------|----------|
-| **chezmoi** (`mode = symlink`) | dotfiles, templates, per-machine data | repo root (`dot_*`, `private_*`, `*.tmpl`) |
-| **mise** | CLI toolchain (node, rust, go, bun, starship, ripgrep, chezmoi itself, LSP servers…) | `dot_config/mise/conf.d/fresh.toml` (shared) + `config.local.toml` (per-machine) |
-| **uv** | Python interpreters, venvs, one-off scripts (`uv run`); executes mise's `pipx:` tools | declared as `pipx:<pkg>` in `fresh.toml` |
-| **Homebrew** | shells, system PATH replacements, GUI casks, fonts, terminfo, keychain-integrated tools | `Brewfile` (+ `Brewfile.optional`) |
+| Tool                           | Owns                                                                                    | Lives in                                                                         |
+| ------------------------------ | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| **chezmoi** (`mode = symlink`) | dotfiles, templates, per-machine data                                                   | repo root (`dot_*`, `private_*`, `*.tmpl`)                                       |
+| **mise**                       | CLI toolchain (node, rust, go, bun, starship, ripgrep, chezmoi itself, LSP servers…)    | `dot_config/mise/conf.d/fresh.toml` (shared) + `config.local.toml` (per-machine) |
+| **uv**                         | Python interpreters, venvs, one-off scripts (`uv run`); executes mise's `pipx:` tools   | declared as `pipx:<pkg>` in `fresh.toml`                                         |
+| **Homebrew**                   | shells, system PATH replacements, GUI casks, fonts, terminfo, keychain-integrated tools | `Brewfile` (+ `Brewfile.optional`)                                               |
 
 ### chezmoi source naming
 
@@ -92,22 +92,22 @@ Intel→Apple-Silicon move (`/usr/local` → `/opt/homebrew`) was overdue.
 
 What changed:
 
-| Old | New | Why |
-|-----|-----|-----|
-| bash + Bash-It | zsh + `shell/*.sh` | macOS default; shell-agnostic helpers |
-| Fresh | **chezmoi** | per-machine templating, no build step, active project |
-| nvm | **mise** | polyglot, fast, no shell-startup penalty |
-| Bash-It themes | **Starship** | cross-shell, fast |
-| fasd | **zoxide** | faster, maintained |
-| hub | **gh** | official GitHub CLI |
-| Python 2 http.server | Python 3 / **uv** | Py2 EOL |
+| Old                  | New                | Why                                                   |
+| -------------------- | ------------------ | ----------------------------------------------------- |
+| bash + Bash-It       | zsh + `shell/*.sh` | macOS default; shell-agnostic helpers                 |
+| Fresh                | **chezmoi**        | per-machine templating, no build step, active project |
+| nvm                  | **mise**           | polyglot, fast, no shell-startup penalty              |
+| Bash-It themes       | **Starship**       | cross-shell, fast                                     |
+| fasd                 | **zoxide**         | faster, maintained                                    |
+| hub                  | **gh**             | official GitHub CLI                                   |
+| Python 2 http.server | Python 3 / **uv**  | Py2 EOL                                               |
 
 Added along the way: `bat`, `fd`, `ripgrep`, `fzf`, `git-delta`. The Brewfile was
 pared to essentials (dropped `boot2docker`/`docker-machine`/`fig`,
 `reattach-to-user-namespace`, discontinued editors, stale `caskroom/*` taps).
 
 **Fresh → chezmoi:** GNU Stow was considered and rejected — the recurring pain
-here is *per-machine state* (mise `config.local.toml`, git identity, future
+here is _per-machine state_ (mise `config.local.toml`, git identity, future
 work/personal split), which chezmoi templates solve natively and Stow does not.
 `tuckr` was evaluated and dropped. Full rationale and cut-over log:
 **[CHEZMOI_MIGRATION.md](./CHEZMOI_MIGRATION.md)**.

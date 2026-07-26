@@ -17,7 +17,7 @@ diverged from the plan below.
 Mental model:
 
 - **Source state**: a directory holding your dotfiles in chezmoi's naming convention (`dot_zshrc` not `.zshrc`, `dot_config/starship.toml` not `.config/starship.toml`). Default location is `~/.local/share/chezmoi`; we'll keep ours at `~/.dotfiles`.
-- **Target state**: what chezmoi *would* produce in `$HOME` after applying templates and decoding the naming attributes.
+- **Target state**: what chezmoi _would_ produce in `$HOME` after applying templates and decoding the naming attributes.
 - **Destination state**: what's actually in `$HOME` right now.
 - `chezmoi apply` reconciles destination → target.
 - `chezmoi diff` shows the gap. `chezmoi status` shows it briefly. `chezmoi edit <target>` opens the source file (with the right name mapping) in your editor. `chezmoi re-add` pulls a destination edit back into source.
@@ -45,14 +45,14 @@ chezmoi cd                     # drop a shell in the source dir
 
 ## What Fresh did, mapped to chezmoi
 
-| Fresh feature | Used for | chezmoi mechanism |
-|---|---|---|
-| Mirror (`fresh path/to/file --file=~/dest`) | `git/.gitconfig` → `~/.gitconfig` | source naming: `dot_gitconfig` |
-| Rename (`shell/exports.sh` → `~/.exports`) | shell helpers | Doesn't need a rename — `.zshrc` sources from `$DOTFILES/shell/*.sh` directly (kept outside chezmoi's tree via `.chezmoiignore`) |
-| Concatenate (gitconfig + gituserconfig) | git includes | Templated `dot_gitconfig.tmpl` with prompts on init |
-| Concatenate (tmux.conf + tmux-colors-solarized) | tmux config | `dot_tmux.conf` has `source-file ~/.dotfiles/tmux/tmuxcolors-dark.conf` (vendored, ignored by chezmoi) |
-| Pull from external git repos (seebi/*) | colors files | Vendor into repo; ignore from chezmoi |
-| `--bin` (link executables) | `~/bin/dotfiles` | `install.sh` adds the symlink. Doesn't belong in chezmoi-managed state |
+| Fresh feature                                   | Used for                          | chezmoi mechanism                                                                                                                |
+| ----------------------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Mirror (`fresh path/to/file --file=~/dest`)     | `git/.gitconfig` → `~/.gitconfig` | source naming: `dot_gitconfig`                                                                                                   |
+| Rename (`shell/exports.sh` → `~/.exports`)      | shell helpers                     | Doesn't need a rename — `.zshrc` sources from `$DOTFILES/shell/*.sh` directly (kept outside chezmoi's tree via `.chezmoiignore`) |
+| Concatenate (gitconfig + gituserconfig)         | git includes                      | Templated `dot_gitconfig.tmpl` with prompts on init                                                                              |
+| Concatenate (tmux.conf + tmux-colors-solarized) | tmux config                       | `dot_tmux.conf` has `source-file ~/.dotfiles/tmux/tmuxcolors-dark.conf` (vendored, ignored by chezmoi)                           |
+| Pull from external git repos (seebi/*)          | colors files                      | Vendor into repo; ignore from chezmoi                                                                                            |
+| `--bin` (link executables)                      | `~/bin/dotfiles`                  | `install.sh` adds the symlink. Doesn't belong in chezmoi-managed state                                                           |
 
 ## Proposed source layout
 
@@ -104,7 +104,7 @@ Keep the repo at `~/.dotfiles`. chezmoi reads it via `--source ~/.dotfiles` (set
 
 ## `~/.config/chezmoi/chezmoi.toml.tmpl` (init prompts)
 
-This is what `chezmoi init` evaluates *first* — it asks questions, records the answers in `~/.config/chezmoi/chezmoi.toml`, and every other template can read from `{{ .* }}`.
+This is what `chezmoi init` evaluates _first_ — it asks questions, records the answers in `~/.config/chezmoi/chezmoi.toml`, and every other template can read from `{{ .* }}`.
 
 ```go-template
 {{- $name := promptStringOnce . "name" "Full name" -}}
@@ -168,7 +168,7 @@ target="$HOME/.iterm2_shell_integration.zsh"
 
 ## `.chezmoiignore`
 
-Keeps directories that are *referenced* by chezmoi-managed files (shell helpers, vendored colors, bootstrap script) out of the apply pass:
+Keeps directories that are _referenced_ by chezmoi-managed files (shell helpers, vendored colors, bootstrap script) out of the apply pass:
 
 ```
 README.md
@@ -190,7 +190,7 @@ git
 mise
 ```
 
-(The lowercased dirs here are the *source-side* directories whose contents are referenced by managed files but don't themselves represent target files. Confusing for one read; once you've internalized the `dot_` convention it's obvious.)
+(The lowercased dirs here are the _source-side_ directories whose contents are referenced by managed files but don't themselves represent target files. Confusing for one read; once you've internalized the `dot_` convention it's obvious.)
 
 ## `.zshrc` patch (replaces Fresh sourcing)
 
@@ -248,6 +248,7 @@ echo "Verify: chezmoi status (should be empty)"
 ```
 
 Gone vs current `install.sh`:
+
 - `source ~/.fresh/build/shell.sh`
 - `cp ~/.dotfiles/.freshrc ~/.freshrc`
 - `fresh install`
@@ -258,28 +259,28 @@ Gone vs current `install.sh`:
 
 ## File-by-file mapping
 
-| Today | After migration | Notes |
-|---|---|---|
-| `zsh/.zshrc` | `dot_zshrc` | rename, edit per .zshrc patch above |
-| `shell/*.sh` | `shell/*.sh` (unchanged) | not under chezmoi; sourced from `.zshrc` via `$DOTFILES` |
-| `git/.gitconfig` | `dot_gitconfig.tmpl` | templated; absorbs `.gituserconfig` |
-| `git/.gitattributes` | `dot_gitattributes` | rename |
-| `git/.gitignore` | `dot_gitignore` | rename |
-| `git/.gituserconfig` | gone — folded into chezmoi data via init prompts | per-machine answers stored in `~/.config/chezmoi/chezmoi.toml` (gitignored by chezmoi by default) |
-| `tmux/.tmux.conf` | `dot_tmux.conf` | rename; add `source-file` line |
-| seebi tmux colors | `tmux/tmuxcolors-dark.conf` (vendored) | ignored by chezmoi |
-| `.inputrc` | `dot_inputrc` | rename |
-| `emacs/init.el` | `dot_emacs.d/init.el` | newly managed; refresh package archives (drop marmalade, https melpa) |
-| (live) `~/.config/ghostty/config` | `dot_config/ghostty/config` | newly managed; primary terminal (cmux/Ghostty), `iTerm2 Solarized Dark` theme |
-| `starship/starship.toml` | `dot_config/starship.toml` | path mirrors target |
-| seebi dircolors | `shell/dircolors.ansi-universal` (vendored) | ignored |
-| `mise/fresh.toml` | `dot_config/mise/conf.d/fresh.toml` | path mirrors target |
-| `mise/config.toml` | `dot_config/mise/config.toml.tmpl` | templated |
-| `mise/config.local.toml` | `dot_config/mise/config.local.toml.tmpl` | templated |
-| `install.sh` | `install.sh` (root); `~/bin/dotfiles` via `bin/symlink_dotfiles` | script not managed; the ~/bin symlink is |
-| `bin/symlinks/subl,subl3` | `bin/symlink_subl.tmpl` → `~/bin/subl`; drop `subl3` | chezmoi `symlink_`, darwin-gated via `.chezmoiignore` |
-| `bin/crossOriginChrome.sh` | `bin/executable_cross_origin_chrome` → `~/bin/cross_origin_chrome` | renamed snake_case, no ext; chezmoi `executable_` sets +x |
-| iTerm2 integration curl | `run_once_before_10-iterm2-shell-integration.sh.tmpl` | chezmoi tracks state |
+| Today                             | After migration                                                    | Notes                                                                                             |
+| --------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| `zsh/.zshrc`                      | `dot_zshrc`                                                        | rename, edit per .zshrc patch above                                                               |
+| `shell/*.sh`                      | `shell/*.sh` (unchanged)                                           | not under chezmoi; sourced from `.zshrc` via `$DOTFILES`                                          |
+| `git/.gitconfig`                  | `dot_gitconfig.tmpl`                                               | templated; absorbs `.gituserconfig`                                                               |
+| `git/.gitattributes`              | `dot_gitattributes`                                                | rename                                                                                            |
+| `git/.gitignore`                  | `dot_gitignore`                                                    | rename                                                                                            |
+| `git/.gituserconfig`              | gone — folded into chezmoi data via init prompts                   | per-machine answers stored in `~/.config/chezmoi/chezmoi.toml` (gitignored by chezmoi by default) |
+| `tmux/.tmux.conf`                 | `dot_tmux.conf`                                                    | rename; add `source-file` line                                                                    |
+| seebi tmux colors                 | `tmux/tmuxcolors-dark.conf` (vendored)                             | ignored by chezmoi                                                                                |
+| `.inputrc`                        | `dot_inputrc`                                                      | rename                                                                                            |
+| `emacs/init.el`                   | `dot_emacs.d/init.el`                                              | newly managed; refresh package archives (drop marmalade, https melpa)                             |
+| (live) `~/.config/ghostty/config` | `dot_config/ghostty/config`                                        | newly managed; primary terminal (cmux/Ghostty), `iTerm2 Solarized Dark` theme                     |
+| `starship/starship.toml`          | `dot_config/starship.toml`                                         | path mirrors target                                                                               |
+| seebi dircolors                   | `shell/dircolors.ansi-universal` (vendored)                        | ignored                                                                                           |
+| `mise/fresh.toml`                 | `dot_config/mise/conf.d/fresh.toml`                                | path mirrors target                                                                               |
+| `mise/config.toml`                | `dot_config/mise/config.toml.tmpl`                                 | templated                                                                                         |
+| `mise/config.local.toml`          | `dot_config/mise/config.local.toml.tmpl`                           | templated                                                                                         |
+| `install.sh`                      | `install.sh` (root); `~/bin/dotfiles` via `bin/symlink_dotfiles`   | script not managed; the ~/bin symlink is                                                          |
+| `bin/symlinks/subl,subl3`         | `bin/symlink_subl.tmpl` → `~/bin/subl`; drop `subl3`               | chezmoi `symlink_`, darwin-gated via `.chezmoiignore`                                             |
+| `bin/crossOriginChrome.sh`        | `bin/executable_cross_origin_chrome` → `~/bin/cross_origin_chrome` | renamed snake_case, no ext; chezmoi `executable_` sets +x                                         |
+| iTerm2 integration curl           | `run_once_before_10-iterm2-shell-integration.sh.tmpl`              | chezmoi tracks state                                                                              |
 
 ## Cut-over plan
 
@@ -295,7 +296,7 @@ Gone vs current `install.sh`:
 3. Create `.chezmoiignore`, `dot_config/chezmoi/chezmoi.toml.tmpl`.
 4. Rename and (where needed) templatize files per the layout. One commit per cluster (git, mise, shell-roots, config dir, scripts) keeps the diff reviewable.
 5. Rewrite `install.sh`.
-6. On a clean profile *or* after backing up `~`'s currently-symlinked files: run `./install.sh`, then `chezmoi status` should report empty.
+6. On a clean profile _or_ after backing up `~`'s currently-symlinked files: run `./install.sh`, then `chezmoi status` should report empty.
 7. Delete `.freshrc`. Drop fresh references from `install.sh` and `Brewfile`. Remove `~/.fresh/` (manual on the dev machine).
 8. Update `2026_REFRESH.md`: replace the Stow plan with chezmoi reality. Move from "Future Plans" to "What Changed."
 
@@ -304,12 +305,12 @@ Gone vs current `install.sh`:
 _(Vendoring resolved — now step 2 of the cut-over plan. The `config.local.toml` comment fix is committed on this branch — `b5ab690`.)_
 
 1. **`emacs/init.el`** — ✅ **include.** Migrate to `dot_emacs.d/init.el` (technomancy `emacs-starter-kit` lineage: `better-defaults`, `paredit`, `magit`, `smex`). Refresh the package archives during the move: drop the dead `marmalade-repo`, switch `melpa-stable` to `https`, add `melpa`. Wasn't in `.freshrc`, so this newly puts it under management.
-2. **`iterm2-preferences/`** — 🅿️ **punt prefs management; Ghostty is now primary.** Ghostty's config is plain text (`~/.config/ghostty/config`) and joins chezmoi cleanly (now in the layout as `dot_config/ghostty/config`). iTerm2 stays *installed* as a secondary for the one thing Ghostty/cmux can't do yet — **`tmux -CC` control mode**, especially over remote ssh. Its other historical edge, the **hotkey/Quake window**, is already covered by Ghostty's `global:opt+`=toggle_quick_terminal`. Don't wire up iTerm2 prefs now; keep the how-to in case it earns a permanent seat:
+2. **`iterm2-preferences/`** — 🅿️ **punt prefs management; Ghostty is now primary.** Ghostty's config is plain text (`~/.config/ghostty/config`) and joins chezmoi cleanly (now in the layout as `dot_config/ghostty/config`). iTerm2 stays _installed_ as a secondary for the one thing Ghostty/cmux can't do yet — **`tmux -CC` control mode**, especially over remote ssh. Its other historical edge, the **hotkey/Quake window**, is already covered by Ghostty's `global:opt+`=toggle_quick_terminal`. Don't wire up iTerm2 prefs now; keep the how-to in case it earns a permanent seat:
    - Native "custom preferences folder": `defaults write com.googlecode.iterm2 PrefsCustomFolder -string "$HOME/.dotfiles/iterm2-preferences"` + `LoadPrefsFromCustomFolder -bool true`. iTerm2 then reads/writes `com.googlecode.iterm2.plist` in that folder; commit it. Loosen `iterm2-preferences/.gitignore` (currently `*` / `!.gitignore`) to allow the plist.
    - Prefer that over chezmoi-managing the plist directly — iTerm2 rewrites it constantly; chezmoi would just leave the dir alone.
    - Watch for `tmux -CC` support landing in Ghostty/cmux — that's the trigger to retire iTerm2 entirely.
-3. **`bin/symlinks/subl,subl3`** — ✅ **keep, simplified, chezmoi-managed.** *Not* a `mise link` candidate (that's for runtime versions, not app CLIs). chezmoi owns `~/bin` now, so a `symlink_subl.tmpl` entry creates `~/bin/subl` → `/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl`, OS-gated via `.chezmoiignore` (`{{ if ne .chezmoi.os "darwin" }}bin/subl{{ end }}`); drop the `subl→subl3` indirection.
-4. **`bin/crossOriginChrome.sh`** — ✅ **keep, modernized, chezmoi-managed.** Old (~2013) `--disable-web-security` launcher, verified still valid as of 2026. Reworked: `CHROME_BIN` override, `mktemp -d` profile (now flagged *required* — Chrome v73+ ignores `--disable-web-security` without a non-default `--user-data-dir`), security note. shellcheck-clean. Renamed snake_case / no extension; chezmoi `bin/executable_cross_origin_chrome` lands it at `~/bin/cross_origin_chrome` (+x, on PATH). **The live file is already renamed to `bin/cross_origin_chrome`; the `executable_` prefix gets added at cut-over (step 4) when chezmoi takes over `~/bin`.**
+3. **`bin/symlinks/subl,subl3`** — ✅ **keep, simplified, chezmoi-managed.** _Not_ a `mise link` candidate (that's for runtime versions, not app CLIs). chezmoi owns `~/bin` now, so a `symlink_subl.tmpl` entry creates `~/bin/subl` → `/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl`, OS-gated via `.chezmoiignore` (`{{ if ne .chezmoi.os "darwin" }}bin/subl{{ end }}`); drop the `subl→subl3` indirection.
+4. **`bin/crossOriginChrome.sh`** — ✅ **keep, modernized, chezmoi-managed.** Old (~2013) `--disable-web-security` launcher, verified still valid as of 2026. Reworked: `CHROME_BIN` override, `mktemp -d` profile (now flagged _required_ — Chrome v73+ ignores `--disable-web-security` without a non-default `--user-data-dir`), security note. shellcheck-clean. Renamed snake_case / no extension; chezmoi `bin/executable_cross_origin_chrome` lands it at `~/bin/cross_origin_chrome` (+x, on PATH). **The live file is already renamed to `bin/cross_origin_chrome`; the `executable_` prefix gets added at cut-over (step 4) when chezmoi takes over `~/bin`.**
 5. **Per-machine zsh overrides** — keep `~/.extra` (sourced by `.zshrc`, gitignored). Could move to chezmoi templates later if `.extra` gets crowded.
 6. **The init prompts** — `name`, `email`, `work`, `machine` is the starting set. Add others lazily as needs surface.
 
@@ -319,7 +320,7 @@ _(Vendoring resolved — now step 2 of the cut-over plan. The `config.local.toml
 
 [GNU Stow](https://www.gnu.org/software/stow/manual/stow.html) is the boring, ubiquitous, well-documented option. For most of this conversation it was the right answer: minimum-viable symlink farm, every dotfiles blog post on the internet assumes its layout, ~5 commands and a one-paragraph mental model.
 
-We're picking chezmoi over it because the *actual recurring pain* in this repo is per-machine state (mise `config.local.toml`, git `.gituserconfig`, the future "work vs personal" split). Stow + `install.sh` glue handles those manually; chezmoi templates handle them natively. Once you accept that constraint, chezmoi's bigger surface area starts paying for itself.
+We're picking chezmoi over it because the _actual recurring pain_ in this repo is per-machine state (mise `config.local.toml`, git `.gituserconfig`, the future "work vs personal" split). Stow + `install.sh` glue handles those manually; chezmoi templates handle them natively. Once you accept that constraint, chezmoi's bigger surface area starts paying for itself.
 
 If the templating dream sours: chezmoi → Stow conversion is a one-time `rename dot_X → .X` plus moving everything into `<pkg>/` wrapper dirs. No data lock-in.
 
@@ -336,7 +337,7 @@ Stow sketch (preserved for posterity): each top-level dir is a package mirroring
 The sketch above was followed cluster-by-cluster, but reality forced several
 corrections (all committed with rationale in their respective commits):
 
-- **`.chezmoiroot` dropped.** Only needed when source state lives in a *subdir*;
+- **`.chezmoiroot` dropped.** Only needed when source state lives in a _subdir_;
   ours is the repo root. Adding it would mis-point chezmoi. (`.chezmoiignore` was
   verified empirically: chezmoi matches slashless patterns at the top level only,
   so `mise` suppresses `~/mise` without touching `~/.config/mise`.)
@@ -351,9 +352,9 @@ corrections (all committed with rationale in their respective commits):
   already there, but `mise use -g` had written it only to the machine-local
   `config.toml`; a clean checkout's bootstrap would have had no chezmoi.
 - **install.sh bootstrap order fixed.** The sketch ran `mise install` (to get
-  chezmoi) *before* `chezmoi apply`, but the mise baseline isn't symlinked until
+  chezmoi) _before_ `chezmoi apply`, but the mise baseline isn't symlinked until
   apply. Corrected to: bootstrap chezmoi via `mise exec chezmoi@latest`, apply,
-  *then* `mise install` the full toolchain.
+  _then_ `mise install` the full toolchain.
 - **emacs: adopted the LIVE `~/.emacs.d/init.el`**, not the repo's `emacs/init.el`.
   The live file was already modern (https melpa, better-defaults, sanityinc theme,
   treesit); the repo copy was the stale technomancy starter-kit. Pushing the repo
