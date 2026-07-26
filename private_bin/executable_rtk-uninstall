@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+# Remove rtk from this machine entirely -- wiring, config, history, binary.
+#
+# This is the nuclear option. If you only want to stop rtk rewriting your
+# commands, you almost certainly want the toggle instead:
+#
+#   rtk-hook disable      # keeps rtk on PATH for explicit `rtk <cmd>` use
+#
+# Uninstalling is for machines that should not carry rtk at all. The Claude Code
+# unwiring is delegated to `rtk-hook disable` so there is exactly one piece of
+# code that edits ~/.claude/settings.json.
+#
+# Dry run by default -- prints what it would do and changes nothing. Pass --yes
+# to actually act. Safe to re-run; every step no-ops when already clean.
+#
+# Also runnable directly as `rtk-uninstall` (~/bin is on PATH).
+
+set -uo pipefail
+
+# bash 3.2 (still /bin/bash on macOS) keeps the backslash in ${v/#$HOME/\~},
+# printing a literal \~. A plain variable sidesteps the escape.
+TILDE='~'
+
+APPLY=0
+
+usage() {
+	cat <<'EOF'
+Usage: rtk-uninstall [--yes]
+
+Removes rtk completely: the Claude Code hook and @RTK.md include, the files this
+repo installs for it, rtk's config and history directory, and the mise-installed
+binary.
+
+Options:
+  --yes, -y    Actually make changes (default is a dry run).
+  -h, --help   Show this help.
+
+To keep rtk installed and only stop it rewriting commands, use:
+  rtk-hook disable [--reset-history]
+EOF
+}
+
+while [ $# -gt 0 ]; do
+	case "$1" in
+	--yes | -y) APPLY=1 ;;
+	--unhook)
+		echo "rtk-uninstall: --unhook moved -- use \`rtk-hook disable\` (or \`mise run rtk:unhook\`)." >&2
+		exit 2
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		echo "rtk-uninstall: unknown option: $1" >&2
+		usage >&2
+		exit 2
+		;;
+	esac
+	shift
+done
+
+# Ordinary terminals get color; pipes and dumb terminals get none.
+if [ -t 1 ] && [ "${TERM:-dumb}" != "dumb" ]; then
+	BOLD=$(tput bold) DIM=$(tput dim) RESET=$(tput sgr0)
+else
+	BOLD="" DIM="" RESET=""
+fi
+
+DID_ANYTHING=0
+say() { printf '%s\n' "$*"; }
+step() { printf '%s==>%s %s\n' "$BOLD" "$RESET" "$*"; }
+skip() { printf '    %sskip%s  %s\n' "$DIM" "$RESET" "$*"; }
+plan() {
+	DID_ANYTHING=1
+	if [ "$APPLY" -eq 1 ]; then
+		printf '    remove %s\n' "$*"
+	else
+		printf '    would remove %s\n' "$*"
+	fi
+}
+
+# rtk stores config and history under the OS-native app dir; it ignores XDG on
+# darwin. Both are listed because a machine may carry either.
+case "$(uname -s)" in
+Darwin) RTK_DATA_DIRS=("$HOME/Library/Application Support/rtk") ;;
+*) RTK_DATA_DIRS=("${XDG_CONFIG_HOME:-$HOME/.config}/rtk" "${XDG_DATA_HOME:-$HOME/.local/share}/rtk") ;;
+esac
+
+say ""
+if [ "$APPLY" -eq 0 ]; then
+	printf '%sDry run%s -- nothing will be changed. Re-run with --yes to apply.\n\n' "$BOLD" "$RESET"
+fi
+
+# 1. Claude Code wiring -------------------------------------------------------
+step "Claude Code wiring"
+if [ -x "$HOME/bin/rtk-hook" ]; then
+	# Captured rather than streamed so this step can report "nothing wired"
+	# instead of printing an empty section, and so a find still counts toward
+	# the summary. rtk-hook owns every edit to settings.json; this only relays.
+	if [ "$APPLY" -eq 1 ]; then
+		wiring=$("$HOME/bin/rtk-hook" disable --quiet 2>&1)
+	else
+		wiring=$("$HOME/bin/rtk-hook" disable --dry-run --quiet 2>&1)
+	fi
+	if [ -n "$wiring" ]; then
+		DID_ANYTHING=1
+		printf '%s\n' "$wiring"
+	else
+		skip "nothing wired into Claude Code"
+	fi
+else
+	skip "~/bin/rtk-hook not present -- check ~/.claude/settings.json by hand"
+fi
+
+# 2. Files this repo installs for rtk ----------------------------------------
+# ~/bin/rtk-uninstall is deliberately absent: deleting the script mid-run reads
+# worse than it behaves, and chezmoi restores it anyway until the source stops
+# shipping it -- which is exactly what the note below is about.
+step "rtk files"
+for f in \
+	"$HOME/bin/rtk-hook" \
+	"$HOME/bin/rtk-allowlist-hook" \
+	"$HOME/.config/rtk-allowlist.toml" \
+	"$HOME/.config/rtk-hook-enabled" \
+	"$HOME/.claude/RTK.md"; do
+	if [ -e "$f" ]; then
+		plan "${f/#$HOME/$TILDE}"
+		[ "$APPLY" -eq 1 ] && rm -f "$f"
+	fi
+done
+
+step "rtk config + history"
+for d in "${RTK_DATA_DIRS[@]}"; do
+	if [ -d "$d" ]; then
+		plan "${d/#$HOME/$TILDE}  (config + history.db)"
+		[ "$APPLY" -eq 1 ] && rm -rf "$d"
+	fi
+done
+
+# chezmoi manages most of what step 2 just deleted, so removing it while the
+# source still ships it means the next `chezmoi apply` puts it straight back --
+# say so rather than reporting a clean uninstall that will not stay clean.
+if command -v chezmoi >/dev/null 2>&1; then
+	if chezmoi managed 2>/dev/null | grep -q 'rtk'; then
+		say ""
+		say "    ${BOLD}note${RESET} chezmoi still manages rtk paths on this machine, so the next"
+		say "         apply will recreate them. Drop rtk from the dotfiles source first"
+		say "         (or run \`chezmoi forget\` on those paths) to make this stick."
+	fi
+fi
+
+# 3. The binary ---------------------------------------------------------------
+step "rtk binary"
+if ! command -v mise >/dev/null 2>&1; then
+	skip "mise not found -- remove rtk however it was installed"
+elif ! mise ls --installed 2>/dev/null | grep -q '^rtk[[:space:]]'; then
+	skip "rtk not installed via mise"
+else
+	plan "the mise-installed rtk toolchain"
+	if [ "$APPLY" -eq 1 ]; then
+		# --all covers every installed version, not just the active one.
+		mise uninstall --all rtk 2>&1 | sed 's/^/    /'
+	fi
+fi
+
+say ""
+if [ "$DID_ANYTHING" -eq 0 ]; then
+	say "Nothing to do -- rtk is already gone."
+elif [ "$APPLY" -eq 1 ]; then
+	say "${BOLD}Done.${RESET} Restart Claude Code so it reloads settings.json."
+else
+	say "Re-run with ${BOLD}--yes${RESET} to apply:  mise run rtk:uninstall -- --yes"
+fi
+say ""

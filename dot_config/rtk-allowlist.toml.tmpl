@@ -1,0 +1,72 @@
+# Allowlist for ~/bin/rtk-allowlist-hook (Claude Code PreToolUse, Bash).
+#
+# rtk only ships denylists, so every handler it has is armed by default and each
+# release re-arms the surface. This file inverts that: a command is rewritten
+# only if it is named here. Everything else passes through untouched.
+#
+# Savings figures are from `rtk gain` over 90 days. Before adding an entry, check
+# it actually earns:  rtk gain --history | grep <cmd>
+# Check what a change does:  rtk hook check "<cmd>"   (engine view, ignores this file)
+# Check the real decision:
+#   echo '{"tool_name":"Bash","tool_input":{"command":"<cmd>"}}' | ~/bin/rtk-allowlist-hook
+# Empty output means no rewrite.
+#
+# Two layers have to agree. This file decides whether rtk is consulted at all;
+# rtk's own config still gets the final say. So adding something here that rtk
+# lists in `exclude_commands` or `transparent_prefixes` still will not rewrite --
+# e.g. allowing `git push` here is inert until it also comes off rtk's
+# transparent_prefixes. Both live in this repo:
+#   .chezmoitemplates/rtk-config.toml  (rtk's own denylists)
+#   this file                          (our allowlist gate)
+#
+# Only a single simple command is ever rewritten. Anything containing a pipe,
+# &&, ||, ;, redirection, backtick, or $(...) is passed through untouched --
+# rtk parses only the leading command, so on a compound line it would rewrite
+# the head and leave the rest inconsistent.
+#
+# This file only matters while the hook is enabled. To turn rewriting off
+# properly, unwire it -- `mise run rtk:unhook` (or `rtk-hook disable`). That
+# keeps rtk on PATH and `rtk gain` working; `mise run rtk:hook` puts it back.
+# Emptying `commands` here has a similar effect but leaves a hook running on
+# every Bash call to decide it has nothing to do, so prefer the toggle.
+
+# Rewritten whenever they are the head of a single simple command.
+commands = [
+    "cat",  # -> rtk read; with head/tail the largest single win, 3.0M tokens
+    "head",
+    "tail",
+    "ls",  # 593K saved, 66%
+    "gh",  # 224K saved, 61%
+    "find",  # 3.0K saved, 96%
+    "wc",  # 982 saved, 64%
+    "du",  # TOML filter, part of the 705K "other" bucket
+    "ps",  # same
+    "vitest",  # 48.9K saved, 100%; rtk passes --no-watch so dropping `run` is safe
+    "cargo",  # 5.7K saved, 98%
+]
+
+# Rewritten only for these subcommands. Global flags (`-C <path>`, `-c k=v`) are
+# skipped when locating the subcommand, so `git -C /tmp commit` still matches.
+[subcommands]
+# commit 88%, fetch 66%. Every other git subcommand loses output the model needs
+# -- `git stash` stopped printing the SHA, costing an extra rev-parse each time.
+git = ["commit", "fetch"]
+
+# Deliberately absent, and why:
+#   pnpm npm npx yarn bun tsc eslint prettier
+#     rtk substitutes its own handler and drops arguments -- `pnpm lint` ran
+#     rtk's eslint instead of the project script, `pnpm vitest run` dropped
+#     `run`. Combined lifetime savings: 0.1% of their input tokens.
+#   rg grep
+#     On 0.42.4 rtk ran BSD grep even when rg was invoked, so rg-only flags hit a
+#     usage error it swallowed with exit 0 and searches silently returned nothing.
+#     Fixed in 0.43.0 -- `rg foo` now runs rg -- so this pair is the most defensible
+#     candidate to re-add. Still out for now: grep was 254 of 287 lifetime parse
+#     failures for 6.1K tokens saved, and Claude Code's native Grep tool covers the
+#     same ground without a hook. Re-measure with `rtk gain --history` before adding.
+#   curl    2 tokens saved on 138K input.
+#   diff    strips hunk context; failed to parse 28 of 36 calls.
+#   tree df wget aws psql rsync make glab docker kubectl helm terraform go
+#   dotnet next pytest mypy ruff jest playwright prisma
+#     handlers rtk arms by default that were invoked zero times in 90 days.
+#     `next build` -> `rtk next` drops `build`, the same defect class as pnpm.

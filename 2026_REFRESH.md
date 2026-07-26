@@ -61,7 +61,7 @@ Old bash-specific files removed (git history preserved).
 | ripgrep (rg) | Better grep |
 | fzf | Fuzzy finder |
 | git-delta | Better git diff |
-| rtk | Token-optimizing CLI proxy for Claude Code (one-time `rtk init -g`, see below) |
+| rtk | Token-optimizing CLI proxy — always on PATH; automatic rewriting is a toggle (see below) |
 
 ### Brewfile Pared Down
 
@@ -115,27 +115,84 @@ cd ~/.dotfiles
 exec zsh
 ```
 
-### Post-install: wire rtk into Claude Code (one-time, per machine)
+### rtk: on PATH always, automatic only when asked
 
-`rtk` (the token-optimizing Claude Code proxy) installs fleet-wide via the mise
-baseline, but its Claude integration writes to `~/.claude/` — which chezmoi does
-not manage — so it needs a single manual step after install:
+`rtk` is a token-optimizing CLI proxy. It installs fleet-wide via the mise
+baseline and is always available to invoke directly — `rtk read foo` works on
+every machine. What is *optional*, and off by default, is the Claude Code hook
+that rewrites Bash commands before you see them.
 
 ```bash
-rtk init -g          # hook + RTK.md + @RTK.md in ~/.claude/CLAUDE.md + settings.json
-rtk init --show      # verify: all rows [ok]
+mise run rtk:hook           # enable: allowlisted commands get rewritten
+mise run rtk:unhook         # disable: nothing is rewritten automatically
+mise run rtk:hook:status    # what is actually wired, and any drift
+mise run rtk:uninstall      # remove rtk entirely (dry run; pass -- --yes)
 ```
 
-Idempotent — safe to re-run. Skips automation in the dotfiles repo on purpose so
-chezmoi never fights rtk over `~/.claude/CLAUDE.md` and `settings.json`.
+All four wrap `~/bin/rtk-hook` and `~/bin/rtk-uninstall`, which are runnable
+directly. Both directions back up every file they touch and are safe to re-run.
 
-rtk's own config *is* chezmoi-managed (`.chezmoitemplates/rtk-config.toml`, one
+**Why a toggle rather than a decision.** rtk *substitutes* rather than filters:
+it drops the wrapper and any argument it does not recognize.
+
+- `pnpm lint` → ran rtk's own eslint instead of the project's `lint` script
+- `pnpm exec prettier` → resolved `prettier` off `PATH`, not `node_modules/.bin`
+- `next build` → dropped `build` outright
+- a rewritten `grep` could hit a usage error rtk swallowed with **exit 0**, so a
+  search silently returned nothing
+
+Those are correctness bugs rather than overhead, and one silently-wrong result
+costs more than the filtering saves. But the savings are real too — `rtk gain`
+showed 4.7M tokens over 90 days, heavily concentrated in `cat`/`head`/`tail`.
+Both facts are true, and which one dominates depends on the machine and the
+week, so the posture is a switch rather than a verdict baked into the repo.
+
+Invoked deliberately, none of that ambiguity exists: you asked for `rtk read`,
+so you get `rtk read`. The hazard was always *automatic* substitution.
+
+**The allowlist.** When enabled, the Bash hook points at
+`~/bin/rtk-allowlist-hook` rather than rtk's own `rtk hook claude`. rtk ships
+only denylists (`exclude_commands`, `transparent_prefixes`), so every handler is
+armed by default and each release re-arms the surface — 0.43.0 added three new
+rewrite paths with no action on our side. The gate inverts that default: a
+command is rewritten only if `~/.config/rtk-allowlist.toml` names it, and only
+as the head of a single simple command. Anything with a pipe, `&&`, `;`, or a
+redirect passes through untouched.
+
+The list is short on purpose — `cat` `head` `tail` `ls` `gh` `find` `wc` `du`
+`ps` `vitest` `cargo`, plus `git commit` and `git fetch` — each earning its place
+in `rtk gain`. The whole JS toolchain is deliberately absent.
+
+**How the toggle sticks.** The choice is a marker file
+(`~/.config/rtk-hook-enabled`), per-machine and uncommitted. `chezmoi apply`
+runs `run_after_20-claude-rtk-hook.sh`, which *reconciles to the marker* rather
+than asserting the hook: enabled machines get their wiring repaired if it
+drifted, disabled machines are left alone. Without that gate a `chezmoi apply`
+would silently undo `rtk-unhook`. An absent marker means disabled, so a fresh
+machine gets rtk on PATH and no hook until it asks — the right default for a
+fleet that is mostly headless.
+
+**Migrating a machine that is already wired.** A machine hooked before the
+toggle existed has no marker, so `rtk:hook:status` reports a hook with no
+recorded intent and does nothing about it — `chezmoi apply` leaves such a
+machine exactly as-is. Run `mise run rtk:hook` once to keep the hook and record
+that choice, or `mise run rtk:unhook` to drop it.
+
+This also means `rtk init -g` is never run. It repoints the hook straight at
+`rtk hook claude`, re-arming everything, and overwrites `~/.claude/RTK.md`.
+`rtk-hook status` reports that drift if it happens.
+
+**Stats.** `rtk-hook disable --reset-history` wipes `history.db` so `rtk gain`
+restarts from zero. Worth doing when going opt-in: an existing database is
+mostly hook-driven traffic, which answers "did the hook save tokens?" — a
+question that stops mattering once it is off. Starting clean makes it answer "is
+invoking rtk by hand actually worth it?" instead.
+
+rtk's own config is chezmoi-managed (`.chezmoitemplates/rtk-config.toml`, one
 template → `~/.config/rtk/` on linux, `~/Library/Application Support/rtk/` on
-darwin). It dials the hook back to where filtering measurably pays off: `rg`,
-`grep`, `curl`, `diff` excluded (silent-failure risk or ~zero savings) and git
-restricted to `commit`/`fetch` via `transparent_prefixes` (compact filters
-stripped output the model needed, e.g. `git stash` SHAs). Verify a rewrite
-decision anytime with `rtk hook check "<cmd>"`.
+darwin). It pins telemetry off and carries **no** `[hooks]` section: with the
+allowlist deciding what reaches rtk, a denylist there is unreachable policy and
+a second place to edit.
 
 ## Verification
 
