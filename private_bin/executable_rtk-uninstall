@@ -8,35 +8,58 @@
 # machine that already ran the installer, where a dangling hook fails on every
 # Bash call. This cleans it up.
 #
-# Dry run by default -- prints what it would do and changes nothing. Pass --yes
-# to actually remove. Safe to re-run; every step no-ops when already clean.
+# Two modes, because "stop rtk rewriting my commands" and "get rtk off this
+# machine" are different asks:
 #
-#   mise run rtk:uninstall          # preview
-#   mise run rtk:uninstall -- --yes # do it
+#   mise run rtk:unhook    -- --yes   # keep rtk on PATH, drop the hook
+#   mise run rtk:uninstall -- --yes   # remove it entirely
+#
+# --unhook is the interesting one: rtk stays installed and useful, but only
+# when *you* type `rtk <cmd>`. Nothing is rewritten behind your back, which was
+# the actual problem -- rtk substitutes its own handler and drops arguments it
+# does not recognize, so `pnpm lint` ran rtk's eslint rather than the project's
+# lint script. Invoked deliberately, that ambiguity disappears.
+#
+# Pair it with --reset-history so `rtk gain` measures opt-in usage from zero
+# instead of years of hook traffic you never asked for.
+#
+# Dry run by default -- prints what it would do and changes nothing. Pass --yes
+# to actually act. Safe to re-run; every step no-ops when already clean.
 #
 # Also runnable directly as `rtk-uninstall` (~/bin is on PATH).
 
 set -uo pipefail
 
 APPLY=0
-KEEP_BINARY=0
+UNHOOK=0
+RESET_HISTORY=0
 
 usage() {
 	cat <<'EOF'
-Usage: rtk-uninstall [--yes] [--keep-binary]
+Usage: rtk-uninstall [--yes] [--unhook] [--reset-history]
 
-  --yes           Actually remove things (default is a dry run).
-  --keep-binary   Leave the rtk binary installed; only undo the Claude Code
-                  wiring and delete config/history. Useful if you still want
-                  `rtk gain` or manual `rtk <cmd>` without the hook.
-  -h, --help      Show this help.
+Modes:
+  (default)         Full removal -- Claude Code wiring, config, history, binary.
+  --unhook          Keep rtk installed and on PATH for explicit use: you type
+                    `rtk <cmd>` and it runs. Removes only the Claude Code
+                    wiring, so nothing is ever rewritten behind your back.
+                    Keeps rtk's config and history.db.
+
+Options:
+  --reset-history   Wipe history.db. With --unhook this makes `rtk gain` count
+                    only deliberate, opt-in runs instead of years of hook
+                    traffic. Redundant during a full removal, which deletes the
+                    whole directory anyway.
+  --yes, -y         Actually make changes (default is a dry run).
+  -h, --help        Show this help.
 EOF
 }
 
 while [ $# -gt 0 ]; do
 	case "$1" in
 	--yes | -y) APPLY=1 ;;
-	--keep-binary) KEEP_BINARY=1 ;;
+	--unhook) UNHOOK=1 ;;
+	--reset-history) RESET_HISTORY=1 ;;
 	-h | --help)
 		usage
 		exit 0
@@ -198,29 +221,55 @@ for f in \
 	fi
 done
 
-for d in "${RTK_DATA_DIRS[@]}"; do
-	if [ -d "$d" ]; then
-		plan "${d/#$HOME/\~}  (config + 90-day history.db)"
-		[ "$APPLY" -eq 1 ] && rm -rf "$d"
+# Config and history are the one thing --unhook keeps: with no hook, rtk is
+# still a useful tool you invoke on purpose, and `rtk gain` still answers
+# whether that is worth it.
+step "rtk config + history"
+if [ "$UNHOOK" -eq 0 ]; then
+	for d in "${RTK_DATA_DIRS[@]}"; do
+		if [ -d "$d" ]; then
+			plan "${d/#$HOME/\~}  (config + history.db)"
+			[ "$APPLY" -eq 1 ] && rm -rf "$d"
+		fi
+	done
+elif [ "$RESET_HISTORY" -eq 1 ]; then
+	# Drop the -shm/-wal sidecars too, or sqlite replays them into a new db.
+	found_db=0
+	for d in "${RTK_DATA_DIRS[@]}"; do
+		for db in "$d/history.db" "$d/history.db-shm" "$d/history.db-wal"; do
+			if [ -e "$db" ]; then
+				found_db=1
+				plan "${db/#$HOME/\~}"
+				[ "$APPLY" -eq 1 ] && rm -f "$db"
+			fi
+		done
+	done
+	if [ "$found_db" -eq 1 ]; then
+		say "    config kept; \`rtk gain\` restarts from zero and counts only opt-in runs"
+	else
+		skip "no history.db to reset"
 	fi
-done
+else
+	skip "keeping rtk's config and history (--unhook; add --reset-history to wipe the db)"
+fi
 
-# chezmoi used to manage rtk's config.toml. If this machine has not yet applied
-# the commit that drops it, deleting the file now just means the next
-# `chezmoi apply` puts it straight back -- so say so instead of looking clean.
-if command -v chezmoi >/dev/null 2>&1; then
+# Only a concern for full removal: chezmoi manages rtk's config.toml, so
+# deleting it while the source still ships it means the next `chezmoi apply`
+# puts it straight back -- say so rather than looking clean. Under --unhook the
+# config is meant to stay, so a managed config is correct, not a warning.
+if [ "$UNHOOK" -eq 0 ] && command -v chezmoi >/dev/null 2>&1; then
 	if chezmoi managed 2>/dev/null | grep -q 'rtk'; then
 		say ""
 		say "    ${BOLD}note${RESET} chezmoi still manages an rtk path on this machine."
-		say "         Run \`chezmoi update\` (or apply this branch) or the next"
-		say "         apply will recreate rtk's config."
+		say "         Run \`chezmoi update\` (or apply this branch) first, or the"
+		say "         next apply will recreate rtk's config."
 	fi
 fi
 
 # 4. The binary ---------------------------------------------------------------
 step "rtk binary"
-if [ "$KEEP_BINARY" -eq 1 ]; then
-	skip "--keep-binary given"
+if [ "$UNHOOK" -eq 1 ]; then
+	skip "keeping rtk on PATH (--unhook)"
 elif ! command -v mise >/dev/null 2>&1; then
 	skip "mise not found -- remove rtk however it was installed"
 elif ! mise ls --installed 2>/dev/null | grep -q '^rtk[[:space:]]'; then
@@ -234,12 +283,25 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+if [ "$UNHOOK" -eq 1 ]; then
+	TASK="rtk:unhook"
+else
+	TASK="rtk:uninstall"
+fi
+
 say ""
 if [ "$DID_ANYTHING" -eq 0 ]; then
-	say "Nothing to do -- rtk is already gone."
+	if [ "$UNHOOK" -eq 1 ]; then
+		say "Nothing to do -- rtk is already unhooked."
+	else
+		say "Nothing to do -- rtk is already gone."
+	fi
 elif [ "$APPLY" -eq 1 ]; then
 	say "${BOLD}Done.${RESET} Restart Claude Code so it reloads settings.json."
+	if [ "$UNHOOK" -eq 1 ]; then
+		say "rtk stays on PATH -- it now runs only when you type it: ${BOLD}rtk <cmd>${RESET}"
+	fi
 else
-	say "Re-run with ${BOLD}--yes${RESET} to apply:  mise run rtk:uninstall -- --yes"
+	say "Re-run with ${BOLD}--yes${RESET} to apply:  mise run $TASK -- --yes"
 fi
 say ""

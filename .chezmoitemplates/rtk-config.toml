@@ -1,0 +1,23 @@
+# rtk config -- deliberately minimal.
+#
+# rtk is installed for *explicit* use: you type `rtk <cmd>` and it runs. It is
+# not wired into Claude Code, so its command handlers never fire on their own.
+#
+# There is no [hooks] section on purpose. Tuning exclude_commands /
+# transparent_prefixes only matters when something invokes rtk automatically,
+# and nothing does -- the PreToolUse hook is gone. Carrying a denylist anyway
+# would be unreachable policy and a second place to edit.
+#
+# Everything omitted here is rtk's own default (verified against a fresh
+# `rtk config --create`), so only settings carrying actual intent are pinned.
+
+[tracking]
+# Powers `rtk gain`. With no hook this counts only commands run on purpose,
+# which makes it an honest answer to "is invoking rtk by hand worth it?"
+enabled = true
+history_days = 90
+
+[telemetry]
+enabled = false  # pinned, not merely defaulted, so an upgrade cannot opt us in
+consent_given = false
+consent_date = "2026-06-21T06:05:58.603291+00:00"

@@ -54,9 +54,13 @@ starship = "latest"
 # AI coding agents
 "aqua:openai/codex" = "latest"
 opencode = "latest"  # anomalyco/opencode
-# rtk (token-optimizing proxy) was removed — it rewrote commands into the wrong
-# binary and dropped arguments. See 2026_REFRESH.md; `mise run rtk:uninstall`
-# cleans up machines that already have it.
+# rtk: on PATH for *explicit* use only — you type `rtk <cmd>` and it runs.
+# Deliberately NOT wired into Claude Code: as an automatic hook it substituted
+# its own handler and dropped arguments (`pnpm lint` ran rtk's eslint, not the
+# project's script). Invoked on purpose, that ambiguity is gone. See
+# 2026_REFRESH.md; `mise run rtk:unhook` removes the hook from a machine that
+# still has it, `mise run rtk:uninstall` removes rtk altogether.
+rtk = "latest"  # aqua:rtk-ai/rtk
 
 # Dotfiles management — must be in the committed baseline so a fresh machine's
 # install.sh (mise install -> chezmoi init) can bootstrap. (Previously chezmoi
@@ -98,6 +102,10 @@ taplo    = "latest"  # TOML
 # conf.d/*.toml counts as *global* mise config, so tasks defined here are global
 # tasks: runnable from any directory, no project file needed (mise 2026.7.5).
 
+[tasks."rtk:unhook"]
+description = "Unwire rtk from Claude Code, keep it on PATH (dry run; pass -- --yes)"
+run = '"$HOME/bin/rtk-uninstall" --unhook'
+
 [tasks."rtk:uninstall"]
-description = "Remove rtk and undo its Claude Code wiring (dry run; pass -- --yes to apply)"
+description = "Remove rtk entirely, wiring included (dry run; pass -- --yes)"
 run = '"$HOME/bin/rtk-uninstall"'
