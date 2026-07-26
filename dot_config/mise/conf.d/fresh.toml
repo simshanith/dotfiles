@@ -18,6 +18,9 @@ credential_command = "gh auth token"
 [settings.pipx]
 uvx = true  # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (default when uv present)
 
+[settings.python]
+uv_venv_auto = true
+
 [tools]
 # Languages
 bun  = "latest"

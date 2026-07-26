@@ -106,6 +106,11 @@ ripgrep, chezmoi itself, …). Shared baseline: `~/.config/mise/conf.d/fresh.tom
 (committed). Machine-local: `~/.config/mise/config.toml` (seeded once). Python is
 delegated to `uv`. `eval "$(mise activate zsh)"` runs from `.zshrc`.
 
+`settings.python.uv_venv_auto` activates a uv project's `.venv` on `cd` (creating it
+if absent), so `source .venv/bin/activate` is no longer needed. mise finds the project
+by walking up for `uv.lock` — a bare `.venv` is ignored, so run `uv sync` once in a new
+project before it takes effect.
+
 ## Installation
 
 ```bash
