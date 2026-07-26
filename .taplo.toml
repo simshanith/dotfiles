@@ -1,0 +1,11 @@
+# taplo (TOML formatter) settings for this repo.
+# Emacs/apheleia and a manual `taplo fmt` both read this, so format-on-save and
+# a check run agree. taplo itself is installed via dot_config/mise/conf.d/fresh.toml.
+#
+# Both keys are here to be explicit rather than to override a default:
+# align_comments is already taplo's default, align_entries is NOT — without it
+# taplo collapses the hand-aligned `key   = value` columns this repo uses.
+
+[formatting]
+align_entries  = true # preserve the aligned `=` columns in the mise / rtk configs
+align_comments = true # trailing `# why` comments line up within a block

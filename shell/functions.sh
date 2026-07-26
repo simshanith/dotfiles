@@ -61,7 +61,10 @@ gf() {
 # ============================================================
 if [[ "$TERM_PROGRAM" == 'iTerm.app' ]]; then
     nametab() {
-        [[ -z "$1" ]] && { echo "Usage: nametab <name>"; return 1; }
+        [[ -z "$1" ]] && {
+            echo "Usage: nametab <name>"
+            return 1
+        }
         echo -ne "\033]0;$*\007"
     }
 fi
@@ -94,7 +97,7 @@ eightbit() {
                 printf("%c",c)};
             c=int(c);
             while(c!=128) { c<128?c++:c--; printf("%c",c)}}}' |
-    sox -t raw -r 64k -c 1 -e unsigned -b 8 - -d
+        sox -t raw -r 64k -c 1 -e unsigned -b 8 - -d
 }
 
 # ============================================================

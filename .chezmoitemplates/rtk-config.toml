@@ -15,10 +15,10 @@
 [tracking]
 # Powers `rtk gain`. With the hook on, that is the feedback loop for tuning the
 # allowlist; with it off, an honest answer to "is typing `rtk` myself worth it?"
-enabled = true
+enabled      = true
 history_days = 90
 
 [telemetry]
-enabled = false  # pinned, not merely defaulted, so an upgrade cannot opt us in
+enabled       = false                              # pinned, not merely defaulted, so an upgrade cannot opt us in
 consent_given = false
-consent_date = "2026-06-21T06:05:58.603291+00:00"
+consent_date  = "2026-06-21T06:05:58.603291+00:00"
