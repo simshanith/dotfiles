@@ -57,7 +57,10 @@ starship = "latest"
 # AI coding agents
 "aqua:openai/codex" = "latest"
 opencode = "latest"  # anomalyco/opencode
-rtk      = "latest"  # aqua:rtk-ai/rtk — token-optimizing CLI proxy for Claude Code.
+# rtk: always on PATH for explicit `rtk <cmd>` use. Whether it *also* rewrites
+# Bash commands automatically is a per-machine toggle, off until asked for:
+#   mise run rtk:hook / rtk:unhook / rtk:hook:status     (see 2026_REFRESH.md)
+rtk      = "latest"  # aqua:rtk-ai/rtk — token-optimizing CLI proxy.
 
 # Dotfiles management — must be in the committed baseline so a fresh machine's
 # install.sh (mise install -> chezmoi init) can bootstrap. (Previously chezmoi
@@ -94,3 +97,24 @@ taplo    = "latest"  # TOML
 # leiningen = "latest"  # optional: classic build tool, only if a project needs it
 # cljs builds run through shadow-cljs (npm, per-project) or figwheel; CIDER
 # connects to that REPL — no extra global tool needed.
+
+# --- Tasks -------------------------------------------------------------------
+# conf.d/*.toml counts as *global* mise config, so tasks defined here are global
+# tasks: runnable from any directory, no project file needed (mise 2026.7.5).
+# Args after `--` are appended to the run command.
+
+[tasks."rtk:hook"]
+description = "Enable rtk's Claude Code hook (allowlisted commands get rewritten)"
+run = '"$HOME/bin/rtk-hook" enable'
+
+[tasks."rtk:unhook"]
+description = "Disable it — rtk stays on PATH, nothing is rewritten automatically"
+run = '"$HOME/bin/rtk-hook" disable'
+
+[tasks."rtk:hook:status"]
+description = "Show whether rtk's hook is wired, and flag any drift"
+run = '"$HOME/bin/rtk-hook" status'
+
+[tasks."rtk:uninstall"]
+description = "Remove rtk entirely, wiring included (dry run; pass -- --yes)"
+run = '"$HOME/bin/rtk-uninstall"'

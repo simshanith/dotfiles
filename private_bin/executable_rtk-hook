@@ -1,0 +1,436 @@
+#!/usr/bin/env bash
+# Turn rtk's Claude Code hook on and off.
+#
+# rtk is always installed and always usable by hand -- `rtk read foo` works
+# whatever this says. What toggles here is whether a PreToolUse hook rewrites
+# Bash commands *automatically*, before you see them.
+#
+#   rtk-hook enable     # allowlisted commands get rewritten
+#   rtk-hook disable    # nothing is rewritten; rtk runs only when you type it
+#   rtk-hook status     # what's actually wired right now
+#
+# Enabled routes Claude Code's Bash hook through ~/bin/rtk-allowlist-hook, which
+# rewrites only what ~/.config/rtk-allowlist.toml names. That gate exists because
+# rtk ships denylists only: every handler it has is armed by default, and each
+# release arms more. The allowlist inverts that default.
+#
+# The choice is recorded in a marker file and is per-machine, not committed --
+# chezmoi's run_after script reconciles the wiring to whatever the marker says,
+# so `chezmoi apply` re-asserts your choice instead of overriding it. Absent
+# marker means disabled: a fresh machine gets rtk on PATH and no hook until it
+# asks for one.
+#
+# Both directions back up every file they touch and are safe to re-run.
+
+set -uo pipefail
+
+# bash 3.2 (still /bin/bash on macOS) keeps the backslash in ${v/#$HOME/\~},
+# printing a literal \~. A plain variable sidesteps the escape.
+TILDE='~'
+
+MARKER="${XDG_CONFIG_HOME:-$HOME/.config}/rtk-hook-enabled"
+CLAUDE_DIR="$HOME/.claude"
+SETTINGS="$CLAUDE_DIR/settings.json"
+CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
+ALLOWLIST="${XDG_CONFIG_HOME:-$HOME/.config}/rtk-allowlist.toml"
+GATE="$HOME/bin/rtk-allowlist-hook"
+
+# Must match run_after_20-claude-rtk-hook.sh and the removal matcher below.
+WRAPPER='if [ -x "$HOME/bin/rtk-allowlist-hook" ]; then "$HOME/bin/rtk-allowlist-hook"; fi'
+
+usage() {
+	cat <<'EOF'
+Usage: rtk-hook <enable|disable|status> [options]
+
+  enable    Wire Claude Code's Bash PreToolUse hook through the allowlist gate.
+            Only commands named in ~/.config/rtk-allowlist.toml are rewritten.
+  disable   Unwire it. rtk stays installed and on PATH; nothing is rewritten
+            unless you type `rtk <cmd>` yourself.
+  status    Show what is wired right now, and whether it matches the marker.
+
+Options:
+  --reset-history   (disable) Wipe history.db so `rtk gain` restarts from zero
+                    and counts only deliberate, opt-in runs.
+  --dry-run         Print what would change and change nothing.
+  --quiet           Print only when something actually changed. Used by the
+                    chezmoi run_after script so a clean apply stays silent.
+  -h, --help        Show this help.
+EOF
+}
+
+CMD="${1:-status}"
+[ $# -gt 0 ] && shift
+
+DRY=0
+RESET_HISTORY=0
+QUIET=0
+while [ $# -gt 0 ]; do
+	case "$1" in
+	--dry-run | -n) DRY=1 ;;
+	--reset-history) RESET_HISTORY=1 ;;
+	--quiet | -q) QUIET=1 ;;
+	--yes | -y) : ;; # accepted and ignored: acting is the default here
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*)
+		echo "rtk-hook: unknown option: $1" >&2
+		usage >&2
+		exit 2
+		;;
+	esac
+	shift
+done
+
+if [ -t 1 ] && [ "${TERM:-dumb}" != "dumb" ]; then
+	BOLD=$(tput bold) DIM=$(tput dim) RESET=$(tput sgr0)
+else
+	BOLD="" DIM="" RESET=""
+fi
+
+say() { [ "$QUIET" -eq 1 ] || printf '%s\n' "$*"; }
+changed() { printf '%s\n' "$*"; } # always shown, even under --quiet
+act() { [ "$DRY" -eq 0 ]; }
+
+need_python() {
+	if ! command -v python3 >/dev/null 2>&1; then
+		echo "rtk-hook: python3 not available -- edit $SETTINGS by hand" >&2
+		return 1
+	fi
+}
+
+# --- enable ------------------------------------------------------------------
+do_enable() {
+	if [ ! -x "$GATE" ]; then
+		echo "rtk-hook: $GATE is missing or not executable." >&2
+		echo "          Run \`chezmoi apply\` first -- it installs the gate." >&2
+		exit 1
+	fi
+	need_python || exit 1
+
+	if act && [ ! -f "$MARKER" ]; then
+		mkdir -p "$(dirname "$MARKER")"
+		cat >"$MARKER" <<-EOF
+			# Presence of this file enables rtk's Claude Code Bash hook on this machine.
+			# Written by \`rtk-hook enable\`; removed by \`rtk-hook disable\`.
+			# Deliberately per-machine and uncommitted -- chezmoi's run_after script
+			# reconciles ~/.claude/settings.json to whatever this says.
+		EOF
+	fi
+
+	python3 - "$SETTINGS" "$CLAUDE_MD" "$WRAPPER" "$DRY" <<'PY'
+import json, os, shutil, sys
+
+settings_path, memory_path, wrapper, dry = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4] == "1"
+verb = "would add" if dry else "added"
+changes = []
+
+# Only ever rewrite an entry that is already rtk's (or already ours). A Bash
+# hook pointing at some other tool belongs to that tool and is left alone.
+RTK_COMMANDS = ("rtk hook claude", wrapper)
+
+try:
+    with open(settings_path) as fh:
+        settings = json.load(fh)
+except FileNotFoundError:
+    settings = {}
+except Exception as exc:
+    # Unparseable settings.json is never rewritten -- that risks destroying
+    # hand-edited config to add one hook.
+    print(f"rtk-hook: could not parse settings.json ({exc}); leaving it alone", file=sys.stderr)
+    sys.exit(1)
+
+hooks = settings.setdefault("hooks", {})
+pre = hooks.setdefault("PreToolUse", [])
+bash_entry = next((e for e in pre if isinstance(e, dict) and e.get("matcher") == "Bash"), None)
+
+if bash_entry is None:
+    pre.append({"matcher": "Bash", "hooks": [{"type": "command", "command": wrapper}]})
+    changes.append(f"{verb} Bash PreToolUse hook")
+else:
+    inner = bash_entry.setdefault("hooks", [])
+    existing = [h for h in inner if isinstance(h, dict) and h.get("command") in RTK_COMMANDS]
+    if not existing:
+        inner.append({"type": "command", "command": wrapper})
+        changes.append(f"{verb} allowlist hook alongside existing Bash hooks")
+    else:
+        for hook in existing:
+            if hook.get("command") != wrapper:
+                hook["command"] = wrapper
+                changes.append(f"{'would repoint' if dry else 'repointed'} Bash hook off `rtk hook claude`")
+
+if changes and not dry:
+    if os.path.exists(settings_path):
+        shutil.copyfile(settings_path, settings_path + ".rtk-hook.bak")
+    tmp = settings_path + ".tmp"
+    with open(tmp, "w") as fh:
+        json.dump(settings, fh, indent=2)
+        fh.write("\n")
+    os.replace(tmp, settings_path)   # atomic; never a half-written settings.json
+
+# --- the @RTK.md include -----------------------------------------------------
+# CLAUDE.md is the user's own global instruction file, so it is not
+# chezmoi-managed; only the include line is asserted, append-only.
+try:
+    with open(memory_path) as fh:
+        memory = fh.read()
+except FileNotFoundError:
+    memory = ""
+except Exception:
+    memory = None
+
+if memory is not None and "@RTK.md" not in memory:
+    if not dry:
+        with open(memory_path, "a") as fh:
+            if memory:
+                fh.write("\n" if memory.endswith("\n") else "\n\n")
+            fh.write("@RTK.md\n")
+    changes.append(f"{verb} @RTK.md include to CLAUDE.md")
+
+for c in changes:
+    print(f"    {c}")
+sys.exit(10 if changes else 0)
+PY
+	rc=$?
+	[ "$rc" -eq 1 ] && exit 1
+
+	if [ "$rc" -eq 10 ]; then
+		if act; then
+			changed "${BOLD}rtk hook enabled.${RESET} Restart Claude Code so it reloads settings.json."
+		else
+			say "Dry run -- nothing changed."
+		fi
+	else
+		say "Already enabled -- nothing to do."
+	fi
+	[ -f "$ALLOWLIST" ] || say "    ${DIM}note${RESET} $ALLOWLIST is missing; run \`chezmoi apply\`"
+}
+
+# --- disable -----------------------------------------------------------------
+do_disable() {
+	need_python || exit 1
+	local did=0
+
+	if [ -f "$MARKER" ]; then
+		did=1
+		if act; then
+			rm -f "$MARKER"
+		fi
+	fi
+
+	python3 - "$SETTINGS" "$CLAUDE_MD" "$DRY" <<'PY'
+import json, os, shutil, sys
+
+settings_path, memory_path, dry = sys.argv[1], sys.argv[2], sys.argv[3] == "1"
+verb = "would remove" if dry else "removed"
+RTK_MARKERS = ("rtk hook claude", "rtk-allowlist-hook")
+changes = []
+
+try:
+    with open(settings_path) as fh:
+        settings = json.load(fh)
+except FileNotFoundError:
+    settings = None
+except Exception as exc:
+    print(f"rtk-hook: could not parse settings.json ({exc}); leaving it alone", file=sys.stderr)
+    settings = None
+
+if isinstance(settings, dict):
+    hooks = settings.get("hooks")
+    if isinstance(hooks, dict):
+        removed = []
+        for event, groups in list(hooks.items()):
+            if not isinstance(groups, list):
+                continue
+            kept_groups = []
+            for group in groups:
+                entries = group.get("hooks") if isinstance(group, dict) else None
+                if not isinstance(entries, list):
+                    kept_groups.append(group)
+                    continue
+                kept = [e for e in entries
+                        if not (isinstance(e, dict)
+                                and any(m in str(e.get("command", "")) for m in RTK_MARKERS))]
+                if len(kept) != len(entries):
+                    removed.append(f"{event}[{group.get('matcher', '*')}]")
+                if kept:
+                    group["hooks"] = kept
+                    kept_groups.append(group)
+                # A group whose only entry was rtk's is dropped rather than left
+                # as an empty matcher shell. Foreign hooks always survive.
+            if kept_groups:
+                hooks[event] = kept_groups
+            else:
+                del hooks[event]
+
+        if removed:
+            changes.extend(f"{verb} hook entry {r}" for r in removed)
+            if not dry:
+                if not hooks:
+                    settings.pop("hooks", None)
+                shutil.copyfile(settings_path, settings_path + ".rtk-hook.bak")
+                tmp = settings_path + ".tmp"
+                with open(tmp, "w") as fh:
+                    json.dump(settings, fh, indent=2)
+                    fh.write("\n")
+                os.replace(tmp, settings_path)
+
+# --- the @RTK.md include -----------------------------------------------------
+# The include goes; ~/.claude/RTK.md itself is chezmoi-managed and stays put.
+# Uncited, it is inert -- and deleting it would only invite the next
+# `chezmoi apply` to put it straight back.
+try:
+    with open(memory_path) as fh:
+        lines = fh.readlines()
+except Exception:
+    lines = None
+
+if lines is not None:
+    kept = [ln for ln in lines if ln.strip() != "@RTK.md"]
+    if len(kept) != len(lines):
+        changes.append(f"{verb} the @RTK.md include from CLAUDE.md")
+        if not dry:
+            while kept and not kept[0].strip():
+                kept.pop(0)          # drop a blank line the include left stranded
+            shutil.copyfile(memory_path, memory_path + ".rtk-hook.bak")
+            tmp = memory_path + ".tmp"
+            with open(tmp, "w") as fh:
+                fh.writelines(kept)
+            os.replace(tmp, memory_path)
+
+for c in changes:
+    print(f"    {c}")
+sys.exit(10 if changes else 0)
+PY
+	[ $? -eq 10 ] && did=1
+
+	if [ "$RESET_HISTORY" -eq 1 ]; then
+		reset_history && did=1
+	fi
+
+	if [ "$did" -eq 1 ]; then
+		if act; then
+			# say(), not changed(): rtk-uninstall calls this with --quiet and
+			# relays the output, where "rtk stays on PATH" would contradict the
+			# removal in progress. The per-file lines above are signal enough.
+			say "${BOLD}rtk hook disabled.${RESET} Restart Claude Code so it reloads settings.json."
+			say "rtk stays on PATH -- it now runs only when you type it: ${BOLD}rtk <cmd>${RESET}"
+		else
+			say "Dry run -- nothing changed."
+		fi
+	else
+		say "Already disabled -- nothing to do."
+	fi
+}
+
+# rtk keeps config and history under the OS-native app dir; it ignores XDG on
+# darwin. Both are listed because a machine may carry either.
+rtk_data_dirs() {
+	case "$(uname -s)" in
+	Darwin) printf '%s\n' "$HOME/Library/Application Support/rtk" ;;
+	*) printf '%s\n%s\n' "${XDG_CONFIG_HOME:-$HOME/.config}/rtk" "${XDG_DATA_HOME:-$HOME/.local/share}/rtk" ;;
+	esac
+}
+
+reset_history() {
+	local found=0 d db
+	while IFS= read -r d; do
+		# The -shm/-wal sidecars go too, or sqlite replays them into a new db.
+		for db in "$d/history.db" "$d/history.db-shm" "$d/history.db-wal"; do
+			if [ -e "$db" ]; then
+				found=1
+				printf '    %s %s\n' "$([ "$DRY" -eq 1 ] && echo 'would remove' || echo removed)" "${db/#$HOME/$TILDE}"
+				act && rm -f "$db"
+			fi
+		done
+	done <<<"$(rtk_data_dirs)"
+	if [ "$found" -eq 1 ]; then
+		say "    config kept; \`rtk gain\` restarts from zero and counts only opt-in runs"
+		return 0
+	fi
+	say "    ${DIM}skip${RESET}  no history.db to reset"
+	return 1
+}
+
+# --- status ------------------------------------------------------------------
+do_status() {
+	local marker="disabled" wired="no" include="no"
+
+	[ -f "$MARKER" ] && marker="enabled"
+
+	if [ -f "$SETTINGS" ] && command -v python3 >/dev/null 2>&1; then
+		wired=$(
+			python3 - "$SETTINGS" <<'PY'
+import json, sys
+RTK_MARKERS = ("rtk hook claude", "rtk-allowlist-hook")
+try:
+    with open(sys.argv[1]) as fh:
+        hooks = json.load(fh).get("hooks") or {}
+except Exception:
+    print("unknown"); raise SystemExit
+for groups in hooks.values() if isinstance(hooks, dict) else []:
+    for group in groups if isinstance(groups, list) else []:
+        for e in (group.get("hooks") or []) if isinstance(group, dict) else []:
+            cmd = str(e.get("command", "")) if isinstance(e, dict) else ""
+            if any(m in cmd for m in RTK_MARKERS):
+                print("gate" if "rtk-allowlist-hook" in cmd else "raw `rtk hook claude`")
+                raise SystemExit
+print("no")
+PY
+		)
+	fi
+
+	grep -q '^@RTK\.md[[:space:]]*$' "$CLAUDE_MD" 2>/dev/null && include="yes"
+
+	printf '%srtk hook%s\n' "$BOLD" "$RESET"
+	printf '  marker         %s  %s\n' "$marker" "${DIM}(${MARKER/#$HOME/$TILDE})${RESET}"
+	printf '  settings.json  %s\n' "$wired"
+	printf '  @RTK.md        %s\n' "$include"
+	if [ -f "$ALLOWLIST" ]; then
+		printf '  allowlist      %s\n' "${ALLOWLIST/#$HOME/$TILDE}"
+	else
+		printf '  allowlist      %smissing -- run `chezmoi apply`%s\n' "$DIM" "$RESET"
+	fi
+	if command -v rtk >/dev/null 2>&1; then
+		printf '  rtk binary     %s\n' "$(command -v rtk)"
+	else
+		printf '  rtk binary     %snot on PATH%s\n' "$DIM" "$RESET"
+	fi
+
+	# The marker is the source of truth chezmoi reconciles to, so drift means a
+	# stray `rtk init -g` or a hand edit -- worth naming rather than papering over.
+	printf '\n'
+	if [ "$marker" = "enabled" ] && [ "$wired" = "no" ]; then
+		printf 'Drift: marker says enabled but nothing is wired. `rtk-hook enable` fixes it.\n'
+	elif [ "$marker" = "disabled" ] && [ "$wired" != "no" ] && [ "$wired" != "unknown" ]; then
+		# Two ways to land here: a machine wired before the marker existed, or
+		# something re-armed the hook behind your back. Both are resolved by
+		# saying which you want, so ask rather than accuse.
+		printf 'A hook is wired, but no marker records that as the intent -- either this\n'
+		printf 'machine was wired before the toggle existed, or something re-added it\n'
+		printf '(`rtk init -g`?). Say which you want:\n'
+		printf '  rtk-hook enable    keep it, and record the choice so apply respects it\n'
+		printf '  rtk-hook disable   unwire it\n'
+		printf 'Until then `chezmoi apply` leaves it exactly as-is.\n'
+	elif [ "$marker" = "enabled" ]; then
+		printf 'Allowlisted Bash commands are rewritten automatically.\n'
+	else
+		printf 'Nothing is rewritten. rtk runs only when you type `rtk <cmd>`.\n'
+	fi
+}
+
+case "$CMD" in
+enable) do_enable ;;
+disable) do_disable ;;
+status) do_status ;;
+-h | --help)
+	usage
+	exit 0
+	;;
+*)
+	echo "rtk-hook: unknown command: $CMD" >&2
+	usage >&2
+	exit 2
+	;;
+esac
