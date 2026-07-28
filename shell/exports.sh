@@ -8,16 +8,16 @@ export HISTSIZE=100000
 export SAVEHIST=100000
 export HISTFILE=~/.zsh_history
 
-setopt EXTENDED_HISTORY          # Timestamp format :start:elapsed:command
-setopt INC_APPEND_HISTORY        # Write immediately, not on exit
-setopt SHARE_HISTORY             # Share between sessions
-setopt HIST_EXPIRE_DUPS_FIRST    # Expire dupes first
-setopt HIST_IGNORE_DUPS          # Don't record immediate dupes
-setopt HIST_IGNORE_ALL_DUPS      # Remove older dupe entries
-setopt HIST_FIND_NO_DUPS         # Don't show dupes when searching
-setopt HIST_IGNORE_SPACE         # Don't record entries starting with space
-setopt HIST_SAVE_NO_DUPS         # Don't write dupes to file
-setopt HIST_REDUCE_BLANKS        # Remove extra blanks
+setopt EXTENDED_HISTORY       # Timestamp format :start:elapsed:command
+setopt INC_APPEND_HISTORY     # Write immediately, not on exit
+setopt SHARE_HISTORY          # Share between sessions
+setopt HIST_EXPIRE_DUPS_FIRST # Expire dupes first
+setopt HIST_IGNORE_DUPS       # Don't record immediate dupes
+setopt HIST_IGNORE_ALL_DUPS   # Remove older dupe entries
+setopt HIST_FIND_NO_DUPS      # Don't show dupes when searching
+setopt HIST_IGNORE_SPACE      # Don't record entries starting with space
+setopt HIST_SAVE_NO_DUPS      # Don't write dupes to file
+setopt HIST_REDUCE_BLANKS     # Remove extra blanks
 
 # ============================================================
 # Editor

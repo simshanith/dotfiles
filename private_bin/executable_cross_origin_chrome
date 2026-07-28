@@ -22,7 +22,7 @@ CHROME_BIN="${CHROME_BIN:-/Applications/Google Chrome.app/Contents/MacOS/Google 
 USER_DATA_DIR="$(mktemp -d "${TMPDIR:-/tmp}/cross_origin_chrome.XXXXXX")"
 
 (
-	"$CHROME_BIN" --disable-web-security --user-data-dir="$USER_DATA_DIR" > /dev/null 2>&1 &
+	"$CHROME_BIN" --disable-web-security --user-data-dir="$USER_DATA_DIR" >/dev/null 2>&1 &
 	chrome_process_id=$!
 	wait "$chrome_process_id"
 	rm -rf "$USER_DATA_DIR"

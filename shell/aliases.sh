@@ -7,7 +7,7 @@
 if command -v gls &>/dev/null; then
     alias ls='gls --color=auto -p -F'
 else
-    alias ls='ls -GFh'  # macOS fallback
+    alias ls='ls -GFh' # macOS fallback
 fi
 alias la='ls -A'
 alias ll='ls -lh'

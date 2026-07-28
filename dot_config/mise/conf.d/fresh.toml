@@ -16,7 +16,7 @@ idiomatic_version_file_enable_tools = ["node"]
 credential_command = "gh auth token"
 
 [settings.pipx]
-uvx = true  # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (default when uv present)
+uvx = true # "pipx:<pkg>" installs via `uv tool`, no pipx binary needed (default when uv present)
 
 [settings.python]
 uv_venv_auto = true
@@ -25,7 +25,7 @@ uv_venv_auto = true
 # Languages
 bun  = "latest"
 go   = "latest"
-node = "lts"  # system default only; projects override via .nvmrc / .node-version / mise.toml
+node = "lts"    # system default only; projects override via .nvmrc / .node-version / mise.toml
 rust = "latest"
 
 # Python: uv owns interpreters, venvs, and `uv run` scripts. CLI tools are "pipx:<pkg>".
@@ -43,7 +43,7 @@ yazi    = "latest"
 # tree: not in mise registry under that short name — left in Brewfile
 
 # Git
-delta   = "latest"  # git-delta
+delta   = "latest" # git-delta
 gh      = "latest"
 lazygit = "latest"
 # tig: not in mise registry under that short name — left in Brewfile
@@ -56,11 +56,11 @@ starship = "latest"
 
 # AI coding agents
 "aqua:openai/codex" = "latest"
-opencode = "latest"  # anomalyco/opencode
+opencode            = "latest" # anomalyco/opencode
 # rtk: always on PATH for explicit `rtk <cmd>` use. Whether it *also* rewrites
 # Bash commands automatically is a per-machine toggle, off until asked for:
 #   mise run rtk:hook / rtk:unhook / rtk:hook:status     (see 2026_REFRESH.md)
-rtk      = "latest"  # aqua:rtk-ai/rtk — token-optimizing CLI proxy.
+rtk = "latest" # aqua:rtk-ai/rtk — token-optimizing CLI proxy.
 
 # Dotfiles management — must be in the committed baseline so a fresh machine's
 # install.sh (mise install -> chezmoi init) can bootstrap. (Previously chezmoi
@@ -74,17 +74,18 @@ chezmoi = "latest"
 # on first file open. Only language servers + formatters belong in mise.
 # NOTE: this installs fleet-wide via the shared baseline. If you'd rather keep
 # LSP servers off headless boxes, move this block to config.local.toml.
-"npm:typescript-language-server"        = "latest"  # TS / JS / TSX
-"npm:yaml-language-server"              = "latest"  # YAML
-"npm:vscode-langservers-extracted"      = "latest"  # JSON / CSS / HTML / ESLint
-"npm:bash-language-server"              = "latest"  # Bash / sh
-"npm:dockerfile-language-server-nodejs" = "latest"  # Dockerfile
-marksman = "latest"  # Markdown LSP
-"pipx:grip" = "latest"  # GitHub-accurate markdown preview (Emacs grip-mode)
+"npm:typescript-language-server"        = "latest" # TS / JS / TSX
+"npm:yaml-language-server"              = "latest" # YAML
+"npm:vscode-langservers-extracted"      = "latest" # JSON / CSS / HTML / ESLint
+"npm:bash-language-server"              = "latest" # Bash / sh
+"npm:dockerfile-language-server-nodejs" = "latest" # Dockerfile
+marksman                                = "latest" # Markdown LSP
+"pipx:grip"                             = "latest" # GitHub-accurate markdown preview (Emacs grip-mode)
 # Formatters for apheleia (format-on-save off by default; C-c f formats once):
-prettier = "latest"  # TS / JSON / YAML / Markdown
-shfmt    = "latest"  # shell
-taplo    = "latest"  # TOML
+prettier = "latest" # TS / JSON / YAML
+oxfmt    = "latest" # Markdown (npm:oxfmt) — Rust-based; delegates .md to prettier
+shfmt    = "latest" # shell
+taplo    = "latest" # TOML
 # rust-analyzer + rustfmt ship with the rust toolchain. If rust-analyzer is
 # absent:  rustup component add rust-analyzer rustfmt
 
@@ -105,16 +106,16 @@ taplo    = "latest"  # TOML
 
 [tasks."rtk:hook"]
 description = "Enable rtk's Claude Code hook (allowlisted commands get rewritten)"
-run = '"$HOME/bin/rtk-hook" enable'
+run         = '"$HOME/bin/rtk-hook" enable'
 
 [tasks."rtk:unhook"]
 description = "Disable it — rtk stays on PATH, nothing is rewritten automatically"
-run = '"$HOME/bin/rtk-hook" disable'
+run         = '"$HOME/bin/rtk-hook" disable'
 
 [tasks."rtk:hook:status"]
 description = "Show whether rtk's hook is wired, and flag any drift"
-run = '"$HOME/bin/rtk-hook" status'
+run         = '"$HOME/bin/rtk-hook" status'
 
 [tasks."rtk:uninstall"]
 description = "Remove rtk entirely, wiring included (dry run; pass -- --yes)"
-run = '"$HOME/bin/rtk-uninstall"'
+run         = '"$HOME/bin/rtk-uninstall"'

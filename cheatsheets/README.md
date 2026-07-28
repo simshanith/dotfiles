@@ -5,11 +5,11 @@ Source-only: listed in `.chezmoiignore`, never deployed to `$HOME`.
 
 ## Contents
 
-| File | What | Source |
-|------|------|--------|
-| [custom-keybindings.md](custom-keybindings.md) | Every keybinding this config adds (fzf, ghostel, magit, apheleia, grip) | **Generated** from init.el — see below |
+| File                                             | What                                                                                  | Source                                                                                  |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [custom-keybindings.md](custom-keybindings.md)   | Every keybinding this config adds (fzf, ghostel, magit, apheleia, grip)               | **Generated** from init.el — see below                                                  |
 | [paredit-cheatsheet.svg](paredit-cheatsheet.svg) | Structural editing commands for lisp buffers (paredit is hook-enabled in this config) | [joelittlejohn/paredit-cheatsheet](https://github.com/joelittlejohn/paredit-cheatsheet) |
-| [emacs-fundamentals.md](emacs-fundamentals.md) | Links to the official GNU refcards + crib tables for kill/yank/mark and dired | [gnu.org refcards](https://www.gnu.org/software/emacs/refcards/) |
+| [emacs-fundamentals.md](emacs-fundamentals.md)   | Links to the official GNU refcards + crib tables for kill/yank/mark and dired         | [gnu.org refcards](https://www.gnu.org/software/emacs/refcards/)                        |
 
 ## Paredit at a glance
 

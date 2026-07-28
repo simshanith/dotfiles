@@ -1,0 +1,13 @@
+# Read by editors and, importantly, by shfmt: with no -i/-ln flags, shfmt takes
+# indentation from here, so `shfmt -d .` agrees with format-on-save.
+# This file only describes the two indent dialects already in the repo; it is
+# not an attempt to unify them.
+
+# private_bin/ scripts are tab-indented (shfmt's own default).
+[*]
+indent_style = tab
+
+# install.sh and the sourced shell/ fragments are 4-space indented.
+[{install.sh,shell/*.sh}]
+indent_style = space
+indent_size = 4

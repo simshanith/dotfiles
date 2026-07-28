@@ -3,23 +3,23 @@ truncation_length = 0
 
 [time]
 disabled = false
-style = "bold green"
+style    = "bold green"
 
 [username]
 show_always = true
-format = "[$user]($style)@"
-style_user = "blue"
+format      = "[$user]($style)@"
+style_user  = "blue"
 
 
 [hostname]
 ssh_only = false
-trim_at = ""
-style = "blue"
+trim_at  = ""
+style    = "blue"
 
 [character]
 success_symbol = "[λ](bold green)"
 error_symbol = "[λ](bold red)"
-format	= """
+format = """
 
  $symbol 
 """
