@@ -40,7 +40,7 @@ chezmoi cd                     # drop a shell in the source dir
 
 - **Templating solves the per-machine problem natively.** No more "shared baseline (symlinked) + per-machine override (copied)" two-file dance for `mise/config.toml`, `git/.gituserconfig`, etc. One `.tmpl` file, prompts on `chezmoi init`, renders to the right shape on each machine.
 - **`run_once_*` scripts replace install-script glue.** Each script runs exactly once per content hash, state tracked in chezmoi's persistent state. The "is this already installed?" `if [[ -f ... ]]` chains in `install.sh` go away.
-- **Built-in conditionals.** `{{ if eq .chezmoi.os "darwin" }}` and `{{ if .work }}` are first-class. Currently single-OS / single-class, but cheap insurance.
+- **Built-in conditionals.** `{{ if eq .chezmoi.os "darwin" }}` and host checks like `{{ if env "CODER_WORKSPACE_NAME" }}` are first-class. Currently single-OS, but cheap insurance.
 - **Active community.** Multiple 2025 blog posts including a [chezmoi + mise](https://manuelchichi.com.ar/blog/personal-toolset-2025/) walkthrough — the exact combo we're running. v2.70.5 was built today (2026-06-03).
 
 ## What Fresh did, mapped to chezmoi
@@ -146,10 +146,7 @@ Replaces both the `~/.gitconfig` symlink **and** the `git/.gituserconfig` stub +
 # Shared baseline lives in conf.d/fresh.toml.
 
 [tools]
-{{- if .work }}
-# Work-only tools
-# example: aws-vault = "latest"
-{{- end }}
+# Add machine-specific tools here.
 ```
 
 The `config.local.toml.tmpl` similarly absorbs whatever you'd put in it today. The `cp ~/.dotfiles/mise/config.local.toml ~/.config/mise/config.local.toml` dance from current `install.sh` disappears.

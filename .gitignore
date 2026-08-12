@@ -1,4 +1,3 @@
-# The work Brewfile now lives in the private repo cloned to ~/.dotfiles-work
-# (see .chezmoiexternal.toml), NOT here. This guard just prevents a stray copy at
-# the public repo root from ever being committed (it names Adobe-internal taps).
+# Local Homebrew bundle dumps — never tracked in this public repo.
 Brewfile.work
+Brewfile.local

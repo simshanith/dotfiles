@@ -50,10 +50,9 @@ cask "ghostty"
 cask "google-chrome"
 cask "iterm2"
 cask "localsend"
-# Per-machine casks are bundled by hooks gated on the .work flag:
-#   personal -> Brewfile.home (in this repo), via run_onchange_after_25-brew-home
-#   work     -> Brewfile.work in the private ~/.dotfiles-work clone
-#               (see .chezmoiexternal.toml), via run_after_26-brew-work
+# Desktop-only casks live in Brewfile.home (in this repo) and are bundled on
+# macOS by run_onchange_after_25-brew-home. This main Brewfile stays common and
+# headless-safe.
 
 # Fonts
 cask "font-symbols-only-nerd-font"

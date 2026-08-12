@@ -165,12 +165,9 @@
 	helper = !mise exec -- gh auth git-credential
 {{ end -}}
 
-# Work-only git config (corp URL rewrites like git.corp.adobe.com, work identity
-# overrides, ...) lives in the private repo cloned to ~/.dotfiles-work (see
-# .chezmoiexternal.toml). Included last so it can override anything above.
-# Absent on personal machines and before the external is cloned -> git ignores a
-# missing include path silently.
-{{ if .work -}}
+# Machine-local git overrides (identity, corp URL rewrites, credential helpers,
+# ...). Included last so it can override anything above. git silently ignores a
+# missing include path, so this is a no-op on machines that don't have the file.
+# Personal machines leave it absent; a private overlay (if any) writes it.
 [include]
-	path = ~/.dotfiles-work/gitconfig
-{{ end -}}
+	path = ~/.config/git/local
