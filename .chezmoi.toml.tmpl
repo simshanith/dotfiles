@@ -12,6 +12,7 @@
 {{- $email := promptStringOnce . "email" "Git email" -}}
 {{- $work := promptBoolOnce . "work" "Work machine?" false -}}
 {{- $machine := promptStringOnce . "machine" "Machine label (e.g. mbp-personal)" "personal" -}}
+{{- $signingkey := promptStringOnce . "signingkey" "Git signing key (blank to disable commit signing)" "" -}}
 
 sourceDir = "{{ .chezmoi.sourceDir }}"
 mode = "symlink"
@@ -21,3 +22,4 @@ mode = "symlink"
     email = {{ $email | quote }}
     work = {{ $work }}
     machine = {{ $machine | quote }}
+    signingkey = {{ $signingkey | quote }}

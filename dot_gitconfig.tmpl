@@ -4,6 +4,9 @@
 [user]
   name = {{ .name }}
   email = {{ .email }}
+{{- if .signingkey }}
+  signingkey = {{ .signingkey }}
+{{- end }}
 
 [core]
   editor = emacs --no-splash -nw
@@ -14,6 +17,17 @@
   diff = true
 [init]
   defaultBranch = main
+{{- if .signingkey }}
+# Sign commits when a signing key is configured (prompted once at `chezmoi init`,
+# blank on machines without a key -> unsigned, no broken commits).
+[commit]
+  gpgsign = true
+{{- end }}
+[rerere]
+  enabled = true
+  autoupdate = true
+[status]
+  showStash = true
 # --- Multi-account routing & URL shorthands ---------------------------------
 # Personal repos route through the github-simshanith SSH alias so the *personal*
 # key is used. On a work machine the default github.com key is the work identity,
