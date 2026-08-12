@@ -12,6 +12,10 @@
 {{- $email := promptStringOnce . "email" "Git email" -}}
 {{- $machine := promptStringOnce . "machine" "Machine label (e.g. mbp-personal)" "personal" -}}
 {{- $signingkey := promptStringOnce . "signingkey" "Git signing key (blank to disable commit signing)" "" -}}
+{{- /* Opt-in: personal daily-drivers answer true to auto-install desktop casks
+       (Brewfile.home). Neutral default false -> work/servers/CI/Coder get none.
+       No work knowledge in the base; "not home" is just the unopted default. */ -}}
+{{- $home := promptBoolOnce . "home" "Personal machine? (auto-install desktop casks from Brewfile.home)" false -}}
 
 sourceDir = "{{ .chezmoi.sourceDir }}"
 mode = "symlink"
@@ -21,3 +25,4 @@ mode = "symlink"
     email = {{ $email | quote }}
     machine = {{ $machine | quote }}
     signingkey = {{ $signingkey | quote }}
+    home = {{ $home }}
