@@ -1,5 +1,5 @@
 #!/bin/sh
-# Reconcile rtk's Claude Code hook to this machine's choice, on every apply.
+# Reconcile rtk's Claude Code hook to this machine's choice.
 #
 # The choice lives in a marker file written by `rtk-hook enable` / removed by
 # `rtk-hook disable`. This script only re-asserts it -- it never decides.
@@ -16,6 +16,15 @@
 # mostly headless. It also means this never *removes* a hook: someone who ran
 # `rtk init -g` by hand keeps what they wired until they run `rtk-hook disable`,
 # which `rtk-hook status` will point out.
+#
+# run_onchange (not run_after): keyed on the marker state below, so a clean apply
+# stays silent in `chezmoi status` instead of showing this every time. It re-runs
+# only when the enable/disable marker flips (or the rev line is bumped). The
+# per-apply self-heal of external drift is intentionally traded away for quiet --
+# `rtk-hook status` still surfaces drift, and any toggle re-asserts the wiring.
+#
+# marker: present={{ if stat (joinPath .chezmoi.homeDir ".config" "rtk-hook-enabled") }}yes{{ else }}no{{ end }}
+# rev: 1
 #
 # No-ops silently when Claude Code isn't installed.
 

@@ -9,10 +9,13 @@
 # gated on the .work flag). This hook applies that set. Personal machines render
 # this script empty, so chezmoi skips it.
 #
-# run_after (not run_onchange): the Brewfile lives outside chezmoi's source tree,
-# so its content can't be hashed at template time. brew bundle is idempotent, so
-# re-running each apply is cheap. If the private repo hasn't been cloned yet
-# (first apply, or auth not ready) the file is absent and this renders empty.
+# run_onchange (not run_after): the Brewfile lives outside chezmoi's source tree,
+# so it can't be hashed with `include`. Instead we read it at render time with
+# `output "cat"` and embed its sha256 below, so this only re-runs -- and only
+# shows in `chezmoi status` -- when Brewfile.work actually changes. Before the
+# private repo is cloned the file is absent and this renders empty.
+#
+# Brewfile.work sha256: {{ output "cat" $bf | sha256sum }}
 set -eu
 brew bundle --file="{{ $bf }}" || true
 {{-   end }}
