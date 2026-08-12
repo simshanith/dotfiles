@@ -1,7 +1,8 @@
 # Brewfile.home — personal-machine Homebrew extras.
 #
-# Auto-bundled on machines that answered work=false at `chezmoi init`, via the
-# run_onchange_after_25-brew-home hook. NOT installed on work machines.
+# Auto-bundled only on machines that answered home=true at `chezmoi init`, via
+# the run_onchange_after_25-brew-home hook. The `home` opt-in defaults to false,
+# so work/servers/CI/Coder never install these.
 #
 # The main Brewfile stays common + headless-safe (and un-templated); anything
 # that only personal boxes should get lives here. Distinct from Brewfile.optional
