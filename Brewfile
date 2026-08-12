@@ -50,7 +50,9 @@ cask "ghostty"
 cask "google-chrome"
 cask "iterm2"
 cask "localsend"
-cask "tailscale-app"
+# Desktop-only casks live in Brewfile.home (in this repo) and are bundled on
+# macOS by run_onchange_after_25-brew-home. This main Brewfile stays common and
+# headless-safe.
 
 # Fonts
 cask "font-symbols-only-nerd-font"

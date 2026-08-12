@@ -1,0 +1,12 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+# Bundle GUI/desktop Homebrew casks (macOS only).
+#
+# The main Brewfile is common + headless-safe and un-templated. Desktop casks
+# that only make sense on a Mac live in Brewfile.home; this hook applies them.
+# run_onchange: re-bundles whenever Brewfile.home changes.
+#
+# Brewfile.home sha256: {{ include "Brewfile.home" | sha256sum }}
+set -eu
+brew bundle --file="{{ .chezmoi.sourceDir }}/Brewfile.home" || true
+{{ end -}}
