@@ -31,7 +31,7 @@ export GIT_EDITOR="$EDITOR"
 # ============================================================
 export MANPAGER="less -X"
 export PAGER="less"
-export LESS="-R"
+export LESS="-RX"
 
 # ============================================================
 # Locale
