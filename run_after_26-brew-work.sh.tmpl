@@ -1,4 +1,4 @@
-{{ if .work -}}
+{{ if and .work (eq .chezmoi.os "darwin") -}}
 {{-   $bf := joinPath .chezmoi.homeDir ".dotfiles-work" "Brewfile.work" -}}
 {{-   if stat $bf -}}
 #!/bin/sh

@@ -14,24 +14,22 @@
   diff = true
 [init]
   defaultBranch = main
+# --- Multi-account routing & URL shorthands ---------------------------------
+# Personal repos route through the github-simshanith SSH alias so the *personal*
+# key is used. On a work machine the default github.com key is the work identity,
+# so without this a simshanith clone would auth as the wrong account. Longer
+# prefix wins, so this beats any general github.com rule. (See ~/.ssh/config.)
+[url "git@github-simshanith:simshanith/"]
+  insteadOf = "https://github.com/simshanith/"
+  insteadOf = "git@github.com:simshanith/"
+  insteadOf = "git://github.com/simshanith/"
+
+# Convenience shorthands. Everything else on github.com keeps HTTPS + the gh
+# credential helper below (upstream's default), rather than a blanket https->ssh.
 [url "git@github.com:"]
   insteadOf = "gh:"
-  pushInsteadOf = "github:"
-  pushInsteadOf = "git://github.com/"
-[url "git://github.com/"]
-  insteadOf = "github:"
 [url "git@gist.github.com:"]
   insteadOf = "gst:"
-  pushInsteadOf = "gist:"
-  pushInsteadOf = "git://gist.github.com/"
-[url "git://gist.github.com/"]
-  insteadOf = "gist:"
-
-# Any GitHub repo with my username should be checked out r/w by default
-# http://rentzsch.tumblr.com/post/564806957/public-but-hackable-git-submodules
-[url "git@github.com:simshanith/"]
-  insteadOf = "git://github.com/simshanith/"
-  insteadOf = "https://github.com/simshanith/"
 
 [push]
   default = simple
@@ -151,4 +149,14 @@
 [credential "https://gist.github.com"]
 	helper =
 	helper = !mise exec -- gh auth git-credential
+{{ end -}}
+
+# Work-only git config (corp URL rewrites like git.corp.adobe.com, work identity
+# overrides, ...) lives in the private repo cloned to ~/.dotfiles-work (see
+# .chezmoiexternal.toml). Included last so it can override anything above.
+# Absent on personal machines and before the external is cloned -> git ignores a
+# missing include path silently.
+{{ if .work -}}
+[include]
+	path = ~/.dotfiles-work/gitconfig
 {{ end -}}

@@ -1,4 +1,4 @@
-{{ if not .work -}}
+{{ if and (not .work) (eq .chezmoi.os "darwin") -}}
 #!/bin/sh
 # Bundle personal-machine Homebrew extras (work=false only).
 #
