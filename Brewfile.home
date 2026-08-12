@@ -1,0 +1,11 @@
+# Brewfile.home — personal-machine Homebrew extras.
+#
+# Auto-bundled on machines that answered work=false at `chezmoi init`, via the
+# run_onchange_after_25-brew-home hook. NOT installed on work machines.
+#
+# The main Brewfile stays common + headless-safe (and un-templated); anything
+# that only personal boxes should get lives here. Distinct from Brewfile.optional
+# (opt-in-by-hand desktop extras).
+
+# Casks
+cask "tailscale-app"

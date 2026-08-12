@@ -50,7 +50,10 @@ cask "ghostty"
 cask "google-chrome"
 cask "iterm2"
 cask "localsend"
-cask "tailscale-app"
+# Per-machine casks live in Brewfile.home / Brewfile.work, auto-bundled by the
+# run_onchange_after_2{5,6}-brew-{home,work} hooks gated on the .work flag:
+#   personal -> Brewfile.home  (e.g. tailscale-app)
+#   work     -> Brewfile.work  (e.g. Adobe-internal taps)
 
 # Fonts
 cask "font-symbols-only-nerd-font"

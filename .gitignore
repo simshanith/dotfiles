@@ -1,0 +1,4 @@
+# Work-machine Brewfile — names Adobe-internal taps; keep out of the public repo.
+# Lives only on the work box; the run_onchange_after_26-brew-work hook self-gates
+# on its presence.
+Brewfile.work

@@ -1,0 +1,21 @@
+{{ if .work -}}
+{{-   $bf := joinPath .chezmoi.sourceDir "Brewfile.work" -}}
+{{-   if stat $bf -}}
+#!/bin/sh
+# Bundle work-machine (Adobe) Homebrew extras (work=true only).
+#
+# The main Brewfile is common + headless-safe and un-templated. Per-machine
+# casks live in Brewfile.home / Brewfile.work; this hook applies the work set,
+# gated on the .work flag answered at `chezmoi init`. Personal machines render
+# this script empty, so chezmoi skips it. run_onchange: re-bundles whenever
+# Brewfile.work changes.
+#
+# Brewfile.work is gitignored (it names Adobe-internal taps) and lives only on
+# the work machine. When it's absent -- e.g. a fresh public clone -- this hook
+# renders empty and chezmoi skips it.
+#
+# Brewfile.work sha256: {{ include "Brewfile.work" | sha256sum }}
+set -eu
+brew bundle --file="{{ $bf }}" || true
+{{-   end }}
+{{ end -}}
