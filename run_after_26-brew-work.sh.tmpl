@@ -1,0 +1,19 @@
+{{ if .work -}}
+{{-   $bf := joinPath .chezmoi.homeDir ".dotfiles-work" "Brewfile.work" -}}
+{{-   if stat $bf -}}
+#!/bin/sh
+# Bundle work-machine (Adobe) Homebrew extras (work=true only).
+#
+# The main Brewfile is common + headless-safe and un-templated. Work-only casks
+# live in the private repo cloned to ~/.dotfiles-work (see .chezmoiexternal.toml,
+# gated on the .work flag). This hook applies that set. Personal machines render
+# this script empty, so chezmoi skips it.
+#
+# run_after (not run_onchange): the Brewfile lives outside chezmoi's source tree,
+# so its content can't be hashed at template time. brew bundle is idempotent, so
+# re-running each apply is cheap. If the private repo hasn't been cloned yet
+# (first apply, or auth not ready) the file is absent and this renders empty.
+set -eu
+brew bundle --file="{{ $bf }}" || true
+{{-   end }}
+{{ end -}}

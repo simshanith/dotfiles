@@ -1,4 +1,4 @@
-# Work-machine Brewfile — names Adobe-internal taps; keep out of the public repo.
-# Lives only on the work box; the run_onchange_after_26-brew-work hook self-gates
-# on its presence.
+# The work Brewfile now lives in the private repo cloned to ~/.dotfiles-work
+# (see .chezmoiexternal.toml), NOT here. This guard just prevents a stray copy at
+# the public repo root from ever being committed (it names Adobe-internal taps).
 Brewfile.work
