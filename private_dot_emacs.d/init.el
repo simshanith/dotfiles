@@ -106,12 +106,22 @@
 (use-package grip-mode
   :bind (:map markdown-mode-command-map ("g" . grip-mode))
   :config
-  ;; Only the API-backed `grip` needs credentials; unauthenticated it's throttled
-  ;; to 60 req/hr. Pull a github.com token from the gh CLI (lazily, once) so we
-  ;; never hardcode a secret in this repo. `go-grip` ignores these (no API call).
-  (defun my/grip--auth-from-gh ()
+  (defun my/grip--effective-command ()
+    "Resolve which backend `grip-start-process' will actually run.
+Mirrors grip-mode's own `auto' order (mdopen > go-grip > grip)."
+    (if (eq grip-command 'auto)
+        (cond ((executable-find "mdopen")  'mdopen)
+              ((executable-find "go-grip") 'go-grip)
+              ((executable-find "grip")    'grip))
+      grip-command))
+  ;; Only the API-backed pipx `grip` needs credentials; unauthenticated it's
+  ;; throttled to 60 req/hr. When (and only when) that backend is the one about
+  ;; to run, pull a github.com token from the gh CLI (lazily, once) so we never
+  ;; hardcode a secret. `go-grip`/`mdopen` render locally and skip this entirely.
+  (defun my/grip--auth-from-gh (&rest _)
     "Populate `grip-github-user'/`grip-github-password' from the gh CLI (github.com)."
-    (when (and (executable-find "gh")
+    (when (and (eq (my/grip--effective-command) 'grip)
+               (executable-find "gh")
                (string-empty-p grip-github-password))
       (let ((user  (string-trim (shell-command-to-string
                                  "gh api --hostname github.com user --jq .login 2>/dev/null")))
@@ -120,7 +130,7 @@
         (unless (string-empty-p token)
           (setq grip-github-user user
                 grip-github-password token)))))
-  (add-hook 'grip-mode-hook #'my/grip--auth-from-gh))
+  (advice-add 'grip-start-process :before #'my/grip--auth-from-gh))
 
 ;;; LSP via Eglot (built-in) --------------------------------------------------
 (use-package eglot
