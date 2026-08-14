@@ -115,21 +115,35 @@ Mirrors grip-mode's own `auto' order (mdopen > go-grip > grip)."
               ((executable-find "grip")    'grip))
       grip-command))
   ;; Only the API-backed pipx `grip` needs credentials; unauthenticated it's
-  ;; throttled to 60 req/hr. When (and only when) that backend is the one about
-  ;; to run, pull a github.com token from the gh CLI (lazily, once) so we never
-  ;; hardcode a secret. `go-grip`/`mdopen` render locally and skip this entirely.
-  (defun my/grip--auth-from-gh (&rest _)
-    "Populate `grip-github-user'/`grip-github-password' from the gh CLI (github.com)."
-    (when (and (eq (my/grip--effective-command) 'grip)
-               (executable-find "gh")
-               (string-empty-p grip-github-password))
+  ;; throttled to 60 req/hr. `go-grip`/`mdopen` render locally and skip this.
+  (defun my/grip--fetch-gh-creds ()
+    "Fetch a fresh github.com token from the gh CLI into grip's cred vars.
+Returns the login on success, nil otherwise. No secret is stored in-repo;
+this pulls at call time (gh refreshes its own OAuth tokens)."
+    (when (executable-find "gh")
       (let ((user  (string-trim (shell-command-to-string
                                  "gh api --hostname github.com user --jq .login 2>/dev/null")))
             (token (string-trim (shell-command-to-string
                                  "gh auth token --hostname github.com 2>/dev/null"))))
         (unless (string-empty-p token)
           (setq grip-github-user user
-                grip-github-password token)))))
+                grip-github-password token)
+          user))))
+  (defun my/grip-refresh-creds ()
+    "Manually (re)load grip's github.com credentials from the gh CLI.
+Handy to pre-warm before switching to the API `grip' backend, or to pick
+up a rotated token without restarting Emacs."
+    (interactive)
+    (let ((login (my/grip--fetch-gh-creds)))
+      (message (if login
+                   (format "grip: authenticated as %s (github.com)" login)
+                 "grip: no github.com token from gh — run `gh auth login`"))))
+  ;; Refetch fresh on every grip-backed preview (not go-grip/mdopen) so a
+  ;; rotated/expired token never goes stale. `:before' runs ahead of
+  ;; grip-start-process reading these vars into the process args.
+  (defun my/grip--auth-from-gh (&rest _)
+    (when (eq (my/grip--effective-command) 'grip)
+      (my/grip--fetch-gh-creds)))
   (advice-add 'grip-start-process :before #'my/grip--auth-from-gh))
 
 ;;; LSP via Eglot (built-in) --------------------------------------------------
