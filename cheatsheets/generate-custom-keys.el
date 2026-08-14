@@ -81,6 +81,17 @@ Walks nested forms so packages wrapped in `when' etc. are found too."
             (setq rest (cdr rest))))))
     rows))
 
+(defconst gck-map-prefixes
+  '((markdown-mode-command-map . "C-c C-c"))
+  "Invoking chord for prefix keymaps that hang off another key.
+Lets the Key column show the full sequence (e.g. `C-c C-c g`) instead of
+just the leaf key — the prefix isn't derivable from init.el's :bind.")
+
+(defun gck-full-key (key map)
+  "Prepend MAP's invoking prefix chord to KEY when known (see `gck-map-prefixes')."
+  (let ((prefix (and map (cdr (assq map gck-map-prefixes)))))
+    (if prefix (concat prefix " " key) key)))
+
 (defun gck-kbd (key)
   "Render KEY as <kbd> keycaps: one per chord, multi-chord sequences
 nested inside a grouping outer <kbd> (MDN pattern)."
@@ -90,18 +101,37 @@ nested inside a grouping outer <kbd> (MDN pattern)."
                 (mapconcat (lambda (c) (format "<kbd>%s</kbd>" c)) chords " "))
       (format "<kbd>%s</kbd>" key))))
 
+(defun gck-render-table (header rows)
+  "Render HEADER (column titles) and ROWS (lists of cells) as a column-aligned
+GFM table, matching prettier's left-aligned padding so the generated block is
+stable under the repo's markdown formatter."
+  (let* ((cols (length header))
+         (widths (cl-loop for i below cols collect
+                          (cl-loop for r in (cons header rows)
+                                   maximize (length (nth i r))))))
+    (cl-flet ((fmt (cells)
+                (concat
+                 "| "
+                 (mapconcat (lambda (i)
+                              (let ((s (or (nth i cells) "")))
+                                (concat s (make-string (- (nth i widths) (length s)) ?\s))))
+                            (number-sequence 0 (1- cols)) " | ")
+                 " |")))
+      (concat (fmt header) "\n"
+              "| " (mapconcat (lambda (w) (make-string w ?-)) widths " | ") " |\n"
+              (mapconcat #'fmt rows "\n") "\n"))))
+
 (defun gck-table ()
-  "Render the bindings as a GFM table."
-  (concat
-   "| Key | Command | Package | Keymap |\n"
-   "|-----|---------|---------|--------|\n"
-   (mapconcat
+  "Render the bindings as a column-aligned GFM table."
+  (gck-render-table
+   '("Key" "Command" "Package" "Keymap")
+   (mapcar
     (lambda (row)
       (pcase-let ((`(,pkg ,key ,cmd ,map) row))
-        (format "| %s | `%s` | %s | %s |"
-                (gck-kbd key) cmd pkg (if map (format "`%s`" map) "global"))))
-    (gck-bindings) "\n")
-   "\n"))
+        (list (gck-kbd (gck-full-key key map))
+              (format "`%s`" cmd) (format "%s" pkg)
+              (if map (format "`%s`" map) "global"))))
+    (gck-bindings))))
 
 (let* ((check (member "--check" command-line-args-left))
        (table (gck-table))
