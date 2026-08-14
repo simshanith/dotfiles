@@ -144,7 +144,24 @@ up a rotated token without restarting Emacs."
   (defun my/grip--auth-from-gh (&rest _)
     (when (eq (my/grip--effective-command) 'grip)
       (my/grip--fetch-gh-creds)))
-  (advice-add 'grip-start-process :before #'my/grip--auth-from-gh))
+  (advice-add 'grip-start-process :before #'my/grip--auth-from-gh)
+  ;; A/B toggles: flip `grip-command' and restart the preview in one step.
+  ;; `grip-command' only takes effect on the next process start, so restart
+  ;; grip-mode in this buffer if it's already live.
+  (defun my/grip--switch (backend label)
+    (setq grip-command backend)
+    (when (bound-and-true-p grip-mode)
+      (grip-mode -1)
+      (grip-mode 1))
+    (message "grip backend: %s (%s)" backend label))
+  (defun my/grip-use-api ()
+    "Preview via the GitHub-API `grip' backend — accurate, gh-authed, light, no mermaid."
+    (interactive)
+    (my/grip--switch 'grip "GitHub API"))
+  (defun my/grip-use-local ()
+    "Preview via the local `go-grip' backend — dark, offline, renders mermaid."
+    (interactive)
+    (my/grip--switch 'go-grip "local go-grip")))
 
 ;;; LSP via Eglot (built-in) --------------------------------------------------
 (use-package eglot
