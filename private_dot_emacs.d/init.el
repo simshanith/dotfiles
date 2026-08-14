@@ -100,9 +100,27 @@
   (markdown-fontify-code-blocks-natively t) ; highlight fenced ```ts blocks
   :hook (markdown-mode . visual-line-mode))
 
-;; GitHub-accurate live preview (requires `grip`; mise baseline "pipx:grip").
+;; GitHub-accurate live preview. `grip-command` is `auto`: prefers the local
+;; `go-grip` (GitHub-styled, dark theme, no API/rate-limit) when installed,
+;; else falls back to the API-backed `grip`. mise baseline ships both.
 (use-package grip-mode
-  :bind (:map markdown-mode-command-map ("g" . grip-mode)))
+  :bind (:map markdown-mode-command-map ("g" . grip-mode))
+  :config
+  ;; Only the API-backed `grip` needs credentials; unauthenticated it's throttled
+  ;; to 60 req/hr. Pull a github.com token from the gh CLI (lazily, once) so we
+  ;; never hardcode a secret in this repo. `go-grip` ignores these (no API call).
+  (defun my/grip--auth-from-gh ()
+    "Populate `grip-github-user'/`grip-github-password' from the gh CLI (github.com)."
+    (when (and (executable-find "gh")
+               (string-empty-p grip-github-password))
+      (let ((user  (string-trim (shell-command-to-string
+                                 "gh api --hostname github.com user --jq .login 2>/dev/null")))
+            (token (string-trim (shell-command-to-string
+                                 "gh auth token --hostname github.com 2>/dev/null"))))
+        (unless (string-empty-p token)
+          (setq grip-github-user user
+                grip-github-password token)))))
+  (add-hook 'grip-mode-hook #'my/grip--auth-from-gh))
 
 ;;; LSP via Eglot (built-in) --------------------------------------------------
 (use-package eglot
