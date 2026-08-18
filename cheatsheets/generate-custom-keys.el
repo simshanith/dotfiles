@@ -147,7 +147,9 @@ stable under the repo's markdown formatter."
                 (delete-region start (match-beginning 0)))
               (goto-char (point-min))
               (re-search-forward "^<!-- BEGIN GENERATED — edit init\\.el, not this table -->\n")
-              (insert table)
+              ;; Blank lines around the table: prettier inserts them around an HTML
+              ;; comment either way, so emit them or --check fights the formatter.
+              (insert "\n" table "\n")
               (buffer-string))))
   (cond
    ((string= old new)

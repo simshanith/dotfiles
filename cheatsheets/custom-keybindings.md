@@ -13,6 +13,7 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 (`--check` mode exits non-zero if it's stale: append `-- --check`.)
 
 <!-- BEGIN GENERATED — edit init.el, not this table -->
+
 | Key                                                   | Command                  | Package   | Keymap                      |
 | ----------------------------------------------------- | ------------------------ | --------- | --------------------------- |
 | <kbd><kbd>C-c</kbd> <kbd>C-c</kbd> <kbd>g</kbd></kbd> | `grip-mode`              | grip-mode | `markdown-mode-command-map` |
@@ -25,6 +26,7 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 | <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>r</kbd></kbd>   | `fzf-grep-dwim`          | fzf       | global                      |
 | <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>R</kbd></kbd>   | `fzf-grep`               | fzf       | global                      |
 | <kbd><kbd>C-c</kbd> <kbd>f</kbd></kbd>                | `apheleia-format-buffer` | apheleia  | global                      |
+
 <!-- END GENERATED -->
 
 ## What each package does
