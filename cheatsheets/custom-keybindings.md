@@ -14,18 +14,18 @@ emacs --batch -l cheatsheets/generate-custom-keys.el
 
 <!-- BEGIN GENERATED — edit init.el, not this table -->
 
-| Key                                                 | Command                  | Package   | Keymap                      |
-| --------------------------------------------------- | ------------------------ | --------- | --------------------------- |
-| <kbd>g</kbd>                                        | `grip-mode`              | grip-mode | `markdown-mode-command-map` |
-| <kbd><kbd>C-x</kbd> <kbd>g</kbd></kbd>              | `magit-status`           | magit     | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>t</kbd></kbd>              | `ghostel`                | ghostel   | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>f</kbd></kbd> | `fzf-find-file`          | fzf       | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>g</kbd></kbd> | `fzf-git-files`          | fzf       | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>b</kbd></kbd> | `fzf-switch-buffer`      | fzf       | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>e</kbd></kbd> | `fzf-recentf`            | fzf       | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>r</kbd></kbd> | `fzf-grep-dwim`          | fzf       | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>R</kbd></kbd> | `fzf-grep`               | fzf       | global                      |
-| <kbd><kbd>C-c</kbd> <kbd>f</kbd></kbd>              | `apheleia-format-buffer` | apheleia  | global                      |
+| Key                                                   | Command                  | Package   | Keymap                      |
+| ----------------------------------------------------- | ------------------------ | --------- | --------------------------- |
+| <kbd><kbd>C-c</kbd> <kbd>C-c</kbd> <kbd>g</kbd></kbd> | `grip-mode`              | grip-mode | `markdown-mode-command-map` |
+| <kbd><kbd>C-x</kbd> <kbd>g</kbd></kbd>                | `magit-status`           | magit     | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>t</kbd></kbd>                | `ghostel`                | ghostel   | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>f</kbd></kbd>   | `fzf-find-file`          | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>g</kbd></kbd>   | `fzf-git-files`          | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>b</kbd></kbd>   | `fzf-switch-buffer`      | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>e</kbd></kbd>   | `fzf-recentf`            | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>r</kbd></kbd>   | `fzf-grep-dwim`          | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>z</kbd> <kbd>R</kbd></kbd>   | `fzf-grep`               | fzf       | global                      |
+| <kbd><kbd>C-c</kbd> <kbd>f</kbd></kbd>                | `apheleia-format-buffer` | apheleia  | global                      |
 
 <!-- END GENERATED -->
 
@@ -50,11 +50,11 @@ One-liners for when the command name isn't enough; full write-ups in
 
 ## Notes
 
-- **Keymap column**: `global` bindings work everywhere.
-  `markdown-mode-command-map` hangs off the
-  <kbd><kbd>C-c</kbd> <kbd>C-c</kbd></kbd> prefix in markdown buffers, so
-  grip-mode is really <kbd><kbd>C-c</kbd> <kbd>C-c</kbd> <kbd>g</kbd></kbd>
-  there.
+- **Keymap column**: `global` bindings work everywhere;
+  `markdown-mode-command-map` bindings only in markdown buffers. That map
+  hangs off the <kbd><kbd>C-c</kbd> <kbd>C-c</kbd></kbd> prefix, which the
+  Key column already folds in (so grip-mode is the full
+  <kbd><kbd>C-c</kbd> <kbd>C-c</kbd> <kbd>g</kbd></kbd> chord).
 - **Discovery**: `which-key-mode` is on (built-in since Emacs 30) — pause
   after any prefix (<kbd><kbd>C-c</kbd> <kbd>z</kbd></kbd>, <kbd>C-x</kbd>,
   <kbd><kbd>C-c</kbd> <kbd>C-c</kbd></kbd>) and the available continuations

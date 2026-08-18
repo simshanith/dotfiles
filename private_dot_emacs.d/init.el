@@ -100,9 +100,68 @@
   (markdown-fontify-code-blocks-natively t) ; highlight fenced ```ts blocks
   :hook (markdown-mode . visual-line-mode))
 
-;; GitHub-accurate live preview (requires `grip`; mise baseline "pipx:grip").
+;; GitHub-accurate live preview. `grip-command` is `auto`: prefers the local
+;; `go-grip` (GitHub-styled, dark theme, no API/rate-limit) when installed,
+;; else falls back to the API-backed `grip`. mise baseline ships both.
 (use-package grip-mode
-  :bind (:map markdown-mode-command-map ("g" . grip-mode)))
+  :bind (:map markdown-mode-command-map ("g" . grip-mode))
+  :config
+  (defun my/grip--effective-command ()
+    "Resolve which backend `grip-start-process' will actually run.
+Mirrors grip-mode's own `auto' order (mdopen > go-grip > grip)."
+    (if (eq grip-command 'auto)
+        (cond ((executable-find "mdopen")  'mdopen)
+              ((executable-find "go-grip") 'go-grip)
+              ((executable-find "grip")    'grip))
+      grip-command))
+  ;; Only the API-backed pipx `grip` needs credentials; unauthenticated it's
+  ;; throttled to 60 req/hr. `go-grip`/`mdopen` render locally and skip this.
+  (defun my/grip--fetch-gh-creds ()
+    "Fetch a fresh github.com token from the gh CLI into grip's cred vars.
+Returns the login on success, nil otherwise. No secret is stored in-repo;
+this pulls at call time (gh refreshes its own OAuth tokens)."
+    (when (executable-find "gh")
+      (let ((user  (string-trim (shell-command-to-string
+                                 "gh api --hostname github.com user --jq .login 2>/dev/null")))
+            (token (string-trim (shell-command-to-string
+                                 "gh auth token --hostname github.com 2>/dev/null"))))
+        (unless (string-empty-p token)
+          (setq grip-github-user user
+                grip-github-password token)
+          user))))
+  (defun my/grip-refresh-creds ()
+    "Manually (re)load grip's github.com credentials from the gh CLI.
+Handy to pre-warm before switching to the API `grip' backend, or to pick
+up a rotated token without restarting Emacs."
+    (interactive)
+    (let ((login (my/grip--fetch-gh-creds)))
+      (message (if login
+                   (format "grip: authenticated as %s (github.com)" login)
+                 "grip: no github.com token from gh — run `gh auth login`"))))
+  ;; Refetch fresh on every grip-backed preview (not go-grip/mdopen) so a
+  ;; rotated/expired token never goes stale. `:before' runs ahead of
+  ;; grip-start-process reading these vars into the process args.
+  (defun my/grip--auth-from-gh (&rest _)
+    (when (eq (my/grip--effective-command) 'grip)
+      (my/grip--fetch-gh-creds)))
+  (advice-add 'grip-start-process :before #'my/grip--auth-from-gh)
+  ;; A/B toggles: flip `grip-command' and restart the preview in one step.
+  ;; `grip-command' only takes effect on the next process start, so restart
+  ;; grip-mode in this buffer if it's already live.
+  (defun my/grip--switch (backend label)
+    (setq grip-command backend)
+    (when (bound-and-true-p grip-mode)
+      (grip-mode -1)
+      (grip-mode 1))
+    (message "grip backend: %s (%s)" backend label))
+  (defun my/grip-use-api ()
+    "Preview via the GitHub-API `grip' backend — accurate, gh-authed, light, no mermaid."
+    (interactive)
+    (my/grip--switch 'grip "GitHub API"))
+  (defun my/grip-use-local ()
+    "Preview via the local `go-grip' backend — dark, offline, renders mermaid."
+    (interactive)
+    (my/grip--switch 'go-grip "local go-grip")))
 
 ;;; LSP via Eglot (built-in) --------------------------------------------------
 (use-package eglot
