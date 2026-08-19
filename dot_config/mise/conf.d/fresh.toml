@@ -81,7 +81,7 @@ chezmoi = "latest"
 "npm:dockerfile-language-server-nodejs" = "latest" # Dockerfile
 marksman                                = "latest" # Markdown LSP
 "pipx:grip"                             = "latest" # GitHub-accurate markdown preview via GitHub API (Emacs grip-mode; gh-authed)
-"ubi:chrishrb/go-grip"                  = "latest" # Local GitHub-styled markdown preview, dark theme, no API/rate-limit (grip-mode auto-prefers)
+"github:chrishrb/go-grip"               = "latest" # Local GitHub-styled markdown preview, dark theme, no API/rate-limit (grip-mode auto-prefers)
 # Formatters for apheleia (format-on-save off by default; C-c f formats once):
 prettier = "latest" # TS / JSON / YAML
 oxfmt    = "latest" # Markdown (npm:oxfmt) — Rust-based; delegates .md to prettier
