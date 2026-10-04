@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Hourly prune of macOS wallpaper-agent BMP renders (policy + rationale in
+  macos/wallpaper-cache-prune.swift). Runs a dedicated helper, not find: TCC
+  blocks launchd jobs from other apps' containers without Full Disk Access.
+  Built + loaded by run_onchange_after_30-wallpaper-cache-prune.sh.tmpl.
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.simshanith.wallpaper-cache-prune</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{ .chezmoi.homeDir }}/Library/Application Support/wallpaper-cache-prune/wallpaper-cache-prune</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>3600</integer>  <!-- hourly; missed while asleep → runs on wake -->
+    <key>RunAtLoad</key>
+    <true/>
+    <key>LowPriorityIO</key>
+    <true/>
+    <key>Nice</key>
+    <integer>10</integer>
+    <key>StandardErrorPath</key>
+    <string>{{ .chezmoi.homeDir }}/Library/Logs/wallpaper-cache-prune.log</string>
+</dict>
+</plist>
