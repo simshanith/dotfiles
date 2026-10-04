@@ -1,0 +1,40 @@
+{{ if and (eq .chezmoi.os "darwin") (stat (joinPath .chezmoi.homeDir "Library/Containers/com.apple.wallpaper.agent")) -}}
+#!/bin/sh
+# Build + ad-hoc sign the wallpaper-cache-prune helper and (re)load its
+# LaunchAgent (GUI Macs only; same stat gate as .chezmoiignore).
+# run_onchange: reruns whenever the Swift source or the plist template changes.
+#
+# Full Disk Access is tied to the binary's cdhash, so a byte-identical rebuild
+# keeps the grant; a changed binary needs a one-time re-grant (prompted below).
+#
+# source sha256: {{ include "macos/wallpaper-cache-prune.swift" | sha256sum }}
+# plist sha256:  {{ include "private_Library/LaunchAgents/com.simshanith.wallpaper-cache-prune.plist.tmpl" | sha256sum }}
+set -eu
+command -v swiftc >/dev/null || { echo "wallpaper-cache-prune: swiftc missing (xcode-select --install); skipping" >&2; exit 0; }
+
+dir="$HOME/Library/Application Support/wallpaper-cache-prune"
+bin="$dir/wallpaper-cache-prune"
+plist="$HOME/Library/LaunchAgents/com.simshanith.wallpaper-cache-prune.plist"
+tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
+
+swiftc -O -o "$tmp/wallpaper-cache-prune" "{{ .chezmoi.sourceDir }}/macos/wallpaper-cache-prune.swift"
+codesign --force --sign - --identifier com.simshanith.wallpaper-cache-prune "$tmp/wallpaper-cache-prune"
+
+cdhash() { codesign -dvvv "$1" 2>&1 | sed -n 's/^CDHash=//p'; }
+if [ -f "$bin" ] && [ "$(cdhash "$bin")" = "$(cdhash "$tmp/wallpaper-cache-prune")" ]; then
+  echo "wallpaper-cache-prune: binary unchanged; Full Disk Access grant still valid"
+else
+  mkdir -p "$dir"
+  mv -f "$tmp/wallpaper-cache-prune" "$bin"
+  echo "wallpaper-cache-prune: new binary — grant it Full Disk Access (Privacy & Security → Full Disk Access → + → ⇧⌘G):" >&2
+  echo "  $bin" >&2
+  if [ -t 1 ]; then  # interactive apply: open the pane + reveal the binary
+    open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
+    open -R "$bin"
+  fi
+fi
+
+launchctl bootout "gui/$(id -u)" "$plist" 2>/dev/null || true  # not loaded yet is fine
+launchctl bootstrap "gui/$(id -u)" "$plist"
+{{ end -}}
