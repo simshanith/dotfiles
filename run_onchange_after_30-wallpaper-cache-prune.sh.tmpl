@@ -29,11 +29,13 @@ if [ -f "$bin" ] && [ "$(cdhash "$bin")" = "$(cdhash "$tmp/wallpaper-cache-prune
 else
   mkdir -p "$dir"
   mv -f "$tmp/wallpaper-cache-prune" "$bin"
+  pane="x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
   echo "wallpaper-cache-prune: new binary — add it to Full Disk Access (+ → ⇧⌘G → paste):" >&2
   echo "  $bin" >&2
-  if [ -t 1 ]; then  # interactive apply: path on the clipboard + open the pane
-    printf %s "$bin" | pbcopy
-    open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
+  echo "  open the pane: open '$pane'" >&2
+  if [ -t 1 ]; then
+    printf %s "$bin" | pbcopy  # interactive apply: path ready to paste
+    if [ "${WALLPAPER_PRUNE_OPEN_SETTINGS:-}" = 1 ]; then open "$pane"; fi  # opt-in auto-open
   fi
 fi
 
