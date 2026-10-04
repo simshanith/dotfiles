@@ -7,7 +7,8 @@
 # Needs Full Disk Access, added once via System Settings (+ → ⇧⌘G → paste).
 # The first-run "access data from other apps" prompt alone didn't persist for
 # this ad-hoc-signed tool. Grants are tied to the cdhash: a byte-identical
-# rebuild keeps the old binary (and grant); a changed one needs re-adding.
+# rebuild keeps the old binary (and grant); a changed one needs re-adding, and
+# the stale entry must be removed (−) first: adding over it doesn't refresh it.
 #
 # source sha256: {{ include "macos/wallpaper-cache-prune.swift" | sha256sum }}
 # plist sha256:  {{ include "private_Library/LaunchAgents/com.simshanith.wallpaper-cache-prune.plist.tmpl" | sha256sum }}
@@ -30,7 +31,7 @@ else
   mkdir -p "$dir"
   mv -f "$tmp/wallpaper-cache-prune" "$bin"
   pane="x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
-  echo "wallpaper-cache-prune: new binary — add it to Full Disk Access (+ → ⇧⌘G → paste):" >&2
+  echo "wallpaper-cache-prune: new binary — in Full Disk Access, remove (−) any old entry, then add (+ → ⇧⌘G → paste):" >&2
   echo "  $bin" >&2
   echo "  open the pane: open '$pane'" >&2
   if [ -t 1 ]; then
