@@ -4,8 +4,10 @@
 # LaunchAgent (GUI Macs only; same stat gate as .chezmoiignore).
 # run_onchange: reruns whenever the Swift source or the plist template changes.
 #
-# Full Disk Access is tied to the binary's cdhash, so a byte-identical rebuild
-# keeps the grant; a changed binary needs a one-time re-grant (prompted below).
+# Needs Full Disk Access, added once via System Settings (+ → ⇧⌘G → paste).
+# The first-run "access data from other apps" prompt alone didn't persist for
+# this ad-hoc-signed tool. Grants are tied to the cdhash: a byte-identical
+# rebuild keeps the old binary (and grant); a changed one needs re-adding.
 #
 # source sha256: {{ include "macos/wallpaper-cache-prune.swift" | sha256sum }}
 # plist sha256:  {{ include "private_Library/LaunchAgents/com.simshanith.wallpaper-cache-prune.plist.tmpl" | sha256sum }}
@@ -27,11 +29,11 @@ if [ -f "$bin" ] && [ "$(cdhash "$bin")" = "$(cdhash "$tmp/wallpaper-cache-prune
 else
   mkdir -p "$dir"
   mv -f "$tmp/wallpaper-cache-prune" "$bin"
-  echo "wallpaper-cache-prune: new binary — grant it Full Disk Access (Privacy & Security → Full Disk Access → + → ⇧⌘G):" >&2
+  echo "wallpaper-cache-prune: new binary — add it to Full Disk Access (+ → ⇧⌘G → paste):" >&2
   echo "  $bin" >&2
-  if [ -t 1 ]; then  # interactive apply: open the pane + reveal the binary
+  if [ -t 1 ]; then  # interactive apply: path on the clipboard + open the pane
+    printf %s "$bin" | pbcopy
     open "x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles"
-    open -R "$bin"
   fi
 fi
 
