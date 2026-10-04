@@ -9,38 +9,48 @@
 import Foundation
 
 let maxAge: TimeInterval = 60 * 60  // keep the last hour (~5 shuffles)
-let cache = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(
-  "Library/Containers/com.apple.wallpaper.agent/Data/Library/Caches/com.apple.wallpaper.caches")
+let cache = URL.homeDirectory.appending(
+  path: "Library/Containers/com.apple.wallpaper.agent/Data/Library/Caches/com.apple.wallpaper.caches")
 
-let fm = FileManager.default
-let cutoff = Date().addingTimeInterval(-maxAge)
-let keys: Set<URLResourceKey> = [.isRegularFileKey, .contentModificationDateKey, .fileSizeKey]
-var failed = false
-var count = 0
-var bytes = 0
-
-func warn(_ url: URL, _ error: Error) {
-  FileHandle.standardError.write(Data("\(url.path): \(error.localizedDescription)\n".utf8))
-  failed = true
+struct PruneResult {
+  var removed = 0
+  var bytes: Int64 = 0
+  var failures = 0
 }
 
-let walker = fm.enumerator(at: cache, includingPropertiesForKeys: Array(keys)) { url, error in
-  warn(url, error)
-  return true  // keep going past unreadable entries
+func eprint(_ message: String) {
+  FileHandle.standardError.write(Data("\(message)\n".utf8))
 }
-while let url = walker?.nextObject() as? URL {
-  guard url.pathExtension == "bmp",
-    let v = try? url.resourceValues(forKeys: keys),
-    v.isRegularFile == true,  // never follow/delete symlinks
-    let mtime = v.contentModificationDate, mtime < cutoff
-  else { continue }
-  do {
-    try fm.removeItem(at: url)
-    count += 1
-    bytes += v.fileSize ?? 0
-  } catch {
-    warn(url, error)
+
+/// Deletes regular `.bmp` files under `dir` last modified before `cutoff`.
+/// Symlinks are never followed or deleted.
+func pruneRenders(in dir: URL, olderThan cutoff: Date) -> PruneResult {
+  var result = PruneResult()
+  let keys: Set<URLResourceKey> = [.isRegularFileKey, .contentModificationDateKey, .fileSizeKey]
+  let files = FileManager.default.enumerator(at: dir, includingPropertiesForKeys: Array(keys)) { url, error in
+    eprint("\(url.path): \(error.localizedDescription)")
+    result.failures += 1
+    return true  // keep walking past unreadable entries
   }
+  guard let files else { return result }
+
+  for case let file as URL in files where file.pathExtension == "bmp" {
+    guard let values = try? file.resourceValues(forKeys: keys),
+      values.isRegularFile == true,
+      let modified = values.contentModificationDate, modified < cutoff
+    else { continue }
+    do {
+      try FileManager.default.removeItem(at: file)
+      result.removed += 1
+      result.bytes += Int64(values.fileSize ?? 0)
+    } catch {
+      eprint("\(file.path): \(error.localizedDescription)")
+      result.failures += 1
+    }
+  }
+  return result
 }
-print("pruned \(count) renders, \(ByteCountFormatter.string(fromByteCount: Int64(bytes), countStyle: .file))")
-exit(failed ? 1 : 0)
+
+let summary = pruneRenders(in: cache, olderThan: .now - maxAge)
+print("pruned \(summary.removed) renders, \(summary.bytes.formatted(.byteCount(style: .file)))")
+exit(summary.failures == 0 ? EXIT_SUCCESS : EXIT_FAILURE)

@@ -1,7 +1,7 @@
-{{ if and (eq .chezmoi.os "darwin") (stat (joinPath .chezmoi.homeDir "Library/Containers/com.apple.wallpaper.agent")) -}}
+{{ if and (eq .chezmoi.os "darwin") (stat (joinPath .chezmoi.homeDir "Library/Containers/com.apple.wallpaper.agent/Data/Library/Caches/com.apple.wallpaper.caches/extension-com.apple.wallpaper.extension.image")) -}}
 #!/bin/sh
 # Build + ad-hoc sign the wallpaper-cache-prune helper and (re)load its
-# LaunchAgent (GUI Macs only; same stat gate as .chezmoiignore).
+# LaunchAgent (image-wallpaper Macs only; same stat gate as .chezmoiignore).
 # run_onchange: reruns whenever the Swift source or the plist template changes.
 #
 # Needs Full Disk Access, added once via System Settings (+ → ⇧⌘G → paste).

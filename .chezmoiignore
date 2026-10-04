@@ -36,9 +36,11 @@ iterm2-preferences
 # self-corrects after `brew bundle` installs the app, or if it's removed).
 {{ if or (ne .chezmoi.os "darwin") (not (stat "/Applications/Sublime Text.app")) }}bin/subl{{ end }}
 
-# Wallpaper-cache prune agent only where the wallpaper agent exists (GUI Macs);
-# headless Macs never get a wallpaper container. Non-darwin skips Library below.
-{{ if not (stat (joinPath .chezmoi.homeDir "Library/Containers/com.apple.wallpaper.agent")) }}Library/LaunchAgents/com.simshanith.wallpaper-cache-prune.plist{{ end }}
+# Wallpaper-cache prune agent only where image wallpapers get rendered (shuffle
+# machines: the image-extension cache exists). Mostly-headless Macs on default
+# aerial/video wallpaper have the container but no image cache, so they skip it;
+# stat re-evaluates every apply. Non-darwin skips Library below.
+{{ if not (stat (joinPath .chezmoi.homeDir "Library/Containers/com.apple.wallpaper.agent/Data/Library/Caches/com.apple.wallpaper.caches/extension-com.apple.wallpaper.extension.image")) }}Library/LaunchAgents/com.simshanith.wallpaper-cache-prune.plist{{ end }}
 
 # rtk config: one shared template, two OS-specific targets. rtk hard-wires
 # ~/Library/Application Support on darwin (ignores XDG) and ~/.config elsewhere.
