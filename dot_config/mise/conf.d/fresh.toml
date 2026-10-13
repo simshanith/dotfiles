@@ -33,13 +33,14 @@ rust = "latest"
 uv = "latest"
 
 # Modern CLI
-bat     = "latest"
-fd      = "latest"
-fzf     = "latest"
-ripgrep = "latest"
-zoxide  = "latest"
-jq      = "latest"
-yazi    = "latest"
+bat           = "latest"
+fd            = "latest"
+fzf           = "latest"
+ripgrep       = "latest"
+zoxide        = "latest"
+jq            = "latest"
+yazi          = "latest"
+"conda:rsync" = "latest" # modern rsync 3.4.x from conda-forge; Apple ships old openrsync, brew's 3.5.0 not mise-able
 # tree: not in mise registry under that short name — left in Brewfile
 
 # Git
