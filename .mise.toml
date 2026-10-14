@@ -1,0 +1,3 @@
+# Repo-only tools (dot-prefixed, so chezmoi ignores it). Fleet baseline: dot_config/mise/conf.d/fresh.toml.
+[tools]
+oxfmt = "latest" # Markdown formatter for this repo's docs (see 2026_REFRESH.md)

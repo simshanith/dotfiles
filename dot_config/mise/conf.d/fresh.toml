@@ -55,8 +55,8 @@ starship = "latest"
 "aqua:iffse/pay-respects" = "latest"
 
 # AI coding agents
-"aqua:openai/codex" = "latest"
-opencode            = "latest" # anomalyco/opencode
+# codex: native self-updating install (~/.codex), not mise
+opencode = "latest" # anomalyco/opencode
 # rtk: always on PATH for explicit `rtk <cmd>` use. Whether it *also* rewrites
 # Bash commands automatically is a per-machine toggle, off until asked for:
 #   mise run rtk:hook / rtk:unhook / rtk:hook:status     (see 2026_REFRESH.md)
@@ -83,8 +83,7 @@ marksman                                = "latest" # Markdown LSP
 "pipx:grip"                             = "latest" # GitHub-accurate markdown preview via GitHub API (Emacs grip-mode; gh-authed)
 "ubi:chrishrb/go-grip"                  = "latest" # Local GitHub-styled markdown preview, dark theme, no API/rate-limit (grip-mode auto-prefers)
 # Formatters for apheleia (format-on-save off by default; C-c f formats once):
-prettier = "latest" # TS / JSON / YAML
-oxfmt    = "latest" # Markdown (npm:oxfmt) — Rust-based; delegates .md to prettier
+prettier = "latest" # TS / JSON / YAML (Markdown: oxfmt, repo-local .mise.toml)
 shfmt    = "latest" # shell
 taplo    = "latest" # TOML
 # rust-analyzer + rustfmt ship with the rust toolchain. If rust-analyzer is
