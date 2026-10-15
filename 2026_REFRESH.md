@@ -213,7 +213,8 @@ a second place to edit.
 ### Formatting
 
 Four formatters, one file type each, all installed via mise and all usable from
-Emacs (apheleia) or the shell:
+Emacs (apheleia) or the shell. `oxfmt` is repo-local (`.mise.toml`); the rest
+are in the fleet baseline:
 
 | Type     | Tool       | Config          |
 | -------- | ---------- | --------------- |

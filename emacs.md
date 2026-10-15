@@ -126,7 +126,7 @@ Installed but **format-on-save is OFF by default**.
 - `C-c f` — format the current buffer once (`apheleia-format-buffer`).
 - `M-x apheleia-global-mode` — toggle format-on-save for the session.
 
-Formatters (in mise): `prettier` (TS/JSON/YAML), `oxfmt` (Markdown),
+Formatters (in mise): `prettier` (TS/JSON/YAML), `oxfmt` (Markdown, repo-local),
 `shfmt` (shell), `taplo` (TOML), `rustfmt` (rust toolchain).
 
 ### chezmoi
@@ -149,7 +149,6 @@ fleet-wide via the shared baseline. To keep them off headless boxes, move the
 | dockerfile-language-server-nodejs | `npm:dockerfile-language-server-nodejs` | Dockerfile (Eglot)    |
 | marksman                          | `marksman`                              | Markdown LSP          |
 | prettier                          | `prettier`                              | format TS/JSON/YAML   |
-| oxfmt                             | `oxfmt`                                 | format Markdown       |
 | shfmt                             | `shfmt`                                 | format shell          |
 | taplo                             | `taplo`                                 | format TOML           |
 
