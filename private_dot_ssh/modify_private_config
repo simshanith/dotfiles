@@ -1,0 +1,11 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /*
+  ~/.ssh/config stays machine-owned (colima, Coder, hand-added hosts all write
+  to it); chezmoi only guarantees it pulls in config.d/, where managed hosts
+  live. The Include is prepended: one placed after a Host block would be scoped
+  to that host. A missing config gets created holding just the Include.
+*/ -}}
+{{- if not (regexMatch "(?m)^\\s*Include\\s+(~/\\.ssh/)?config\\.d/\\*\\s*$" .chezmoi.stdin) -}}
+Include config.d/*
+{{ end -}}
+{{ .chezmoi.stdin -}}
