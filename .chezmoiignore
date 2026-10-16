@@ -15,6 +15,7 @@ CHEZMOI_MIGRATION.md
 Brewfile*
 dotfiles.sublime-project
 bash_screenshot.png
+zsh_screenshot.png
 install.sh
 emacs.md
 cheatsheets
