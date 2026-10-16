@@ -29,15 +29,16 @@
 [status]
   showStash = true
 # --- Multi-account routing & URL shorthands ---------------------------------
-# Personal repos route through the github-simshanith SSH alias so the *personal*
-# key is used. On a work machine the default github.com key is the work identity,
-# so without this a simshanith clone would auth as the wrong account. Longer
-# prefix wins, so this beats any general github.com rule. The alias itself is
-# managed in private_dot_ssh/private_config.d/private_github-simshanith.tmpl.
-[url "git@github-simshanith:simshanith/"]
-  insteadOf = "https://github.com/simshanith/"
-  insteadOf = "git@github.com:simshanith/"
-  insteadOf = "git://github.com/simshanith/"
+{{- with get . "github_user" }}
+# Repos under github.com/{{ . }}/ go through SSH host github-{{ . }}, so that
+# account's key is used even where the default github.com key is another
+# identity (e.g. a work machine). Longer prefix wins, so this beats any general
+# github.com rule. Host: ~/.ssh/config.d/github-account (chezmoi-managed).
+[url "git@github-{{ . }}:{{ . }}/"]
+  insteadOf = "https://github.com/{{ . }}/"
+  insteadOf = "git@github.com:{{ . }}/"
+  insteadOf = "git://github.com/{{ . }}/"
+{{- end }}
 
 # Convenience shorthands. Everything else on github.com keeps HTTPS + the gh
 # credential helper below (upstream's default), rather than a blanket https->ssh.

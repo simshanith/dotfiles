@@ -26,7 +26,7 @@ exec zsh
 `install.sh` is idempotent and safe to re-run. It: installs Homebrew (which
 pulls Xcode CLT → `git`) → `brew bundle` (shells, casks, terminfo) → `chezmoi
 init --apply` (symlinks dotfiles, renders templates, prompts once for
-name/email/work/machine) → `mise install` (the CLI toolchain). The first
+per-machine data) → `mise install` (the CLI toolchain). The first
 `chezmoi` run is bootstrapped via `mise exec` to break the chicken-and-egg where
 chezmoi itself lives in the mise baseline.
 
@@ -118,9 +118,17 @@ zsh)"` runs from `.zshrc`. Python is delegated to `uv`.
 
 ## Per-machine & headless notes
 
-- **Per-machine data** — `chezmoi init` prompts for name / email / work / machine
-  (`.chezmoi.toml.tmpl`) and records them in `~/.config/chezmoi/chezmoi.toml`
-  (not committed). Templates read `{{ .name }}` etc. from there.
+- **Per-machine data** — `chezmoi init` prompts for name / email / machine /
+  signing key / `home` (desktop casks) / `github_user` (`.chezmoi.toml.tmpl`) and
+  records them in `~/.config/chezmoi/chezmoi.toml` (not committed). Templates
+  read `{{ .name }}` etc. from there. Nothing personal is hardcoded: forks just
+  answer the prompts.
+- **GitHub account routing** — set `github_user` (key: `personal_ssh_key`,
+  default `~/.ssh/id_ed25519`) and repos under `github.com/<you>/` go through
+  SSH host `github-<you>`, so they use that account's key even where the
+  default `github.com` key is another identity. Blank skips it. chezmoi only
+  makes sure `~/.ssh/config` starts with `Include config.d/*`; the rest of
+  that file stays yours.
 - **Per-machine tools** — `~/.config/mise/config.toml` is seeded once and
   edit-freely; `config.local.toml` holds overrides. The committed
   `conf.d/fresh.toml` is the shared baseline that every machine gets.
