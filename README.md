@@ -119,7 +119,8 @@ zsh)"` runs from `.zshrc`. Python is delegated to `uv`.
 ## Per-machine & headless notes
 
 - **Per-machine data** — `chezmoi init` prompts for name / email / machine /
-  signing key / `home` (desktop casks) / `github_user` (`.chezmoi.toml.tmpl`) and
+  signing key / `home` (desktop casks) / `github_user` / `launchd_prefix`
+  (reverse-DNS namespace for LaunchAgent labels) (`.chezmoi.toml.tmpl`) and
   records them in `~/.config/chezmoi/chezmoi.toml` (not committed). Templates
   read `{{ .name }}` etc. from there. Nothing personal is hardcoded: forks just
   answer the prompts.
