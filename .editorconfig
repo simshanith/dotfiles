@@ -11,3 +11,8 @@ indent_style = tab
 [{install.sh,shell/*.sh}]
 indent_style = space
 indent_size = 4
+
+# Python follows PEP 8, whatever [*] says.
+[*.py]
+indent_style = space
+indent_size = 4

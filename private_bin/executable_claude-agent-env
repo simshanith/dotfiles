@@ -1,0 +1,57 @@
+#!/bin/bash
+# Write the lines Claude Code's agent shell needs into $CLAUDE_ENV_FILE.
+#
+#   claude-agent-env <file>
+#
+# Called by a user-level SessionStart hook (wired by
+# run_onchange_after_21-claude-agent-env-hook.sh). Claude Code sources that
+# file before every Bash command, after its shell snapshot -- the only point
+# where PATH edits survive. ~/.zshenv runs too early: the snapshot overwrites
+# PATH after it.
+#
+#   mise hook-env   The snapshot freezes PATH at session start and mise's prompt
+#                   hook never fires, so project _.path and [env] never apply.
+#                   Re-deriving per command costs ~30ms and follows each
+#                   command's starting cwd (a `cd` inside one command doesn't).
+#   not-found       The snapshot also captures pay-respects'
+#                   command_not_found_handler, so a missing command exits 0 and
+#                   fakes a green run. Unsetting it restores exit 127. Both
+#                   names: zsh's handler and bash's handle.
+#
+# Idempotent. Other hooks' lines stay; stale or duplicate marked lines collapse
+# to the current set. Bash builtins only, so it runs under macOS /bin/bash 3.2
+# and no host grep/sed/awk flavor decides the result.
+set -eu
+
+file="${1:?usage: claude-agent-env <file>}"
+# Distinct from lit-ui-router's '# mise agent_env' so the two never strip each
+# other's lines while both are wired.
+marker='# claude-agent-env'
+
+# Single-quoted: the shell that sources the lines picks its own -s flag.
+want=(
+	'eval "$(mise hook-env -s ${ZSH_VERSION:+zsh}${BASH_VERSION:+bash})"'" $marker"
+	# zsh's unset -f returns 1 when either name is missing.
+	'unset -f command_not_found_handler command_not_found_handle 2>/dev/null || :'" $marker"
+)
+
+kept=() seen=()
+if [ -f "$file" ]; then
+	while IFS= read -r l || [ -n "$l" ]; do
+		case "$l" in
+		*"$marker") seen+=("$l") ;;
+		*) kept+=("$l") ;;
+		esac
+	done <"$file"
+fi
+
+# Current means the marked lines are exactly the wanted set, in order.
+if [ "${#seen[@]}" -eq "${#want[@]}" ]; then
+	i=0
+	while [ "$i" -lt "${#want[@]}" ] && [ "${seen[$i]}" = "${want[$i]}" ]; do
+		i=$((i + 1))
+	done
+	[ "$i" -lt "${#want[@]}" ] || exit 0
+fi
+
+printf '%s\n' ${kept[@]+"${kept[@]}"} "${want[@]}" >"$file"

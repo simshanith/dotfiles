@@ -1,0 +1,23 @@
+#!/bin/sh
+# Wire a user-level Claude Code SessionStart hook that runs ~/bin/claude-agent-env,
+# so every agent Bash shell is mise-activated in every repo and worktree. The
+# merge lives in claude/merge_agent_env_hook.py; see it and ~/bin/claude-agent-env.
+#
+# Unlike rtk there's no toggle: the hook is harmless everywhere (it skips when
+# CLAUDE_ENV_FILE is unset), so apply always asserts it.
+#
+# run_onchange: re-runs when the merge script changes. Bump rev to re-assert.
+# merge sha256: {{ include "claude/merge_agent_env_hook.py" | sha256sum }}
+# rev: 1
+#
+# No-ops silently when Claude Code isn't installed.
+
+set -eu
+
+[ -d "$HOME/.claude" ] || exit 0
+command -v python3 >/dev/null 2>&1 || {
+	echo "claude-agent-env: python3 not available -- add the SessionStart hook by hand" >&2
+	exit 0
+}
+
+python3 "{{ .chezmoi.sourceDir }}/claude/merge_agent_env_hook.py" "$HOME/.claude/settings.json"
