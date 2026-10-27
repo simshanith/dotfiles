@@ -6,7 +6,7 @@
 """Merge the claude-agent-env SessionStart hook into Claude Code's settings.json.
 
 Run by run_onchange_after_21-claude-agent-env-hook.sh on `chezmoi apply`; see
-~/bin/claude-agent-env for what the hook does and why.
+claude_agent_env.py for what the hook does and why.
 
 settings.json is not chezmoi-managed, so this asserts one hook entry and leaves
 everything else alone, the way rtk-hook does: our entry is found by the
