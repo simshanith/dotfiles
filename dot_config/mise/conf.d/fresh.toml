@@ -57,7 +57,7 @@ starship = "latest"
 
 # AI coding agents
 # codex: native self-updating install (~/.codex), not mise
-opencode = "latest" # anomalyco/opencode
+# opencode: curl install (~/.opencode/bin, on PATH via shell/path.sh); mise registry lags upstream
 # rtk: always on PATH for explicit `rtk <cmd>` use. Whether it *also* rewrites
 # Bash commands automatically is a per-machine toggle, off until asked for:
 #   mise run rtk:hook / rtk:unhook / rtk:hook:status     (see 2026_REFRESH.md)
