@@ -35,9 +35,9 @@ want=(
 	'unset -f command_not_found_handler command_not_found_handle 2>/dev/null || :'" $marker"
 )
 
-kept=() seen=()
+kept=() seen=() unterminated=
 if [ -f "$file" ]; then
-	while IFS= read -r l || [ -n "$l" ]; do
+	while IFS= read -r l || { [ -n "$l" ] && unterminated=1; }; do
 		case "$l" in
 		*"$marker") seen+=("$l") ;;
 		*) kept+=("$l") ;;
@@ -54,4 +54,15 @@ if [ "${#seen[@]}" -eq "${#want[@]}" ]; then
 	[ "$i" -lt "${#want[@]}" ] || exit 0
 fi
 
+# Claude Code runs SessionStart hooks in parallel, and others may write this
+# file too. Append when there's nothing to replace: concurrent small appends
+# don't clobber each other, while read-then-rewrite would drop a sibling's
+# lines. Rewrite only to clear stale or duplicate marked lines.
+if [ "${#seen[@]}" -eq 0 ]; then
+	{
+		[ -z "$unterminated" ] || printf '\n'
+		printf '%s\n' "${want[@]}"
+	} >>"$file"
+	exit 0
+fi
 printf '%s\n' ${kept[@]+"${kept[@]}"} "${want[@]}" >"$file"
