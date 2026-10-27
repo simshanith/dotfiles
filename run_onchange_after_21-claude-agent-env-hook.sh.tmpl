@@ -1,7 +1,7 @@
 #!/bin/sh
 # Wire a user-level Claude Code SessionStart hook that runs ~/bin/claude-agent-env,
 # so every agent Bash shell is mise-activated in every repo and worktree. The
-# merge lives in claude/merge_agent_env_hook.py; see it and ~/bin/claude-agent-env.
+# merge lives in claude/merge_agent_env_hook.py; see it and claude/claude_agent_env.py.
 #
 # Unlike rtk there's no toggle: the hook is harmless everywhere (it skips when
 # CLAUDE_ENV_FILE is unset), so apply always asserts it.
