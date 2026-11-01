@@ -24,7 +24,8 @@ exec zsh
 ```
 
 `install.sh` is idempotent and safe to re-run. It: installs Homebrew (which
-pulls Xcode CLT → `git`) → `brew bundle` (shells, casks, terminfo) → `chezmoi
+pulls Xcode CLT → `git`) → `brew bundle` (shells, casks, terminfo) → mise via
+[mise.run](https://mise.run) (standalone, `~/.local/bin/mise`) → `chezmoi
 init --apply` (symlinks dotfiles, renders templates, prompts once for
 name/email/work/machine) → `mise install` (the CLI toolchain). The first
 `chezmoi` run is bootstrapped via `mise exec` to break the chicken-and-egg where

@@ -6,6 +6,9 @@
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
 
+# mise itself (standalone install lives in ~/.local/bin, not brew).
+export PATH="$HOME/.local/bin:$PATH"
+
 # mise shims — make mise-managed tools (node, ...) visible to IDEs and other
 # non-interactive login shells that don't run `mise activate` (that's in .zshrc).
 export PATH="$HOME/.local/share/mise/shims:$PATH"
