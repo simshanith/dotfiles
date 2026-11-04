@@ -1,7 +1,16 @@
-# Repo-only (dot-prefixed, so chezmoi ignores it). Skill scripts run through
-# `uv run --script` (PEP 723) on the latest stable Python (3.14). Run: mise run py
+# Repo-only (dot-prefixed, so chezmoi ignores it). Run: mise run py
+#
+# Two runtimes, chosen by when a script runs:
+#   uv run --script, Python 3.14   skills, the rtk allowlist gate
+#   macOS system python3 (3.9)     claude/ helpers: they run at bootstrap, before
+#                                  mise has installed uv, or are the hook that
+#                                  makes mise (and so uv) reachable at all
 line-length = 100
 target-version = "py314"
+extend-include = ["private_bin/executable_rtk-allowlist-hook"]
+
+[per-file-target-version]
+"claude/**" = "py39"
 
 [lint]
 select = ["ALL"]
@@ -24,7 +33,15 @@ max-returns = 4
 max-statements = 30
 
 [lint.per-file-ignores]
-"**/tests/**" = ["S101", "PLR2004", "D", "INP001", "ANN401"]
+"**/tests/**" = ["S101", "PLR2004", "D", "INP001", "ANN401", "SLF001"]
+"claude/*.py" = [
+  "T201",    # CLI scripts: print is the interface
+  "INP001",  # standalone scripts, not a package
+]
+"private_bin/executable_rtk-allowlist-hook" = [
+  "BLE001",  # fail-open is the contract: any exception means "no rewrite", never a blocked command
+  "INP001",
+]
 
 [format]
 docstring-code-format = true

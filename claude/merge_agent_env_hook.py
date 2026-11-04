@@ -23,10 +23,10 @@ Prints only when it changes something, so a clean apply stays silent.
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import sys
 from pathlib import Path
+from typing import Any
 
 MARKER = "claude-agent-env"
 
@@ -35,7 +35,7 @@ MARKER = "claude-agent-env"
 HOOK = '[ -z "$CLAUDE_ENV_FILE" ] || "$HOME/bin/claude-agent-env" "$CLAUDE_ENV_FILE"'
 
 
-def merge(settings: dict) -> list[str]:
+def merge(settings: dict[str, Any]) -> list[str]:
     """Assert our hook in place; return what changed (empty if nothing)."""
     hooks = settings.setdefault("hooks", {})
     start = hooks.setdefault("SessionStart", [])
@@ -58,6 +58,7 @@ def merge(settings: dict) -> list[str]:
 
 
 def main(argv: list[str]) -> int:
+    """Merge the hook into argv[1] (default ~/.claude/settings.json). Always exits 0."""
     path = Path(argv[1]) if len(argv) > 1 else Path.home() / ".claude" / "settings.json"
 
     try:
@@ -85,11 +86,9 @@ def main(argv: list[str]) -> int:
         shutil.copyfile(path, f"{path}.claude-agent-env.bak")
     tmp = path.with_name(path.name + ".tmp")
     tmp.write_text(json.dumps(settings, indent=2) + "\n")
-    os.replace(tmp, path)  # atomic; never a half-written settings.json
+    tmp.replace(path)  # atomic; never a half-written settings.json
     for c in changes:
-        print(
-            f"claude-agent-env: {c}. Restart Claude Code so it reloads settings.json."
-        )
+        print(f"claude-agent-env: {c}. Restart Claude Code so it reloads settings.json.")
     return 0
 
 

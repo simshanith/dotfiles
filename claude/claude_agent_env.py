@@ -44,10 +44,13 @@ WANT = [
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 2:
+    """Ensure WANT's lines are in the env file argv[1]; 2 on bad usage."""
+    try:
+        _, target = argv
+    except ValueError:
         print("usage: claude-agent-env <file>", file=sys.stderr)
         return 2
-    path = Path(argv[1])
+    path = Path(target)
 
     try:
         text = path.read_text()
@@ -65,11 +68,7 @@ def main(argv: list[str]) -> int:
         # small appends don't clobber each other, while read-then-rewrite would
         # drop a sibling's lines.
         with path.open("a") as fh:
-            fh.write(
-                ("\n" if text and not text.endswith("\n") else "")
-                + "\n".join(WANT)
-                + "\n"
-            )
+            fh.write(("\n" if text and not text.endswith("\n") else "") + "\n".join(WANT) + "\n")
         return 0
 
     # Rewrite only to clear stale or duplicate marked lines.
