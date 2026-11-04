@@ -1,3 +1,32 @@
 # Repo-only tools (dot-prefixed, so chezmoi ignores it). Fleet baseline: dot_config/mise/conf.d/fresh.toml.
 [tools]
 oxfmt = "latest" # Markdown formatter for this repo's docs (see 2026_REFRESH.md)
+ruff = "latest"  # Python lint + format (config: .ruff.toml)
+
+# Python checks for the stdlib-only scripts (skills, claude/ helpers). `mise run py` runs all.
+# mypy and pytest run through uvx (uv is in the fleet baseline), so nothing is installed globally.
+[vars]
+py_src = "dot_agents/skills"
+
+[tasks."py:fmt"]
+description = "Format Python"
+run = "ruff format {{vars.py_src}} && ruff check --fix {{vars.py_src}}"
+
+[tasks."py:lint"]
+description = "Lint Python (ruff, complexity limits in .ruff.toml)"
+run = ["ruff format --check {{vars.py_src}}", "ruff check {{vars.py_src}}"]
+
+[tasks."py:types"]
+description = "Type-check Python (mypy --strict, 3.9 target)"
+run = "uvx --with pytest mypy@2.4 --config-file .mypy.ini {{vars.py_src}}"
+
+[tasks."py:test"]
+description = "Offline tests on macOS system Python (3.9) and current Python"
+run = [
+  "uvx --python 3.9 pytest -q -p no:cacheprovider {{vars.py_src}}",
+  "uvx --python 3.14 pytest -q -p no:cacheprovider {{vars.py_src}}",
+]
+
+[tasks.py]
+description = "All Python checks"
+depends = ["py:lint", "py:types", "py:test"]
