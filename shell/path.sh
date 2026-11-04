@@ -15,6 +15,7 @@ fi
 # ============================================================
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/bin:$PATH"
+[[ -d "$HOME/.opencode/bin" ]] && export PATH="$HOME/.opencode/bin:$PATH"  # opencode curl installer
 
 # ============================================================
 # Language-specific
