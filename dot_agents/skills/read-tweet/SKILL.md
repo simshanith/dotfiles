@@ -19,7 +19,7 @@ You don't need to ask whether something is a thread. Every post comes back in co
 - Each post is tagged `[i/N]`. `★ focal` is the linked post, which is never truncated. `· other author` marks parent posts by someone else.
 - `> quoting:` is an expanded quoted post. `> quoting @x: URL (not expanded)` means the quote chain goes deeper. This is always checked for the focal post; for other posts it shows only when the API includes it.
 - Media lines (`[photo]`, `[video]`, `[gif]`) give direct URLs, plus alt text or the video's thumbnail. When the content of an image matters, fetch it and look.
-- `note:` lines report gaps: root missing, posts unavailable, a fallback source.
+- `note:` lines report gaps: root missing, posts unavailable, a fallback source and why (`fell back because …`, including a source whose payload changed shape).
 - `more:` lines list what was left out and the exact flag that fetches it. Re-run with that flag only if the task needs it.
 
 ## Defaults and flags
@@ -42,6 +42,7 @@ The script can't search, so "that tweet from @foo about bar" isn't enough. Ask f
 
 ## Limits
 
+- Runs through `uv run --script` (PEP 723), so `uv` must be on PATH. The first run fetches Python 3.12+ and `msgspec` into uv's cache.
 - Only posts that are visible while logged out. Protected, deleted, and some age-restricted posts fail.
 - Sources: `api.fxtwitter.com` is unofficial and gives threads, media, quotes and stats. If its thread endpoint fails, the script falls back to walking parents only, with nothing below the linked post. The last resort is X's official oEmbed: plain text only, no thread context, and quotes appear as `t.co` links.
 - No search, timelines, profiles or likes. Those need the paid X API. Say so rather than scraping x.com.

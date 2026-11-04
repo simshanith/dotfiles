@@ -191,3 +191,42 @@ def test_cli_json_and_exit_status(recorded: Recorded) -> None:
     assert {"omitted": 1, "before_position": 3} in first["posts"]
     assert "quote_known" not in json.dumps(first)
     assert "error" in second
+
+
+# ---------------------------------------------------------------- payload drift
+
+
+def drift_thread(old: bytes, new: bytes) -> Recorded:
+    """A fetcher whose /2/ payloads have `old` replaced by `new`."""
+    return Recorded(rewrite=lambda url, body: body.replace(old, new) if "/2/" in url else body)
+
+
+def test_renamed_field_falls_back_with_a_note() -> None:
+    result = report(REPLY_INTO_THREAD, drift_thread(b'"author":', b'"user":'))
+    assert result.thread.source is rt.Source.PARENTS  # not 5 bogus UNAVAILABLE posts
+    (reason,) = result.thread.fallback_reasons
+    assert "payload changed" in reason
+    assert "missing required field `author`" in reason
+    assert any(note.startswith("fell back because") for note in result.notes)
+
+
+def test_changed_type_names_the_field() -> None:
+    result = report(REPLY_INTO_THREAD, drift_thread(b'"likes": 4', b'"likes": "4"'))
+    (reason,) = result.thread.fallback_reasons
+    assert "Expected `int | null`, got `str`" in reason
+    assert "likes" in reason
+
+
+def test_drift_in_both_fxtwitter_apis_lands_on_oembed() -> None:
+    drifted = Recorded(rewrite=lambda _url, body: body.replace(b'"author"', b'"user"'))
+    result = report(PATIO11_THREAD, drifted)
+    assert result.thread.source is rt.Source.OEMBED
+    assert result.thread.focal.handle == "patio11"
+    assert "payload changed" in result.thread.fallback_reasons[0]
+    assert "oEmbed fallback" in rt.render(result)
+
+
+def test_non_json_is_a_source_error() -> None:
+    result = report(PATIO11_THREAD, Recorded(rewrite=lambda _url, _body: b"<html>blocked</html>"))
+    assert isinstance(result, rt.Failure)
+    assert "non-JSON response" in result.error

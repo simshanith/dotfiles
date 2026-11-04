@@ -3,15 +3,14 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
+    from collections.abc import Callable
     from types import ModuleType
 
 SKILL = Path(__file__).resolve().parents[1]
@@ -48,13 +47,18 @@ def fixture_for(url: str) -> str:
 
 
 class Recorded:
-    """A get_json that serves fixtures, can fail chosen URLs, and logs calls."""
+    """A fetcher that serves fixtures, can fail or rewrite chosen URLs, and logs calls."""
 
-    def __init__(self, fail: Callable[[str], bool] = lambda _url: False) -> None:
+    def __init__(
+        self,
+        fail: Callable[[str], bool] = lambda _url: False,
+        rewrite: Callable[[str, bytes], bytes] = lambda _url, body: body,
+    ) -> None:
         self.fail = fail
+        self.rewrite = rewrite
         self.calls: list[str] = []
 
-    def __call__(self, url: str) -> Mapping[str, Any]:
+    def __call__(self, url: str) -> bytes:
         self.calls.append(url)
         if self.fail(url):
             msg = f"simulated outage: {url}"
@@ -63,8 +67,7 @@ class Recorded:
         if not path.exists():
             msg = f"no fixture for {url}"
             raise rt.SourceError(msg)
-        data: Mapping[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-        return data
+        return self.rewrite(url, path.read_bytes())
 
 
 @pytest.fixture
@@ -73,4 +76,4 @@ def recorded() -> Recorded:
 
 
 def make_api(get_json: Recorded) -> Any:
-    return rt.Api(get_json=get_json)
+    return rt.Api(fetch=get_json)

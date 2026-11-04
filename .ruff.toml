@@ -1,7 +1,7 @@
-# Repo-only (dot-prefixed, so chezmoi ignores it). Python here is stdlib-only
-# scripts that must run on macOS system python3 (3.9). Run: mise run py
+# Repo-only (dot-prefixed, so chezmoi ignores it). Skill scripts run through
+# `uv run --script` (PEP 723), so they target a uv-managed 3.12+. Run: mise run py
 line-length = 100
-target-version = "py39"
+target-version = "py312"
 
 [lint]
 select = ["ALL"]
@@ -10,9 +10,6 @@ ignore = [
   "D203",    # conflicts with D211 (no blank line before class docstring)
   "D213",    # conflicts with D212 (summary on the docstring's first line)
   "TRY003",  # long messages in exceptions are fine
-  "UP007",   # X | Y needs 3.10 at runtime; keep Optional/Union under target py39
-  "UP045",
-  "FA100",   # future-annotations is used where it matters
   "D401",    # noun-phrase docstrings ("The focal post.") suit value-returning functions
   "CPY001",  # no copyright headers in dotfiles
 ]

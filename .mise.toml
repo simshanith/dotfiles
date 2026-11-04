@@ -3,8 +3,8 @@
 oxfmt = "latest" # Markdown formatter for this repo's docs (see 2026_REFRESH.md)
 ruff = "latest"  # Python lint + format (config: .ruff.toml)
 
-# Python checks for the stdlib-only scripts (skills, claude/ helpers). `mise run py` runs all.
-# mypy and pytest run through uvx (uv is in the fleet baseline), so nothing is installed globally.
+# Python checks for the skill scripts (PEP 723, run via `uv run --script`). `mise run py` runs all.
+# mypy and pytest run through uvx with the scripts' dependencies, so nothing is installed globally.
 [vars]
 py_src = "dot_agents/skills"
 
@@ -18,13 +18,13 @@ run = ["ruff format --check {{vars.py_src}}", "ruff check {{vars.py_src}}"]
 
 [tasks."py:types"]
 description = "Type-check Python (mypy --strict, 3.9 target)"
-run = "uvx --with pytest mypy@2.4 --config-file .mypy.ini {{vars.py_src}}"
+run = "uvx --python 3.12 --with pytest --with msgspec mypy@2.4 --config-file .mypy.ini {{vars.py_src}}"
 
 [tasks."py:test"]
-description = "Offline tests on macOS system Python (3.9) and current Python"
+description = "Offline tests on the oldest (3.12) and newest (3.14) supported Python"
 run = [
-  "uvx --python 3.9 pytest -q -p no:cacheprovider {{vars.py_src}}",
-  "uvx --python 3.14 pytest -q -p no:cacheprovider {{vars.py_src}}",
+  "uvx --python 3.12 --with msgspec pytest -q -p no:cacheprovider {{vars.py_src}}",
+  "uvx --python 3.14 --with msgspec pytest -q -p no:cacheprovider {{vars.py_src}}",
 ]
 
 [tasks.py]

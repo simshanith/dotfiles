@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --quiet --script
 # /// script
-# requires-python = ">=3.9"
-# dependencies = []
+# requires-python = ">=3.12"
+# dependencies = ["msgspec>=0.22,<0.23"]
 # ///
 """Read X/Twitter posts, with their thread, from URLs. No login or API key.
 
@@ -15,27 +15,29 @@ Sources, tried in order (all public, no auth):
   2. api.fxtwitter.com/status/<id>     single post; parents walked one by one (no posts below)
   3. publish.x.com/oembed              X's official embed: text only, no thread context
 Replies from other people come from api.fxtwitter.com/2/conversation/<id> (--replies).
+Payloads are validated as they're decoded: if a source changes shape, it counts as
+failed, the next source is tried, and a note says what changed.
 """
 
 from __future__ import annotations
 
 import argparse
 import html
-import json
 import os
 import re
 import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from collections.abc import Iterator, Mapping, Sequence
-from dataclasses import asdict, dataclass, field, replace
-from datetime import datetime, timezone
+from collections.abc import Callable, Iterator, Mapping, Sequence
+from dataclasses import dataclass, field, replace
+from datetime import UTC, datetime
 from enum import Enum
-from typing import Any, Callable, Optional, Union
+from typing import Any
 
-Json = Mapping[str, Any]
-GetJson = Callable[[str], Json]
+import msgspec
+
+type Fetch = Callable[[str], bytes]
 
 USER_AGENT = "read-tweet/2.0"
 HTTP_OK = 200
@@ -48,6 +50,10 @@ STAT_KEYS = ("replies", "reposts", "likes", "quotes", "views")
 
 class SourceError(Exception):
     """A source could not provide a post: network, HTTP or payload error."""
+
+
+class PayloadChangedError(SourceError):
+    """A source answered, but not in the shape this script expects."""
 
 
 class Source(Enum):
@@ -66,7 +72,7 @@ class Role(Enum):
     CONTEXT = "context"  # someone else, above the focal post
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Limits:
     """Output budget. 0 disables a cap."""
 
@@ -79,16 +85,16 @@ class Limits:
 # Model
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Ref:
     """A pointer to a post that wasn't expanded."""
 
     id: str
-    handle: Optional[str] = None
-    url: Optional[str] = None
+    handle: str | None = None
+    url: str | None = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Media:
     """One photo, video or gif."""
 
@@ -96,37 +102,37 @@ class Media:
     url: str
     alt: str = ""
     thumbnail: str = ""
-    duration_s: Optional[float] = None
+    duration_s: float | None = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Tombstone:
     """A deleted, protected or otherwise unreachable post."""
 
     id: str
     reason: str
-    url: Optional[str] = None
-    handle: Optional[str] = None
+    url: str | None = None
+    handle: str | None = None
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Post:
     """One readable post."""
 
     id: str
-    url: Optional[str]
-    author: Optional[str]
-    handle: Optional[str]
-    date: Optional[str]
+    url: str | None
+    author: str | None
+    handle: str | None
+    date: str | None
     text: str
-    reply_to: Optional[Ref] = None
+    reply_to: Ref | None = None
     stats: Mapping[str, int] = field(default_factory=dict)
     media: tuple[Media, ...] = ()
-    community_note: Optional[str] = None
-    article: Optional[str] = None
-    card: Optional[str] = None
-    quote: Optional[Entry] = None
-    quote_ref: Optional[Ref] = None  # a quote beyond --quote-depth
+    community_note: str | None = None
+    article: str | None = None
+    card: str | None = None
+    quote: Entry | None = None
+    quote_ref: Ref | None = None  # a quote beyond --quote-depth
     quote_known: bool = True  # False: the payload didn't say whether this post quotes another
     truncated_chars: int = 0
 
@@ -136,7 +142,7 @@ class Post:
         return self.stats.get("replies", 0)
 
 
-Entry = Union[Post, Tombstone]
+type Entry = Post | Tombstone
 
 
 def ref_to(entry: Entry) -> Ref:
@@ -144,7 +150,7 @@ def ref_to(entry: Entry) -> Ref:
     return Ref(entry.id, entry.handle, entry.url)
 
 
-def same_handle(a: Optional[str], b: Optional[str]) -> bool:
+def same_handle(a: str | None, b: str | None) -> bool:
     """Compare X handles, which are case-insensitive."""
     return (a or "").lower() == (b or "").lower()
 
@@ -152,7 +158,7 @@ def same_handle(a: Optional[str], b: Optional[str]) -> bool:
 # Parsing: pure functions, no I/O
 
 
-def tweet_id(arg: str) -> Optional[str]:
+def tweet_id(arg: str) -> str | None:
     """The status ID in a URL, or arg itself if it's a bare ID."""
     arg = arg.strip()
     if arg.isdigit():
@@ -161,94 +167,220 @@ def tweet_id(arg: str) -> Optional[str]:
     return match.group(1) if match else None
 
 
-def parse_post(raw: Json, *, top_level: bool = True) -> Entry:
-    """Normalise one fxtwitter post (v1 /status or v2 /2/...)."""
-    author = raw.get("author")
-    if not author or raw.get("type") == "tombstone":
-        reason = raw.get("reason") or raw.get("message") or "unavailable"
-        return Tombstone(str(raw.get("id")), reason, raw.get("url"))
-    quote = raw.get("quote")
+# Wire format: what the endpoints send. Unknown fields are ignored; the fields read
+# here are typed, and the ones the output can't do without are required, so a changed
+# payload fails at decode instead of rendering wrong.
+
+
+class FxAuthor(msgspec.Struct, frozen=True):
+    """A post's author."""
+
+    screen_name: str
+    name: str = ""
+
+
+class FxMediaItem(msgspec.Struct, frozen=True):
+    """One photo, video or gif."""
+
+    kind: str = msgspec.field(name="type")
+    url: str
+    alt_text: str = msgspec.field(name="altText", default="")
+    thumbnail_url: str = ""
+    duration: float | None = None
+
+
+class FxMedia(msgspec.Struct, frozen=True):
+    """A post's media, all kinds in display order."""
+
+    items: list[FxMediaItem] = msgspec.field(name="all", default_factory=list)
+
+
+class FxNote(msgspec.Struct, frozen=True):
+    """A community note."""
+
+    text: str
+
+
+class FxArticle(msgspec.Struct, frozen=True):
+    """An X Article attached to a post."""
+
+    title: str = ""
+    preview_text: str = ""
+
+
+class FxCard(msgspec.Struct, frozen=True):
+    """A link preview card."""
+
+    title: str = ""
+
+
+class FxPostBase(msgspec.Struct, frozen=True):
+    """Fields v1 (/status) and v2 (/2/...) posts share."""
+
+    id: str
+    text: str
+    author: FxAuthor
+    url: str | None = None
+    created_at: str | None = None
+    created_timestamp: int | None = None
+    replies: int | None = None
+    likes: int | None = None
+    quotes: int | None = None
+    views: int | None = None
+    media: FxMedia | None = None
+    community_note: FxNote | str | None = None
+    article: FxArticle | None = None
+    card: FxCard | None = None
+
+
+class V1Tweet(FxPostBase, frozen=True):
+    """A v1 post: the reply target is two flat fields, reposts are "retweets"."""
+
+    replying_to: str | None = None
+    replying_to_status: str | None = None
+    retweets: int | None = None
+    quote: V1Tweet | None = None
+
+
+class FxReplyTo(msgspec.Struct, frozen=True):
+    """The v2 reply target."""
+
+    status: str
+    screen_name: str | None = None
+    url: str | None = None
+
+
+class V2Post(FxPostBase, frozen=True, tag_field="type", tag="status"):
+    """A v2 post. Quotes are inlined, but a quote's own quote usually isn't."""
+
+    replying_to: FxReplyTo | None = None
+    reposts: int | None = None
+    quote: V2Post | V2Tombstone | None = None
+
+
+class V2Tombstone(msgspec.Struct, frozen=True, tag_field="type", tag="tombstone"):
+    """A v2 placeholder for a deleted, protected or suspended post."""
+
+    id: str = ""
+    reason: str = "unavailable"
+    url: str | None = None
+
+
+type V2Entry = V2Post | V2Tombstone
+
+
+class V2StatusResponse(msgspec.Struct, frozen=True):
+    """/2/status and /2/thread. fxtwitter mirrors the HTTP status in `code`."""
+
+    code: int
+    status: V2Entry | None = None
+    thread: list[V2Entry] | None = None
+    message: str = ""
+
+
+class V1StatusResponse(msgspec.Struct, frozen=True):
+    """/status (v1)."""
+
+    code: int
+    tweet: V1Tweet | None = None
+    message: str = ""
+
+
+class FxCursor(msgspec.Struct, frozen=True):
+    """Pagination cursors."""
+
+    bottom: str | None = None
+
+
+class V2ConversationResponse(msgspec.Struct, frozen=True):
+    """/2/conversation: replies from other people."""
+
+    code: int
+    replies: list[V2Entry] | None = None
+    cursor: FxCursor | None = None
+
+
+class OEmbedResponse(msgspec.Struct, frozen=True):
+    """X's oEmbed: the post as embed HTML."""
+
+    html: str
+    url: str | None = None
+    author_name: str | None = None
+    author_url: str = ""
+
+
+def from_wire(raw: V1Tweet | V2Entry, *, top_level: bool = True) -> Entry:
+    """The domain view of one decoded post."""
+    if isinstance(raw, V2Tombstone):
+        return Tombstone(raw.id, raw.reason, raw.url)
     return Post(
-        id=str(raw["id"]),
-        url=raw.get("url"),
-        author=author.get("name"),
-        handle=author.get("screen_name"),
+        id=raw.id,
+        url=raw.url,
+        author=raw.author.name or None,
+        handle=raw.author.screen_name,
         date=_date(raw),
-        text=raw.get("text") or "",
+        text=raw.text,
         reply_to=_reply_ref(raw),
         stats=_stats(raw),
-        media=tuple(_media(m) for m in (raw.get("media") or {}).get("all") or ()),
-        community_note=_community_note(raw.get("community_note")),
-        article=_article(raw.get("article")),
-        card=_card(raw.get("card") or raw.get("twitter_card")),
-        quote=parse_post(quote, top_level=False) if quote else None,
-        quote_known=top_level or "quote" in raw,
+        media=tuple(map(_media, raw.media.items)) if raw.media else (),
+        community_note=_note(raw.community_note),
+        article=f"{raw.article.title}: {raw.article.preview_text}" if raw.article else None,
+        card=raw.card.title or None if raw.card else None,
+        quote=from_wire(raw.quote, top_level=False) if raw.quote else None,
+        # Nested quotes aren't inlined, so a missing one means "unknown", not "none".
+        quote_known=top_level or raw.quote is not None,
     )
 
 
-def _date(raw: Json) -> Optional[str]:
-    ts = raw.get("created_timestamp")
-    if not ts:
-        return raw.get("created_at")
-    return datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d %H:%MZ")
+def _date(raw: FxPostBase) -> str | None:
+    if raw.created_timestamp is None:
+        return raw.created_at
+    return datetime.fromtimestamp(raw.created_timestamp, UTC).strftime("%Y-%m-%d %H:%MZ")
 
 
-def _reply_ref(raw: Json) -> Optional[Ref]:
-    target = raw.get("replying_to")
-    if isinstance(target, Mapping):  # v2: {"screen_name", "status", "url"}
-        status = target.get("status")
-        return Ref(str(status), target.get("screen_name"), target.get("url")) if status else None
-    status = raw.get("replying_to_status")  # v1: handle and ID in separate fields
-    return Ref(str(status), target) if status else None
+def _reply_ref(raw: V1Tweet | V2Post) -> Ref | None:
+    match raw:
+        case V2Post(replying_to=FxReplyTo(status=status, screen_name=handle, url=url)):
+            return Ref(status, handle, url)
+        case V1Tweet(replying_to_status=str(status), replying_to=handle):
+            return Ref(status, handle)
+    return None
 
 
-def _stats(raw: Json) -> dict[str, int]:
-    values = {key: raw.get(key) for key in STAT_KEYS}
-    if values["reposts"] is None:
-        values["reposts"] = raw.get("retweets")  # v1 name
-    return {key: value for key, value in values.items() if isinstance(value, int)}
+def _stats(raw: V1Tweet | V2Post) -> dict[str, int]:
+    reposts = raw.reposts if isinstance(raw, V2Post) else raw.retweets
+    values = dict(
+        zip(STAT_KEYS, (raw.replies, reposts, raw.likes, raw.quotes, raw.views), strict=True)
+    )
+    return {key: value for key, value in values.items() if value is not None}
 
 
-def _media(raw: Json) -> Media:
-    duration = raw.get("duration")
+def _media(item: FxMediaItem) -> Media:
     return Media(
-        type=raw.get("type") or "media",
-        url=raw.get("url") or "",
-        alt=clip(raw.get("altText") or "", ALT_TEXT_MAX)[0],
-        thumbnail=raw.get("thumbnail_url") or "",
-        duration_s=round(duration, 1) if duration else None,
+        type=item.kind,
+        url=item.url,
+        alt=clip(item.alt_text, ALT_TEXT_MAX)[0],
+        thumbnail=item.thumbnail_url,
+        duration_s=round(item.duration, 1) if item.duration else None,
     )
 
 
-def _community_note(note: object) -> Optional[str]:
-    if isinstance(note, Mapping):
-        return note.get("text")
-    return note if isinstance(note, str) and note else None
+def _note(note: FxNote | str | None) -> str | None:
+    return note.text if isinstance(note, FxNote) else note or None
 
 
-def _article(article: object) -> Optional[str]:
-    if not isinstance(article, Mapping):
-        return None
-    return f"{article.get('title')}: {article.get('preview_text')}"
-
-
-def _card(card: object) -> Optional[str]:
-    return card.get("title") if isinstance(card, Mapping) else None
-
-
-def parse_oembed(tid: str, payload: Json) -> Post:
+def parse_oembed(tid: str, payload: OEmbedResponse) -> Post:
     """Plain-text post from X's oEmbed HTML."""
-    markup = payload.get("html") or ""
-    match = re.search(r"<p[^>]*>(.*?)</p>", markup, re.DOTALL)
+    match = re.search(r"<p[^>]*>(.*?)</p>", payload.html, re.DOTALL)
     body = re.sub(r"<br\s*/?>", "\n", match.group(1) if match else "")
     body = re.sub(r'<a href="([^"]+)"[^>]*>[^<]*</a>', r"\1", body)
     body = html.unescape(re.sub(r"<[^>]+>", "", body)).strip()
-    dates = re.findall(r">([A-Z][a-z]+ \d{1,2}, \d{4})</a>", markup)
+    dates = re.findall(r">([A-Z][a-z]+ \d{1,2}, \d{4})</a>", payload.html)
     return Post(
         id=tid,
-        url=payload.get("url"),
-        author=payload.get("author_name"),
-        handle=(payload.get("author_url") or "").rsplit("/", 1)[-1] or None,
+        url=payload.url,
+        author=payload.author_name,
+        handle=payload.author_url.rsplit("/", 1)[-1] or None,
         date=dates[-1] if dates else None,
         text=body,
     )
@@ -284,7 +416,7 @@ def shape_quotes(post: Post, levels: int, max_chars: int) -> Post:
     return replace(post, quote=quote)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Gap:
     """Thread posts left out by --max-posts."""
 
@@ -292,15 +424,15 @@ class Gap:
     before_position: int
 
 
-def window(total: int, focal: int, max_posts: int) -> list[Union[int, Gap]]:
+def window(total: int, focal: int, max_posts: int) -> list[int | Gap]:
     """Indices to show: the root plus the max_posts-1 posts nearest focal, gaps marked."""
     if max_posts <= 0 or total <= max_posts:
         return list(range(total))
     span = max_posts - 1
     start = max(1, min(focal - span // 2, total - span))
     keep = [0, *range(start, start + span)]
-    shown: list[Union[int, Gap]] = []
-    for prev, index in zip([-1, *keep], [*keep, total]):
+    shown: list[int | Gap] = []
+    for prev, index in zip([-1, *keep], [*keep, total], strict=False):
         if index - prev > 1:
             shown.append(Gap(index - prev - 1, index + 1))
         if index < total:
@@ -311,72 +443,87 @@ def window(total: int, focal: int, max_posts: int) -> list[Union[int, Gap]]:
 # Sources: all network access lives here
 
 
-def http_get_json(url: str) -> Json:
-    """GET url and decode a JSON object. fxtwitter's 4xx bodies are JSON too."""
+def http_get(url: str) -> bytes:
+    """GET url. HTTP error bodies are returned too: fxtwitter puts JSON on its 4xx."""
     if not url.startswith(("https://", "http://")):
         msg = f"refusing non-HTTP URL {url!r}"
         raise SourceError(msg)
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})  # noqa: S310 (scheme checked)
     try:
         with urllib.request.urlopen(request, timeout=HTTP_TIMEOUT_S) as response:  # noqa: S310
-            body = response.read()
+            return bytes(response.read())
     except urllib.error.HTTPError as err:
-        body = err.read()
+        return bytes(err.read())
     except OSError as err:  # URLError, timeouts, connection errors
         raise SourceError(str(err)) from err
+
+
+def decode[T](body: bytes, kind: type[T], url: str) -> T:
+    """Decode and validate a JSON body as kind."""
     try:
-        data = json.loads(body)
-    except ValueError as err:
+        return msgspec.json.decode(body, type=kind)
+    except msgspec.ValidationError as err:
+        msg = f"payload changed at {url}: {err}"
+        raise PayloadChangedError(msg) from err
+    except msgspec.DecodeError as err:
         msg = f"non-JSON response from {url}"
         raise SourceError(msg) from err
-    if not isinstance(data, dict):
-        msg = f"unexpected payload from {url}"
-        raise SourceError(msg)
-    return data
 
 
-@dataclass(frozen=True)
+def fx_error(path: str, code: int, message: str = "") -> SourceError:
+    """The error for an fxtwitter response without a usable payload."""
+    return SourceError(f"{path}: code {code} {message}".rstrip())
+
+
+@dataclass(frozen=True, slots=True)
 class Api:
-    """The public endpoints, behind an injectable JSON getter."""
+    """The public endpoints, behind an injectable fetcher."""
 
-    get_json: GetJson = http_get_json
+    fetch: Fetch = http_get
     fx_base: str = "https://api.fxtwitter.com"
     oembed_url: str = "https://publish.x.com/oembed"
 
-    def _fx(self, path: str, payload_key: str) -> Json:
-        data = self.get_json(f"{self.fx_base.rstrip('/')}/{path}")
-        payload = data.get(payload_key)
-        if (
-            data.get("code") != HTTP_OK or not payload
-        ):  # fxtwitter mirrors the HTTP status in the body
-            msg = f"{path}: code {data.get('code')} {data.get('message') or ''}".rstrip()
-            raise SourceError(msg)
-        return data
+    def _get[T](self, url: str, kind: type[T]) -> T:
+        return decode(self.fetch(url), kind, url)
+
+    def _fx[T](self, path: str, kind: type[T]) -> T:
+        return self._get(f"{self.fx_base.rstrip('/')}/{path}", kind)
 
     def thread(self, tid: str) -> list[Entry]:
         """The parent chain plus the focal author's self-thread, both directions."""
-        data = self._fx(f"2/thread/{tid}", "status")
-        raw = list(data.get("thread") or [])
-        if not any(str(post.get("id")) == tid for post in raw):
-            raw.append(data["status"])
-        return [parse_post(post) for post in raw]
+        path = f"2/thread/{tid}"
+        data = self._fx(path, V2StatusResponse)
+        if data.code != HTTP_OK or data.status is None:
+            raise fx_error(path, data.code, data.message)
+        raw = list(data.thread or ())
+        if not any(post.id == tid for post in raw):
+            raw.append(data.status)
+        return [from_wire(post) for post in raw]
 
     def status(self, tid: str) -> Entry:
         """One post from the v1 endpoint, which survives some v2 outages."""
-        return parse_post(self._fx(f"status/{tid}", "tweet")["tweet"])
+        path = f"status/{tid}"
+        data = self._fx(path, V1StatusResponse)
+        if data.code != HTTP_OK or data.tweet is None:
+            raise fx_error(path, data.code, data.message)
+        return from_wire(data.tweet)
 
     def status_v2(self, tid: str) -> Entry:
-        """One post from the v2 endpoint, with its quote chain inlined."""
-        return parse_post(self._fx(f"2/status/{tid}", "status")["status"])
+        """One post from the v2 endpoint, with its quote inlined."""
+        path = f"2/status/{tid}"
+        data = self._fx(path, V2StatusResponse)
+        if data.code != HTTP_OK or data.status is None:
+            raise fx_error(path, data.code, data.message)
+        return from_wire(data.status)
 
-    def replies_page(self, tid: str, cursor: Optional[str]) -> tuple[list[Entry], Optional[str]]:
+    def replies_page(self, tid: str, cursor: str | None) -> tuple[list[Entry], str | None]:
         """One page of replies to tid, most-liked first, and the next cursor."""
         query = urllib.parse.urlencode(
-            {"ranking_mode": "likes", **({"cursor": cursor} if cursor else {})}
+            {"ranking_mode": "likes"} | ({"cursor": cursor} if cursor else {})
         )
-        data = self.get_json(f"{self.fx_base.rstrip('/')}/2/conversation/{tid}?{query}")
-        replies = [parse_post(raw) for raw in data.get("replies") or ()]
-        next_cursor = (data.get("cursor") or {}).get("bottom")
+        data = self._fx(f"2/conversation/{tid}?{query}", V2ConversationResponse)
+        replies = [from_wire(raw) for raw in data.replies or ()]
+        next_cursor = data.cursor.bottom if data.cursor else None
         return replies, next_cursor if replies else None
 
     def oembed(self, tid: str) -> Post:
@@ -384,11 +531,7 @@ class Api:
         query = urllib.parse.urlencode(
             {"url": f"https://x.com/i/status/{tid}", "omit_script": "1", "dnt": "1"}
         )
-        payload = self.get_json(f"{self.oembed_url}?{query}")
-        if not payload.get("html"):
-            msg = "oEmbed returned no post"
-            raise SourceError(msg)
-        return parse_oembed(tid, payload)
+        return parse_oembed(tid, self._get(f"{self.oembed_url}?{query}", OEmbedResponse))
 
 
 def walk_parents(api: Api, tid: str, max_posts: int) -> list[Entry]:
@@ -427,13 +570,14 @@ def fill_quotes(post: Post, api: Api, levels: int) -> Post:
 # Thread
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Thread:
     """The posts around one focal post, oldest first."""
 
     focal_id: str
     source: Source
     entries: tuple[Entry, ...]
+    fallback_reasons: tuple[str, ...] = ()  # why the better sources were skipped
 
     @property
     def focal_index(self) -> int:
@@ -447,7 +591,7 @@ class Thread:
         return self.entries[self.focal_index]
 
     @property
-    def root(self) -> Optional[Post]:
+    def root(self) -> Post | None:
         """The conversation root, or None when the top of the chain wasn't reached."""
         first = self.entries[0]
         if self.source is Source.OEMBED or not isinstance(first, Post) or first.reply_to:
@@ -483,11 +627,11 @@ def load_thread(api: Api, tid: str, max_posts: int) -> Thread:
         (Source.PARENTS, lambda: walk_parents(api, tid, max_posts)),
         (Source.OEMBED, lambda: [api.oembed(tid)]),
     ]
-    errors = []
+    errors: list[str] = []
     for source, load in loaders:
         try:
-            return Thread(tid, source, tuple(load()))
-        except SourceError as err:  # noqa: PERF203 (three tries at most)
+            return Thread(tid, source, tuple(load()), tuple(errors))
+        except SourceError as err:
             errors.append(f"{source.value}: {err}")
     errors.append("deleted, protected, age-restricted, or all sources down")
     raise SourceError("; ".join(errors))
@@ -513,20 +657,20 @@ def budget(thread: Thread, api: Api, limits: Limits) -> Thread:
 # Report
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Report:
     """Everything printed for one input."""
 
     input: str
     thread: Thread
-    shown: list[Union[int, Gap]]
-    replies: Optional[list[Entry]] = None
-    replies_from_others: Optional[int] = None
+    shown: list[int | Gap]
+    replies: list[Entry] | None = None
+    replies_from_others: int | None = None
     notes: list[str] = field(default_factory=list)
     more: list[str] = field(default_factory=list)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class Failure:
     """An input that produced no post."""
 
@@ -538,7 +682,7 @@ def fetch_replies(api: Api, thread: Thread, limit: int, max_chars: int) -> list[
     """The top `limit` replies to the focal post from people outside the thread."""
     in_thread = {entry.id for entry in thread.entries}
     found: list[Entry] = []
-    cursor: Optional[str] = None
+    cursor: str | None = None
     for _ in range(REPLY_PAGES_MAX):
         page, cursor = api.replies_page(thread.focal_id, cursor)
         found += [
@@ -567,9 +711,10 @@ def thread_notes(thread: Thread) -> Iterator[str]:
             "oEmbed fallback: no media, quotes, stats or thread context; "
             "a quoted post appears only as a t.co link"
         )
+    yield from (f"fell back because {reason}" for reason in thread.fallback_reasons)
 
 
-def budget_hints(thread: Thread, shown: Sequence[Union[int, Gap]], limits: Limits) -> Iterator[str]:
+def budget_hints(thread: Thread, shown: Sequence[int | Gap], limits: Limits) -> Iterator[str]:
     """What the limits left out, and the flag that brings it back."""
     hidden = sum(item.count for item in shown if isinstance(item, Gap))
     if hidden:
@@ -600,7 +745,7 @@ def _has_quote_ref(post: Post) -> bool:
     )
 
 
-def build_report(arg: str, api: Api, limits: Limits) -> Union[Report, Failure]:
+def build_report(arg: str, api: Api, limits: Limits) -> Report | Failure:
     """Fetch, budget and annotate the thread for one input."""
     tid = tweet_id(arg)
     if tid is None:
@@ -629,7 +774,7 @@ def replies_from_others(thread: Thread) -> int:
 
 
 def reply_hints(
-    thread: Thread, replies: Optional[list[Entry]], others: int, asked: int
+    thread: Thread, replies: list[Entry] | None, others: int, asked: int
 ) -> Iterator[str]:
     """Hint at replies that weren't fetched."""
     if replies is None:
@@ -712,7 +857,7 @@ def _headline(report: Report) -> str:
     return f"=== {shape} · {where} · source: {thread.source.value}"
 
 
-def render(result: Union[Report, Failure]) -> str:
+def render(result: Report | Failure) -> str:
     """The full text block for one input."""
     if isinstance(result, Failure):
         return f"[{result.input}] ERROR: {result.error}"
@@ -753,18 +898,18 @@ def _prune(data: Mapping[str, Any]) -> dict[str, Any]:
     return pruned
 
 
-def entry_json(entry: Union[Entry, Ref]) -> dict[str, Any]:
+def entry_json(entry: Entry | Ref) -> dict[str, Any]:
     """An entry as a JSON-ready dict."""
-    data = asdict(entry)
+    data: dict[str, Any] = msgspec.to_builtins(entry)
     if isinstance(entry, Tombstone):
         data["unavailable"] = data.pop("reason")
     return _prune(data)
 
 
-def to_json(result: Union[Report, Failure]) -> dict[str, Any]:
+def to_json(result: Report | Failure) -> dict[str, Any]:
     """One result as a JSON-ready dict, mirroring the text output."""
     if isinstance(result, Failure):
-        return asdict(result)
+        return {"input": result.input, "error": result.error}
     thread = result.thread
     root = thread.root
     posts: list[dict[str, Any]] = []
@@ -794,7 +939,7 @@ def to_json(result: Union[Report, Failure]) -> dict[str, Any]:
 # CLI
 
 
-def parse_args(argv: Optional[Sequence[str]]) -> argparse.Namespace:
+def parse_args(argv: Sequence[str] | None) -> argparse.Namespace:
     """The command line."""
     limits = Limits()
     parser = argparse.ArgumentParser(
@@ -834,13 +979,12 @@ def run(args: argparse.Namespace, api: Api) -> tuple[str, int]:
     status = int(any(isinstance(result, Failure) for result in results))
     if args.json:
         payload = [to_json(result) for result in results]
-        return json.dumps(
-            payload if len(payload) > 1 else payload[0], indent=2, ensure_ascii=False
-        ), status
+        encoded = msgspec.json.encode(payload if len(payload) > 1 else payload[0])
+        return msgspec.json.format(encoded, indent=2).decode(), status
     return "\n\n".join(map(render, results)), status
 
 
-def main(argv: Optional[Sequence[str]] = None) -> int:
+def main(argv: Sequence[str] | None = None) -> int:
     """CLI entry point."""
     output, status = run(parse_args(argv), api_from_env(os.environ))
     sys.stdout.write(output + "\n")
