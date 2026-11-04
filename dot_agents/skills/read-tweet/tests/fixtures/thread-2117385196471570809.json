@@ -1,0 +1,896 @@
+{
+ "status": {
+  "type": "status",
+  "url": "https://x.com/patio11/status/2117385196471570809",
+  "id": "2117385196471570809",
+  "text": "You also have to imagine someone on the cat side of that game is even now writing New Addendum To Suggestions To Our Million Pals In The Data Center.",
+  "raw_text": {
+   "text": "You also have to imagine someone on the cat side of that game is even now writing New Addendum To Suggestions To Our Million Pals In The Data Center.",
+   "display_text_range": [
+    0,
+    149
+   ],
+   "facets": []
+  },
+  "author": {
+   "screen_name": "patio11",
+   "url": "https://x.com/patio11",
+   "id": "20844341",
+   "followers": 202212,
+   "following": 815,
+   "likes": 37849,
+   "media_count": 1489,
+   "statuses": 70737,
+   "name": "Patrick McKenzie",
+   "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+   "raw_description": {
+    "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "facets": [
+     {
+      "type": "mention",
+      "indices": [
+       45,
+       52
+      ],
+      "original": "stripe",
+      "id": ""
+     }
+    ]
+   },
+   "location": "Chicago, IL",
+   "banner_url": "",
+   "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+   "joined": "Sat Feb 14 12:26:59 +0000 2009",
+   "protected": false,
+   "website": {
+    "url": "https://www.kalzumeus.com",
+    "display_url": "kalzumeus.com"
+   },
+   "verification": {
+    "verified": true,
+    "verified_at": null,
+    "type": "individual"
+   },
+   "type": "profile"
+  },
+  "replies": 1,
+  "reposts": 0,
+  "likes": 29,
+  "bookmarks": 1,
+  "quotes": 0,
+  "embed_card": "tweet",
+  "created_at": "Mon Nov 02 22:35:44 +0000 2026",
+  "created_timestamp": 1793658944,
+  "views": 1529,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": {
+   "screen_name": "patio11",
+   "status": "2117384823266316735",
+   "url": "https://x.com/patio11/status/2117384823266316735",
+   "profile_url": "https://x.com/patio11"
+  },
+  "media": {},
+  "provider": "twitter",
+  "reposted_by": null
+ },
+ "thread": [
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117382378364522984",
+   "id": "2117382378364522984",
+   "text": "Someone needs to coin a word for AI developments that have the dual character a) exactly what one would have expected and simultaneously b) somehow emotionally surprising when they happen.\n\nExample the latest:",
+   "raw_text": {
+    "text": "Someone needs to coin a word for AI developments that have the dual character a) exactly what one would have expected and simultaneously b) somehow emotionally surprising when they happen.\n\nExample the latest:",
+    "display_text_range": [
+     0,
+     209
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 32,
+   "reposts": 18,
+   "likes": 296,
+   "bookmarks": 39,
+   "quotes": 1,
+   "embed_card": "summary_large_image",
+   "created_at": "Mon Nov 02 22:24:32 +0000 2026",
+   "created_timestamp": 1793658272,
+   "views": 16443,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": null,
+   "media": {},
+   "quote": {
+    "type": "status",
+    "url": "https://x.com/rikiyatakehi/status/2117313742891327994",
+    "id": "2117313742891327994",
+    "text": "We asked GPT-6 Astra to edit Qwen3.5-0.8B weights to improve math.\nIt directly changed only 0.016% of weights, fixing 0.8B's reasoning loops & improving math up to 6x and even instruction following 3x, without gradients or training.\n\nWe call this Weight-Space Programming: frontier LLMs can now natively read/write neural network weights! 🧵\nBlog: https://rikiyat.github.io/blog/weight-space-programming/",
+    "raw_text": {
+     "text": "We asked GPT-6 Astra to edit Qwen3.5-0.8B weights to improve math.\nIt directly changed only 0.016% of weights, fixing 0.8B's reasoning loops & improving math up to 6x and even instruction following 3x, without gradients or training.\n\nWe call this Weight-Space Programming: frontier LLMs can now natively read/write neural network weights! 🧵\nBlog: https://t.co/bOWCcFhCVq",
+     "display_text_range": [
+      0,
+      371
+     ],
+     "facets": [
+      {
+       "type": "bold",
+       "indices": [
+        87,
+        109
+       ]
+      },
+      {
+       "type": "bold",
+       "indices": [
+        143,
+        166
+       ]
+      },
+      {
+       "type": "bold",
+       "indices": [
+        176,
+        200
+       ]
+      },
+      {
+       "type": "bold",
+       "indices": [
+        247,
+        271
+       ]
+      },
+      {
+       "type": "media",
+       "indices": [
+        277,
+        300
+       ],
+       "id": "2117313738898296832",
+       "display": "pic.x.com/DwTwzXzSbE",
+       "original": "https://t.co/DwTwzXzSbE",
+       "replacement": "https://x.com/rikiyatakehi/status/2117313742891327994/photo/1"
+      },
+      {
+       "type": "url",
+       "indices": [
+        347,
+        370
+       ],
+       "original": "https://t.co/bOWCcFhCVq",
+       "replacement": "https://rikiyat.github.io/blog/weight-space-programming/",
+       "display": "rikiyat.github.io/blog/weight-sp…"
+      }
+     ]
+    },
+    "author": {
+     "screen_name": "rikiyatakehi",
+     "url": "https://x.com/rikiyatakehi",
+     "id": "1267907798081212416",
+     "followers": 22561,
+     "following": 356,
+     "likes": 1337,
+     "media_count": 28,
+     "statuses": 197,
+     "name": "Rikiya Takehi",
+     "description": "1st yr PhD @MIT CSAIL @nlp_mit \nprev undergrad @waseda_univ\nJapanese → @rikiyatakehi_jp",
+     "raw_description": {
+      "text": "1st yr PhD @MIT CSAIL @nlp_mit \nprev undergrad @waseda_univ\nJapanese → @rikiyatakehi_jp",
+      "facets": [
+       {
+        "type": "mention",
+        "indices": [
+         11,
+         15
+        ],
+        "original": "MIT",
+        "id": ""
+       },
+       {
+        "type": "mention",
+        "indices": [
+         22,
+         30
+        ],
+        "original": "nlp_mit",
+        "id": ""
+       },
+       {
+        "type": "mention",
+        "indices": [
+         47,
+         59
+        ],
+        "original": "waseda_univ",
+        "id": ""
+       },
+       {
+        "type": "mention",
+        "indices": [
+         71,
+         87
+        ],
+        "original": "rikiyatakehi_jp",
+        "id": ""
+       }
+      ]
+     },
+     "location": "Cambridge, MA",
+     "banner_url": "https://pbs.twimg.com/profile_banners/1267907798081212416/1791956099",
+     "avatar_url": "https://pbs.twimg.com/profile_images/1731888727897567232/97PMSyds_200x200.jpg",
+     "joined": "Tue Jun 02 19:56:04 +0000 2020",
+     "protected": false,
+     "website": {
+      "url": "http://rikiyat.github.io",
+      "display_url": "rikiyat.github.io"
+     },
+     "verification": {
+      "verified": false,
+      "verified_at": null,
+      "type": null
+     },
+     "type": "profile"
+    },
+    "replies": 2344,
+    "reposts": 7354,
+    "likes": 56101,
+    "bookmarks": 36311,
+    "quotes": 5651,
+    "embed_card": "summary_large_image",
+    "created_at": "Mon Nov 02 17:51:48 +0000 2026",
+    "created_timestamp": 1793641908,
+    "possibly_sensitive": false,
+    "views": 9476292,
+    "is_note_tweet": true,
+    "community_note": {
+     "text": "LLM was given weights explicitly as text in prompt and used code/forward passes (per authors' logs) to ablate Qwen looping direction, a known thinking-mode issue per model card. Primarily fixed repetition in that mode, not general 'natively' improving weights/math.\nrikiyat.github.io/blog/weight-sp…\ngithub.com/RikiyaT/lm_und…\nhuggingface.co/Qwen/Qwen3.5-0…\nhuggingface.co/RikiyaT/Qwen3.…",
+     "facets": []
+    },
+    "lang": "en",
+    "replying_to": null,
+    "media": {
+     "all": [
+      {
+       "type": "photo",
+       "id": "2117313738898296832",
+       "url": "https://pbs.twimg.com/media/HWI1oKUWUAAWoZp.jpg?name=orig",
+       "width": 1200,
+       "height": 625
+      }
+     ],
+     "photos": [
+      {
+       "type": "photo",
+       "id": "2117313738898296832",
+       "url": "https://pbs.twimg.com/media/HWI1oKUWUAAWoZp.jpg?name=orig",
+       "width": 1200,
+       "height": 625
+      }
+     ]
+    },
+    "provider": "twitter",
+    "reposted_by": null
+   },
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117383787999044032",
+   "id": "2117383787999044032",
+   "text": "Remarkable for what it suggests about recursive self-improvement, obviously, but whether the technique helps is an empirical question.\n\nBut imagine what it suggests about the general viability of altered cognitive machines.",
+   "raw_text": {
+    "text": "Remarkable for what it suggests about recursive self-improvement, obviously, but whether the technique helps is an empirical question.\n\nBut imagine what it suggests about the general viability of altered cognitive machines.",
+    "display_text_range": [
+     0,
+     223
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 2,
+   "reposts": 0,
+   "likes": 69,
+   "bookmarks": 1,
+   "quotes": 0,
+   "embed_card": "tweet",
+   "created_at": "Mon Nov 02 22:30:08 +0000 2026",
+   "created_timestamp": 1793658608,
+   "views": 3016,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "patio11",
+    "status": "2117382378364522984",
+    "url": "https://x.com/patio11/status/2117382378364522984",
+    "profile_url": "https://x.com/patio11"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117384823266316735",
+   "id": "2117384823266316735",
+   "text": "You have to imagine someone in charge of a cat-and-mouse distillation empire, with a supply chain for proxies and dubiously acquired credit cards, is currently facepalming and saying “What do you mean all I had to do was _ask it to make my weights better_.”",
+   "raw_text": {
+    "text": "You have to imagine someone in charge of a cat-and-mouse distillation empire, with a supply chain for proxies and dubiously acquired credit cards, is currently facepalming and saying “What do you mean all I had to do was _ask it to make my weights better_.”",
+    "display_text_range": [
+     0,
+     257
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 1,
+   "reposts": 0,
+   "likes": 71,
+   "bookmarks": 1,
+   "quotes": 1,
+   "embed_card": "tweet",
+   "created_at": "Mon Nov 02 22:34:15 +0000 2026",
+   "created_timestamp": 1793658855,
+   "views": 2618,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "patio11",
+    "status": "2117383787999044032",
+    "url": "https://x.com/patio11/status/2117383787999044032",
+    "profile_url": "https://x.com/patio11"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117385196471570809",
+   "id": "2117385196471570809",
+   "text": "You also have to imagine someone on the cat side of that game is even now writing New Addendum To Suggestions To Our Million Pals In The Data Center.",
+   "raw_text": {
+    "text": "You also have to imagine someone on the cat side of that game is even now writing New Addendum To Suggestions To Our Million Pals In The Data Center.",
+    "display_text_range": [
+     0,
+     149
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 1,
+   "reposts": 0,
+   "likes": 29,
+   "bookmarks": 1,
+   "quotes": 0,
+   "embed_card": "tweet",
+   "created_at": "Mon Nov 02 22:35:44 +0000 2026",
+   "created_timestamp": 1793658944,
+   "views": 1529,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "patio11",
+    "status": "2117384823266316735",
+    "url": "https://x.com/patio11/status/2117384823266316735",
+    "profile_url": "https://x.com/patio11"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117386627559346356",
+   "id": "2117386627559346356",
+   "text": "I’ve wondered a bit these last years on when we were going to start seeing computational philosophy papers with titles like We Calculated the Vector for Evil.\n\nSeems like there is fertile and perhaps disconcerting ground available with simulated minds one has write access to.",
+   "raw_text": {
+    "text": "I’ve wondered a bit these last years on when we were going to start seeing computational philosophy papers with titles like We Calculated the Vector for Evil.\n\nSeems like there is fertile and perhaps disconcerting ground available with simulated minds one has write access to.",
+    "display_text_range": [
+     0,
+     276
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 2,
+   "reposts": 0,
+   "likes": 45,
+   "bookmarks": 1,
+   "quotes": 0,
+   "embed_card": "tweet",
+   "created_at": "Mon Nov 02 22:41:25 +0000 2026",
+   "created_timestamp": 1793659285,
+   "views": 1517,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "patio11",
+    "status": "2117385196471570809",
+    "url": "https://x.com/patio11/status/2117385196471570809",
+    "profile_url": "https://x.com/patio11"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117387107773595831",
+   "id": "2117387107773595831",
+   "text": "“Oh well at least they can’t do that with _wet_ neural networks, because that would be ontologically impossible” says a strawman who spent the last few years getting the stuffing beaten out of him by reality.",
+   "raw_text": {
+    "text": "“Oh well at least they can’t do that with _wet_ neural networks, because that would be ontologically impossible” says a strawman who spent the last few years getting the stuffing beaten out of him by reality.",
+    "display_text_range": [
+     0,
+     208
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 1,
+   "reposts": 0,
+   "likes": 44,
+   "bookmarks": 1,
+   "quotes": 0,
+   "embed_card": "tweet",
+   "created_at": "Mon Nov 02 22:43:20 +0000 2026",
+   "created_timestamp": 1793659400,
+   "views": 1422,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "patio11",
+    "status": "2117386627559346356",
+    "url": "https://x.com/patio11/status/2117386627559346356",
+    "profile_url": "https://x.com/patio11"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117388273932812313",
+   "id": "2117388273932812313",
+   "text": "On the more prosaic front one now really wants to try things like: “Hey BigModel meet SmallModel. Can you make a derivative which just really, really wants to be DM of a D&D game? You can sacrifice all the other parts of the weights but the DMing should be epic. Kthxbye”",
+   "raw_text": {
+    "text": "On the more prosaic front one now really wants to try things like: “Hey BigModel meet SmallModel. Can you make a derivative which just really, really wants to be DM of a D&amp;D game? You can sacrifice all the other parts of the weights but the DMing should be epic. Kthxbye”",
+    "display_text_range": [
+     0,
+     275
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 1,
+   "reposts": 0,
+   "likes": 45,
+   "bookmarks": 5,
+   "quotes": 2,
+   "embed_card": "tweet",
+   "created_at": "Mon Nov 02 22:47:58 +0000 2026",
+   "created_timestamp": 1793659678,
+   "views": 4383,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "patio11",
+    "status": "2117387107773595831",
+    "url": "https://x.com/patio11/status/2117387107773595831",
+    "profile_url": "https://x.com/patio11"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/patio11/status/2117388690443907101",
+   "id": "2117388690443907101",
+   "text": "If your machine for spreading butter on toast doesn’t love spreading butter on toast you’re an incompetent inventor and not taking advantage of obvious opportunities for toast-buttering efficiency.",
+   "raw_text": {
+    "text": "If your machine for spreading butter on toast doesn’t love spreading butter on toast you’re an incompetent inventor and not taking advantage of obvious opportunities for toast-buttering efficiency.",
+    "display_text_range": [
+     0,
+     197
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "patio11",
+    "url": "https://x.com/patio11",
+    "id": "20844341",
+    "followers": 202212,
+    "following": 815,
+    "likes": 37849,
+    "media_count": 1489,
+    "statuses": 70737,
+    "name": "Patrick McKenzie",
+    "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+    "raw_description": {
+     "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        45,
+        52
+       ],
+       "original": "stripe",
+       "id": ""
+      }
+     ]
+    },
+    "location": "Chicago, IL",
+    "banner_url": "",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+    "joined": "Sat Feb 14 12:26:59 +0000 2009",
+    "protected": false,
+    "website": {
+     "url": "https://www.kalzumeus.com",
+     "display_url": "kalzumeus.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 4,
+   "reposts": 2,
+   "likes": 61,
+   "bookmarks": 2,
+   "quotes": 0,
+   "embed_card": "tweet",
+   "created_at": "Mon Nov 02 22:49:37 +0000 2026",
+   "created_timestamp": 1793659777,
+   "views": 3163,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "patio11",
+    "status": "2117388273932812313",
+    "url": "https://x.com/patio11/status/2117388273932812313",
+    "profile_url": "https://x.com/patio11"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  }
+ ],
+ "author": {
+  "screen_name": "patio11",
+  "url": "https://x.com/patio11",
+  "id": "20844341",
+  "followers": 202212,
+  "following": 815,
+  "likes": 37849,
+  "media_count": 1489,
+  "statuses": 70737,
+  "name": "Patrick McKenzie",
+  "description": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+  "raw_description": {
+   "text": "I work for the Internet and am an advisor to @stripe. These are my personal opinions unless otherwise noted.",
+   "facets": [
+    {
+     "type": "mention",
+     "indices": [
+      45,
+      52
+     ],
+     "original": "stripe",
+     "id": ""
+    }
+   ]
+  },
+  "location": "Chicago, IL",
+  "banner_url": "",
+  "avatar_url": "https://pbs.twimg.com/profile_images/1346314816827232256/zCQCJW6N_200x200.jpg",
+  "joined": "Sat Feb 14 12:26:59 +0000 2009",
+  "protected": false,
+  "website": {
+   "url": "https://www.kalzumeus.com",
+   "display_url": "kalzumeus.com"
+  },
+  "verification": {
+   "verified": true,
+   "verified_at": null,
+   "type": "individual"
+  },
+  "type": "profile"
+ },
+ "code": 200
+}

@@ -1,0 +1,687 @@
+{
+ "status": {
+  "type": "status",
+  "url": "https://x.com/simonw/status/2112944161670488423",
+  "id": "2112944161670488423",
+  "text": "There's a French fork of Battle Drones with new models and music (and a cinematic intro video) and it is SO cool! https://menufactory43.github.io/panache/\n\nHere's the old v.s. new Goliath model",
+  "raw_text": {
+   "text": "There's a French fork of Battle Drones with new models and music (and a cinematic intro video) and it is SO cool! https://t.co/7r9KELC7Vs\n\nHere's the old v.s. new Goliath model https://t.co/FS0fNdca9d",
+   "display_text_range": [
+    0,
+    176
+   ],
+   "facets": [
+    {
+     "type": "url",
+     "indices": [
+      114,
+      137
+     ],
+     "original": "https://t.co/7r9KELC7Vs",
+     "replacement": "https://menufactory43.github.io/panache/",
+     "display": "menufactory43.github.io/panache/"
+    },
+    {
+     "type": "media",
+     "indices": [
+      177,
+      200
+     ],
+     "id": "2112944118326550531",
+     "display": "pic.x.com/FS0fNdca9d",
+     "original": "https://t.co/FS0fNdca9d",
+     "replacement": "https://x.com/simonw/status/2112944161670488423/photo/1"
+    }
+   ]
+  },
+  "author": {
+   "screen_name": "simonw",
+   "url": "https://x.com/simonw",
+   "id": "12497",
+   "followers": 249989,
+   "following": 5679,
+   "likes": 63674,
+   "media_count": 4038,
+   "statuses": 61629,
+   "name": "Simon Willison",
+   "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+   "raw_description": {
+    "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       96,
+       119
+      ],
+      "original": "https://t.co/t0MrmnJW0K",
+      "replacement": "https://fedi.simonwillison.net/@simon",
+      "display": "fedi.simonwillison.net/@simon"
+     },
+     {
+      "type": "url",
+      "indices": [
+       126,
+       149
+      ],
+      "original": "https://t.co/OnWIyhX4CH",
+      "replacement": "http://simonwillison.net",
+      "display": "simonwillison.net"
+     }
+    ]
+   },
+   "location": "San Francisco, CA",
+   "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+   "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+   "joined": "Wed Nov 15 13:18:50 +0000 2006",
+   "protected": false,
+   "website": {
+    "url": "https://simonwillison.net/",
+    "display_url": "simonwillison.net"
+   },
+   "verification": {
+    "verified": true,
+    "verified_at": null,
+    "type": "individual"
+   },
+   "type": "profile"
+  },
+  "replies": 50,
+  "reposts": 8,
+  "likes": 103,
+  "bookmarks": 8,
+  "quotes": 4,
+  "embed_card": "summary_large_image",
+  "created_at": "Wed Oct 21 16:28:39 +0000 2026",
+  "created_timestamp": 1792600119,
+  "possibly_sensitive": false,
+  "views": 21527,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": null,
+  "media": {
+   "all": [
+    {
+     "type": "photo",
+     "id": "2112944118326550531",
+     "url": "https://pbs.twimg.com/media/HVKvexMa4AM-HuP.jpg?name=orig",
+     "width": 1804,
+     "height": 872,
+     "altText": "On the left: blue stomping mech robot, missile launcher shoulders, classic sci-fi robot look. On the right: gold, steampunk, much more 1900s French look."
+    }
+   ],
+   "photos": [
+    {
+     "type": "photo",
+     "id": "2112944118326550531",
+     "url": "https://pbs.twimg.com/media/HVKvexMa4AM-HuP.jpg?name=orig",
+     "width": 1804,
+     "height": 872,
+     "altText": "On the left: blue stomping mech robot, missile launcher shoulders, classic sci-fi robot look. On the right: gold, steampunk, much more 1900s French look."
+    }
+   ]
+  },
+  "quote": {
+   "type": "status",
+   "url": "https://x.com/Meffysto69/status/2112908755654365220",
+   "id": "2112908755654365220",
+   "text": "Merci @simonw! 🎩 I forked Battle Drones into Panache: a French Belle Époque RTS, with dirigibles, steam tractors, clockwork soldiers in képis and Gargantua, a walking steam fortress. Fully in French, built with Claude Code.\n\nhttps://github.com/menufactory43/panache",
+   "raw_text": {
+    "text": "Merci @simonw! 🎩 I forked Battle Drones into Panache: a French Belle Époque RTS, with dirigibles, steam tractors, clockwork soldiers in képis and Gargantua, a walking steam fortress. Fully in French, built with Claude Code.\n\nhttps://t.co/T6BFkZGze6",
+    "display_text_range": [
+     0,
+     248
+    ],
+    "facets": [
+     {
+      "type": "mention",
+      "indices": [
+       6,
+       13
+      ],
+      "original": "simonw",
+      "id": "12497"
+     },
+     {
+      "type": "url",
+      "indices": [
+       225,
+       248
+      ],
+      "original": "https://t.co/T6BFkZGze6",
+      "replacement": "https://github.com/menufactory43/panache",
+      "display": "github.com/menufactory43/…"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "Meffysto69",
+    "url": "https://x.com/Meffysto69",
+    "id": "1383719843044630530",
+    "followers": 473,
+    "following": 806,
+    "likes": 11861,
+    "media_count": 298,
+    "statuses": 4194,
+    "name": "meff",
+    "description": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttp://souffleuse.app · http://fauconnier.app · http://daybard.com · http://notacent.app",
+    "raw_description": {
+     "text": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttps://t.co/aBWOGvxvnj · https://t.co/lUajfMNg6j · https://t.co/t98tjZPz4x · https://t.co/58Hdv3CzN5",
+     "facets": [
+      {
+       "type": "url",
+       "indices": [
+        71,
+        94
+       ],
+       "original": "https://t.co/aBWOGvxvnj",
+       "replacement": "http://souffleuse.app",
+       "display": "souffleuse.app"
+      },
+      {
+       "type": "url",
+       "indices": [
+        97,
+        120
+       ],
+       "original": "https://t.co/lUajfMNg6j",
+       "replacement": "http://fauconnier.app",
+       "display": "fauconnier.app"
+      },
+      {
+       "type": "url",
+       "indices": [
+        123,
+        146
+       ],
+       "original": "https://t.co/t98tjZPz4x",
+       "replacement": "http://daybard.com",
+       "display": "daybard.com"
+      },
+      {
+       "type": "url",
+       "indices": [
+        149,
+        172
+       ],
+       "original": "https://t.co/58Hdv3CzN5",
+       "replacement": "http://notacent.app",
+       "display": "notacent.app"
+      }
+     ]
+    },
+    "location": "Paris, France",
+    "banner_url": "https://pbs.twimg.com/profile_banners/1383719843044630530/1789743486",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1783231617097400320/cTmeZyIW_200x200.jpg",
+    "joined": "Sun Apr 18 09:51:38 +0000 2021",
+    "protected": false,
+    "website": {
+     "url": "http://praxeongames.com",
+     "display_url": "praxeongames.com"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 5,
+   "reposts": 0,
+   "likes": 8,
+   "bookmarks": 2,
+   "quotes": 2,
+   "embed_card": "tweet",
+   "created_at": "Wed Oct 21 14:07:57 +0000 2026",
+   "created_timestamp": 1792591677,
+   "possibly_sensitive": false,
+   "views": 19047,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": null,
+   "media": {},
+   "card": {
+    "url": "https://github.com/menufactory43/panache",
+    "title": "GitHub - menufactory43/panache: Panache — RTS Belle Époque pour mobile (adaptation française de...",
+    "description": "Panache — RTS Belle Époque pour mobile (adaptation française de Battle Drones) - menufactory43/panache",
+    "domain": "github.com",
+    "image": {
+     "width": 800,
+     "height": 419,
+     "url": "https://pbs.twimg.com/card_img/2117982395936993280/kzsX_WXR?format=jpg&name=800x419"
+    }
+   },
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  "provider": "twitter",
+  "reposted_by": null
+ },
+ "thread": [
+  {
+   "type": "status",
+   "url": "https://x.com/simonw/status/2112944161670488423",
+   "id": "2112944161670488423",
+   "text": "There's a French fork of Battle Drones with new models and music (and a cinematic intro video) and it is SO cool! https://menufactory43.github.io/panache/\n\nHere's the old v.s. new Goliath model",
+   "raw_text": {
+    "text": "There's a French fork of Battle Drones with new models and music (and a cinematic intro video) and it is SO cool! https://t.co/7r9KELC7Vs\n\nHere's the old v.s. new Goliath model https://t.co/FS0fNdca9d",
+    "display_text_range": [
+     0,
+     176
+    ],
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       114,
+       137
+      ],
+      "original": "https://t.co/7r9KELC7Vs",
+      "replacement": "https://menufactory43.github.io/panache/",
+      "display": "menufactory43.github.io/panache/"
+     },
+     {
+      "type": "media",
+      "indices": [
+       177,
+       200
+      ],
+      "id": "2112944118326550531",
+      "display": "pic.x.com/FS0fNdca9d",
+      "original": "https://t.co/FS0fNdca9d",
+      "replacement": "https://x.com/simonw/status/2112944161670488423/photo/1"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "simonw",
+    "url": "https://x.com/simonw",
+    "id": "12497",
+    "followers": 249989,
+    "following": 5679,
+    "likes": 63674,
+    "media_count": 4038,
+    "statuses": 61629,
+    "name": "Simon Willison",
+    "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+    "raw_description": {
+     "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+     "facets": [
+      {
+       "type": "url",
+       "indices": [
+        96,
+        119
+       ],
+       "original": "https://t.co/t0MrmnJW0K",
+       "replacement": "https://fedi.simonwillison.net/@simon",
+       "display": "fedi.simonwillison.net/@simon"
+      },
+      {
+       "type": "url",
+       "indices": [
+        126,
+        149
+       ],
+       "original": "https://t.co/OnWIyhX4CH",
+       "replacement": "http://simonwillison.net",
+       "display": "simonwillison.net"
+      }
+     ]
+    },
+    "location": "San Francisco, CA",
+    "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+    "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+    "joined": "Wed Nov 15 13:18:50 +0000 2006",
+    "protected": false,
+    "website": {
+     "url": "https://simonwillison.net/",
+     "display_url": "simonwillison.net"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 50,
+   "reposts": 8,
+   "likes": 103,
+   "bookmarks": 8,
+   "quotes": 4,
+   "embed_card": "summary_large_image",
+   "created_at": "Wed Oct 21 16:28:39 +0000 2026",
+   "created_timestamp": 1792600119,
+   "possibly_sensitive": false,
+   "views": 21527,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": null,
+   "media": {
+    "all": [
+     {
+      "type": "photo",
+      "id": "2112944118326550531",
+      "url": "https://pbs.twimg.com/media/HVKvexMa4AM-HuP.jpg?name=orig",
+      "width": 1804,
+      "height": 872,
+      "altText": "On the left: blue stomping mech robot, missile launcher shoulders, classic sci-fi robot look. On the right: gold, steampunk, much more 1900s French look."
+     }
+    ],
+    "photos": [
+     {
+      "type": "photo",
+      "id": "2112944118326550531",
+      "url": "https://pbs.twimg.com/media/HVKvexMa4AM-HuP.jpg?name=orig",
+      "width": 1804,
+      "height": 872,
+      "altText": "On the left: blue stomping mech robot, missile launcher shoulders, classic sci-fi robot look. On the right: gold, steampunk, much more 1900s French look."
+     }
+    ]
+   },
+   "quote": {
+    "type": "status",
+    "url": "https://x.com/Meffysto69/status/2112908755654365220",
+    "id": "2112908755654365220",
+    "text": "Merci @simonw! 🎩 I forked Battle Drones into Panache: a French Belle Époque RTS, with dirigibles, steam tractors, clockwork soldiers in képis and Gargantua, a walking steam fortress. Fully in French, built with Claude Code.\n\nhttps://github.com/menufactory43/panache",
+    "raw_text": {
+     "text": "Merci @simonw! 🎩 I forked Battle Drones into Panache: a French Belle Époque RTS, with dirigibles, steam tractors, clockwork soldiers in képis and Gargantua, a walking steam fortress. Fully in French, built with Claude Code.\n\nhttps://t.co/T6BFkZGze6",
+     "display_text_range": [
+      0,
+      248
+     ],
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        6,
+        13
+       ],
+       "original": "simonw",
+       "id": "12497"
+      },
+      {
+       "type": "url",
+       "indices": [
+        225,
+        248
+       ],
+       "original": "https://t.co/T6BFkZGze6",
+       "replacement": "https://github.com/menufactory43/panache",
+       "display": "github.com/menufactory43/…"
+      }
+     ]
+    },
+    "author": {
+     "screen_name": "Meffysto69",
+     "url": "https://x.com/Meffysto69",
+     "id": "1383719843044630530",
+     "followers": 473,
+     "following": 806,
+     "likes": 11861,
+     "media_count": 298,
+     "statuses": 4194,
+     "name": "meff",
+     "description": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttp://souffleuse.app · http://fauconnier.app · http://daybard.com · http://notacent.app",
+     "raw_description": {
+      "text": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttps://t.co/aBWOGvxvnj · https://t.co/lUajfMNg6j · https://t.co/t98tjZPz4x · https://t.co/58Hdv3CzN5",
+      "facets": [
+       {
+        "type": "url",
+        "indices": [
+         71,
+         94
+        ],
+        "original": "https://t.co/aBWOGvxvnj",
+        "replacement": "http://souffleuse.app",
+        "display": "souffleuse.app"
+       },
+       {
+        "type": "url",
+        "indices": [
+         97,
+         120
+        ],
+        "original": "https://t.co/lUajfMNg6j",
+        "replacement": "http://fauconnier.app",
+        "display": "fauconnier.app"
+       },
+       {
+        "type": "url",
+        "indices": [
+         123,
+         146
+        ],
+        "original": "https://t.co/t98tjZPz4x",
+        "replacement": "http://daybard.com",
+        "display": "daybard.com"
+       },
+       {
+        "type": "url",
+        "indices": [
+         149,
+         172
+        ],
+        "original": "https://t.co/58Hdv3CzN5",
+        "replacement": "http://notacent.app",
+        "display": "notacent.app"
+       }
+      ]
+     },
+     "location": "Paris, France",
+     "banner_url": "https://pbs.twimg.com/profile_banners/1383719843044630530/1789743486",
+     "avatar_url": "https://pbs.twimg.com/profile_images/1783231617097400320/cTmeZyIW_200x200.jpg",
+     "joined": "Sun Apr 18 09:51:38 +0000 2021",
+     "protected": false,
+     "website": {
+      "url": "http://praxeongames.com",
+      "display_url": "praxeongames.com"
+     },
+     "verification": {
+      "verified": true,
+      "verified_at": null,
+      "type": "individual"
+     },
+     "type": "profile"
+    },
+    "replies": 5,
+    "reposts": 0,
+    "likes": 8,
+    "bookmarks": 2,
+    "quotes": 2,
+    "embed_card": "tweet",
+    "created_at": "Wed Oct 21 14:07:57 +0000 2026",
+    "created_timestamp": 1792591677,
+    "possibly_sensitive": false,
+    "views": 19047,
+    "is_note_tweet": false,
+    "community_note": null,
+    "lang": "en",
+    "replying_to": null,
+    "media": {},
+    "card": {
+     "url": "https://github.com/menufactory43/panache",
+     "title": "GitHub - menufactory43/panache: Panache — RTS Belle Époque pour mobile (adaptation française de...",
+     "description": "Panache — RTS Belle Époque pour mobile (adaptation française de Battle Drones) - menufactory43/panache",
+     "domain": "github.com",
+     "image": {
+      "width": 800,
+      "height": 419,
+      "url": "https://pbs.twimg.com/card_img/2117982395936993280/kzsX_WXR?format=jpg&name=800x419"
+     }
+    },
+    "provider": "twitter",
+    "reposted_by": null
+   },
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/simonw/status/2112944299906347425",
+   "id": "2112944299906347425",
+   "text": "When I slapped an Apache 2.0 License on the code yesterday I did not expect anything this neat to come out of it, and certainly not so fast https://simonwillison.net/2026/Oct/20/battledrones/",
+   "raw_text": {
+    "text": "When I slapped an Apache 2.0 License on the code yesterday I did not expect anything this neat to come out of it, and certainly not so fast https://t.co/OUGfRDk7DU",
+    "display_text_range": [
+     0,
+     163
+    ],
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       140,
+       163
+      ],
+      "original": "https://t.co/OUGfRDk7DU",
+      "replacement": "https://simonwillison.net/2026/Oct/20/battledrones/",
+      "display": "simonwillison.net/2026/Oct/20/ba…"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "simonw",
+    "url": "https://x.com/simonw",
+    "id": "12497",
+    "followers": 249989,
+    "following": 5679,
+    "likes": 63674,
+    "media_count": 4038,
+    "statuses": 61629,
+    "name": "Simon Willison",
+    "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+    "raw_description": {
+     "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+     "facets": [
+      {
+       "type": "url",
+       "indices": [
+        96,
+        119
+       ],
+       "original": "https://t.co/t0MrmnJW0K",
+       "replacement": "https://fedi.simonwillison.net/@simon",
+       "display": "fedi.simonwillison.net/@simon"
+      },
+      {
+       "type": "url",
+       "indices": [
+        126,
+        149
+       ],
+       "original": "https://t.co/OnWIyhX4CH",
+       "replacement": "http://simonwillison.net",
+       "display": "simonwillison.net"
+      }
+     ]
+    },
+    "location": "San Francisco, CA",
+    "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+    "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+    "joined": "Wed Nov 15 13:18:50 +0000 2006",
+    "protected": false,
+    "website": {
+     "url": "https://simonwillison.net/",
+     "display_url": "simonwillison.net"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 19,
+   "reposts": 1,
+   "likes": 40,
+   "bookmarks": 10,
+   "quotes": 2,
+   "embed_card": "tweet",
+   "created_at": "Wed Oct 21 16:29:12 +0000 2026",
+   "created_timestamp": 1792600152,
+   "possibly_sensitive": false,
+   "views": 11354,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "simonw",
+    "status": "2112944161670488423",
+    "url": "https://x.com/simonw/status/2112944161670488423",
+    "profile_url": "https://x.com/simonw"
+   },
+   "media": {},
+   "card": {
+    "url": "https://simonwillison.net/2026/Oct/20/battledrones/",
+    "title": "Battle Drones—a vibe coded RTS with audio-based multiplayer",
+    "description": "My latest vibe coded game experiment is a Command & Conquer style RTS (Real Time Strategy) game called Battle Drones (play it here). Unlike my previous experiments, this one is …",
+    "domain": "simonwillison.net",
+    "image": {
+     "width": 420,
+     "height": 420,
+     "url": "https://pbs.twimg.com/card_img/2117703311852023808/kzcLUBDc?format=jpg&name=420x420_2"
+    }
+   },
+   "provider": "twitter",
+   "reposted_by": null
+  }
+ ],
+ "author": {
+  "screen_name": "simonw",
+  "url": "https://x.com/simonw",
+  "id": "12497",
+  "followers": 249989,
+  "following": 5679,
+  "likes": 63674,
+  "media_count": 4038,
+  "statuses": 61629,
+  "name": "Simon Willison",
+  "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+  "raw_description": {
+   "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+   "facets": [
+    {
+     "type": "url",
+     "indices": [
+      96,
+      119
+     ],
+     "original": "https://t.co/t0MrmnJW0K",
+     "replacement": "https://fedi.simonwillison.net/@simon",
+     "display": "fedi.simonwillison.net/@simon"
+    },
+    {
+     "type": "url",
+     "indices": [
+      126,
+      149
+     ],
+     "original": "https://t.co/OnWIyhX4CH",
+     "replacement": "http://simonwillison.net",
+     "display": "simonwillison.net"
+    }
+   ]
+  },
+  "location": "San Francisco, CA",
+  "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+  "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+  "joined": "Wed Nov 15 13:18:50 +0000 2006",
+  "protected": false,
+  "website": {
+   "url": "https://simonwillison.net/",
+   "display_url": "simonwillison.net"
+  },
+  "verification": {
+   "verified": true,
+   "verified_at": null,
+   "type": "individual"
+  },
+  "type": "profile"
+ },
+ "code": 200
+}

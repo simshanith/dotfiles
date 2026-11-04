@@ -1,0 +1,72 @@
+{
+ "code": 200,
+ "message": "OK",
+ "tweet": {
+  "url": "https://x.com/cipri_tom/status/2112663943491567663",
+  "id": "2112663943491567663",
+  "text": "@simonw Can’t it use inaudible range? \n\n(You obviously considered it, but why didn’t it work)",
+  "raw_text": {
+   "text": "@simonw Can’t it use inaudible range? \n\n(You obviously considered it, but why didn’t it work)",
+   "display_text_range": [
+    8,
+    93
+   ],
+   "facets": [
+    {
+     "type": "mention",
+     "indices": [
+      0,
+      7
+     ],
+     "original": "simonw",
+     "id": "12497"
+    }
+   ]
+  },
+  "author": {
+   "screen_name": "cipri_tom",
+   "url": "https://x.com/cipri_tom",
+   "id": "616203093",
+   "followers": 361,
+   "following": 810,
+   "likes": 15304,
+   "media_count": 407,
+   "name": "Ciprian Tomoiagă",
+   "description": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+   "raw_description": {
+    "text": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+    "facets": []
+   },
+   "location": "Lausanne, the real one",
+   "banner_url": "https://pbs.twimg.com/profile_banners/616203093/1637595653",
+   "avatar_url": "https://pbs.twimg.com/profile_images/1244194024086528001/6f_NJXiY_200x200.png",
+   "joined": "Sat Jun 23 13:44:27 +0000 2012",
+   "protected": false,
+   "website": null,
+   "verification": {
+    "verified": false,
+    "verified_at": null,
+    "type": null
+   },
+   "avatar_color": null
+  },
+  "replies": 1,
+  "retweets": 0,
+  "likes": 4,
+  "bookmarks": 0,
+  "quotes": 0,
+  "created_at": "Tue Oct 20 21:55:10 +0000 2026",
+  "created_timestamp": 1792533310,
+  "views": 95,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": "simonw",
+  "replying_to_status": "2112657717227843942",
+  "source": "Twitter for iPhone",
+  "twitter_card": "tweet",
+  "color": null,
+  "provider": "twitter",
+  "reposted_by": null
+ }
+}

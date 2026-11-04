@@ -1,0 +1,85 @@
+{
+ "code": 200,
+ "message": "OK",
+ "tweet": {
+  "url": "https://x.com/simonw/status/2112657717227843942",
+  "id": "2112657717227843942",
+  "text": "Warning if you're going to try this: the audio multiplayer plays a high pitched noise throughout the game - annoying at best, and at worst might give you an actual headache\n\n(Natalie: \"why do my teeth hurt?\")",
+  "raw_text": {
+   "text": "Warning if you're going to try this: the audio multiplayer plays a high pitched noise throughout the game - annoying at best, and at worst might give you an actual headache\n\n(Natalie: \"why do my teeth hurt?\")",
+   "display_text_range": [
+    0,
+    208
+   ],
+   "facets": []
+  },
+  "author": {
+   "screen_name": "simonw",
+   "url": "https://x.com/simonw",
+   "id": "12497",
+   "followers": 249989,
+   "following": 5679,
+   "likes": 63674,
+   "media_count": 4038,
+   "name": "Simon Willison",
+   "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+   "raw_description": {
+    "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       96,
+       119
+      ],
+      "original": "https://t.co/t0MrmnJW0K",
+      "replacement": "https://fedi.simonwillison.net/@simon",
+      "display": "fedi.simonwillison.net/@simon"
+     },
+     {
+      "type": "url",
+      "indices": [
+       126,
+       149
+      ],
+      "original": "https://t.co/OnWIyhX4CH",
+      "replacement": "http://simonwillison.net",
+      "display": "simonwillison.net"
+     }
+    ]
+   },
+   "location": "San Francisco, CA",
+   "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+   "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+   "joined": "Wed Nov 15 13:18:50 +0000 2006",
+   "protected": false,
+   "website": {
+    "url": "https://simonwillison.net/",
+    "display_url": "simonwillison.net"
+   },
+   "verification": {
+    "verified": true,
+    "verified_at": null,
+    "type": "individual"
+   },
+   "avatar_color": null
+  },
+  "replies": 6,
+  "retweets": 1,
+  "likes": 25,
+  "bookmarks": 0,
+  "quotes": 0,
+  "created_at": "Tue Oct 20 21:30:25 +0000 2026",
+  "created_timestamp": 1792531825,
+  "views": 8886,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": "simonw",
+  "replying_to_status": "2112632287250743641",
+  "twitter_card": "tweet",
+  "color": null,
+  "provider": "twitter",
+  "reposted_by": null
+ }
+}
