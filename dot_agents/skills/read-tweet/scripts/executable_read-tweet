@@ -1,0 +1,380 @@
+#!/usr/bin/env python3
+"""Read X/Twitter posts, with their thread, from URLs. No login or API key.
+
+Every post is read in thread context automatically. You get the parent chain
+up to the conversation root, plus the focal author's self-thread both up and
+down, in order. The default output is compact. Flags raise the limits, and the
+output's "more:" lines say which flag to use when something was left out.
+
+Sources, tried in order (all public, no auth):
+  1. api.fxtwitter.com/2/thread/<id>   full thread, media, quotes, stats (unofficial)
+  2. api.fxtwitter.com/status/<id>     single post; parents walked one by one (no posts below)
+  3. publish.x.com/oembed              X's official embed: text only, no thread context
+Replies from other people come from api.fxtwitter.com/2/conversation/<id> (--replies).
+"""
+import argparse, datetime, html, json, os, re, sys, urllib.parse, urllib.request
+
+UA = "read-tweet/2.0"
+FX = os.environ.get("READ_TWEET_FXTWITTER", "https://api.fxtwitter.com").rstrip("/")
+OEMBED = os.environ.get("READ_TWEET_OEMBED", "https://publish.x.com/oembed")
+ID_RE = re.compile(r"/status(?:es)?/(\d{1,25})")
+ALT_MAX = 300  # image alt text can be paragraphs; cap it
+
+
+def tweet_id(arg):
+    arg = arg.strip()
+    if arg.isdigit():
+        return arg
+    m = ID_RE.search(arg)
+    return m.group(1) if m else None
+
+
+def get_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            return json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:  # fxtwitter puts a JSON body on 4xx
+        try:
+            return json.loads(e.read().decode())
+        except Exception:  # noqa: BLE001
+            raise e from None
+
+
+def clip(s, n):
+    """Truncate s to n chars (n<=0: no limit). Returns (text, chars_dropped)."""
+    if not s or n <= 0 or len(s) <= n:
+        return s, 0
+    return s[:n].rstrip() + "…", len(s) - n
+
+
+def iso(ts, fallback=None):
+    if ts:
+        return datetime.datetime.fromtimestamp(ts, datetime.timezone.utc).strftime("%Y-%m-%d %H:%MZ")
+    return fallback
+
+
+# ---------- normalisation (fxtwitter v2 and v1 share most field names) ----------
+
+def clip_post(p, n):
+    p["text"], cut = clip(p.get("text") or "", n)
+    if cut:
+        p["text_truncated_chars"] = cut
+    return p
+
+
+def norm(t, opts, depth=1):
+    """Normalise one fxtwitter post (v1 or v2). depth = quote nesting level of t.
+    Top-level text is left whole (read() clips it); quoted posts are clipped here."""
+    if not t.get("author") or t.get("type") == "tombstone":
+        return {"id": t.get("id"), "url": t.get("url"), "unavailable": t.get("reason") or t.get("message") or "unavailable"}
+    a = t["author"]
+    rt = t.get("replying_to")
+    if isinstance(rt, dict):
+        reply_to = {"handle": rt.get("screen_name"), "id": rt.get("status")}
+    elif t.get("replying_to_status"):  # v1
+        reply_to = {"handle": rt, "id": t.get("replying_to_status")}
+    else:
+        reply_to = None
+    p = {"id": t.get("id"), "url": t.get("url"), "author": a.get("name"), "handle": a.get("screen_name"),
+         "date": iso(t.get("created_timestamp"), t.get("created_at")), "text": t.get("text") or "",
+         "reply_to": reply_to,
+         "stats": {k: t.get(k) for k in ("replies", "reposts", "likes", "quotes", "views")}}
+    if p["stats"]["reposts"] is None:
+        p["stats"]["reposts"] = t.get("retweets")
+    if depth > 1:
+        clip_post(p, opts.max_chars)
+    media = (t.get("media") or {}).get("all") or []
+    if media:
+        p["media"] = []
+        for m in media:
+            alt, _ = clip(m.get("altText") or "", ALT_MAX)
+            e = {"type": m.get("type"), "url": m.get("url")}
+            if m.get("thumbnail_url"):
+                e["thumbnail"] = m["thumbnail_url"]
+            if m.get("duration"):
+                e["duration_s"] = round(m["duration"], 1)
+            if alt:
+                e["alt"] = alt
+            p["media"].append(e)
+    if t.get("community_note"):
+        n = t["community_note"]
+        p["community_note"] = n.get("text") if isinstance(n, dict) else n
+    if t.get("article"):
+        art = t["article"]
+        p["article"] = {"title": art.get("title"), "preview": art.get("preview_text")}
+    card = t.get("card") or t.get("twitter_card")
+    if isinstance(card, dict) and card.get("title"):
+        p["card"] = card.get("title")
+    q = t.get("quote")
+    if q:
+        if depth <= opts.quote_depth:
+            if depth < opts.quote_depth and "quote" not in q:
+                # The API inlines about two quote levels; refetch to go deeper.
+                try:
+                    full = get_json(f"{FX}/2/status/{q['id']}").get("status")
+                    if full and full.get("author"):
+                        q = full
+                except Exception:  # noqa: BLE001
+                    pass
+            p["quote"] = norm(q, opts, depth + 1)
+        else:
+            qa = (q.get("author") or {}).get("screen_name")
+            p["quote_stub"] = {"handle": qa, "url": q.get("url"), "id": q.get("id")}
+    return p
+
+
+# ---------- sources ----------
+
+def from_thread_endpoint(tid, opts):
+    d = get_json(f"{FX}/2/thread/{tid}")
+    if d.get("code") != 200 or not d.get("status"):
+        raise RuntimeError(f"code {d.get('code')}")
+    posts = d.get("thread") or [d["status"]]
+    if not any(str(p.get("id")) == tid for p in posts):
+        posts = posts + [d["status"]]
+    return [norm(p, opts) for p in posts], "fxtwitter /2/thread", True
+
+
+def from_status_walk(tid, opts):
+    def one(i):
+        d = get_json(f"{FX}/status/{i}")
+        if d.get("code") != 200 or not d.get("tweet"):
+            raise RuntimeError(d.get("message", "not found"))
+        return d["tweet"]
+    chain = [norm(one(tid), opts)]
+    while len(chain) < max(opts.max_posts, 1) and (chain[-1].get("reply_to") or {}).get("id"):
+        try:
+            chain.append(norm(one(chain[-1]["reply_to"]["id"]), opts))
+        except Exception as e:  # noqa: BLE001
+            chain.append({"id": chain[-1]["reply_to"]["id"], "unavailable": str(e)})
+            break
+    return chain[::-1], "fxtwitter /status (parents only)", False
+
+
+def from_oembed(tid, opts):
+    q = urllib.parse.urlencode({"url": f"https://x.com/i/status/{tid}", "omit_script": "1", "dnt": "1"})
+    d = get_json(f"{OEMBED}?{q}")
+    raw = d.get("html", "")
+    m = re.search(r"<p[^>]*>(.*?)</p>", raw, re.S)
+    body = m.group(1) if m else ""
+    body = re.sub(r"<br\s*/?>", "\n", body)
+    body = re.sub(r'<a href="([^"]+)"[^>]*>[^<]*</a>', r"\1", body)
+    body = html.unescape(re.sub(r"<[^>]+>", "", body)).strip()
+    date = re.findall(r">([A-Z][a-z]+ \d{1,2}, \d{4})</a>", raw)
+    p = {"id": tid, "url": d.get("url"), "author": d.get("author_name"),
+         "handle": (d.get("author_url") or "").rsplit("/", 1)[-1],
+         "date": date[-1] if date else None, "text": body, "reply_to": None}
+    return [p], "oembed (text only)", False
+
+
+def fetch_replies(tid, n, exclude, opts):
+    out, cursor, pages = [], None, 0
+    while len(out) < n and pages < 5:
+        q = "?ranking_mode=likes" + (f"&cursor={urllib.parse.quote(cursor)}" if cursor else "")
+        d = get_json(f"{FX}/2/conversation/{tid}{q}")
+        pages += 1
+        for r in d.get("replies") or []:
+            if str(r.get("id")) not in exclude and len(out) < n:
+                out.append(clip_post(norm(r, opts, depth=opts.quote_depth), opts.max_chars))  # quotes: stub only
+        cursor = (d.get("cursor") or {}).get("bottom")
+        if not cursor or not d.get("replies"):
+            break
+    return out
+
+
+# ---------- assembling a result ----------
+
+def read(arg, opts):
+    tid = tweet_id(arg)
+    if not tid:
+        return {"input": arg, "error": "no tweet ID in input; need a .../status/<id> URL or a numeric ID"}
+    errs = []
+    for src in (from_thread_endpoint, from_status_walk, from_oembed):
+        try:
+            posts, source, walked_down = src(tid, opts)
+            break
+        except Exception as e:  # noqa: BLE001
+            errs.append(f"{src.__name__}: {e}")
+    else:
+        return {"input": arg, "id": tid, "error": "; ".join(errs) +
+                " (deleted, protected, age-restricted, or all sources down)"}
+
+    fi = next((i for i, p in enumerate(posts) if str(p.get("id")) == tid), len(posts) - 1)
+    focal = posts[fi]
+    fh = (focal.get("handle") or "").lower()
+    for i, p in enumerate(posts):
+        p["position"] = i + 1
+        p["role"] = "focal" if i == fi else ("author" if (p.get("handle") or "").lower() == fh else "context")
+        if i != fi and not p.get("unavailable"):  # the focal post is always shown in full
+            clip_post(p, opts.max_chars)
+
+    total = len(posts)
+    chain = [p for p in posts if p["role"] in ("author", "focal")]
+    res = {"input": arg, "id": tid, "source": source, "url": focal.get("url"),
+           "total_posts": total, "focal_position": fi + 1,
+           "author_posts": len(chain), "context_posts": total - len(chain),
+           "is_reply": bool(focal.get("reply_to")),
+           # None when the top of the chain wasn't reached (missing post, capped walk, oEmbed)
+           "root": None if posts[0].get("unavailable") or posts[0].get("reply_to") or source.startswith("oembed")
+           else {"id": posts[0].get("id"), "url": posts[0].get("url"), "handle": posts[0].get("handle")}}
+    notes, more = [], []
+
+    # Window: root + the posts nearest the focal one.
+    keep = set(range(total))
+    if total > opts.max_posts > 0:
+        n = opts.max_posts - 1
+        start = max(1, min(fi - n // 2, total - n))
+        keep = {0, *range(start, start + n)}
+    shown, omitted, gap = [], [], 0
+    for i, p in enumerate(posts):
+        if i in keep:
+            if gap:
+                shown.append({"omitted": gap})
+                omitted.append({"before_position": i + 1, "count": gap})
+                gap = 0
+            shown.append(p)
+        else:
+            gap += 1
+    if gap:
+        shown.append({"omitted": gap})
+        omitted.append({"before_position": total + 1, "count": gap})
+    res["posts"] = shown
+    if omitted:
+        res["omitted"] = omitted
+        more.append(f"{sum(o['count'] for o in omitted)} thread posts not shown: --max-posts {total}")
+
+    # /2/thread doesn't inline a quoted post's own quote; probe the focal one so quote chains show.
+    fq = focal.get("quote")
+    if fq and not fq.get("unavailable") and not fq.get("quote") and not fq.get("quote_stub") and "fxtwitter" in source:
+        try:
+            qq = (get_json(f"{FX}/2/status/{fq['id']}").get("status") or {}).get("quote")
+            if qq:
+                fq["quote_stub"] = {"handle": (qq.get("author") or {}).get("screen_name"), "url": qq.get("url"), "id": qq.get("id")}
+        except Exception:  # noqa: BLE001
+            pass
+
+    root_h = (res["root"] or {}).get("handle")
+    if root_h and root_h.lower() != fh:
+        more.append(f"focal post replies into @{root_h}'s conversation; this shows only the chain above it. "
+                    f"For @{root_h}'s own full thread run on the root: {posts[0].get('url')}")
+
+    # Completeness signals.
+    if source.startswith("fxtwitter /2") and res["root"] is None:
+        notes.append("thread root is missing (deleted, protected or unreachable); context above it is lost")
+    if len(posts) >= opts.max_posts > 0 and not walked_down and source.startswith("fxtwitter /status"):
+        more.append(f"parent walk stopped at {opts.max_posts}: --max-posts {opts.max_posts * 2}")
+    if any(p.get("unavailable") for p in posts):
+        notes.append("some posts in the chain are unavailable (shown as UNAVAILABLE)")
+    if not walked_down:
+        notes.append("thread endpoint failed: posts after this one were NOT fetched; ask the user for the last post's link" if source.startswith("fxtwitter")
+                     else "oEmbed fallback: no media, quotes, stats or thread context; a quoted post appears only as a t.co link")
+    if any(p.get("text_truncated_chars") for p in posts):
+        more.append("some post text truncated: --max-chars 0")
+    if any(p.get("quote_stub") or (p.get("quote") or {}).get("quote_stub") for p in posts):
+        more.append(f"deeper quoted posts shown as links only: --quote-depth {opts.quote_depth + 1}")
+
+    # Replies from other people.
+    if "/2/thread" in source:
+        last_author = max((i for i, p in enumerate(posts) if p["role"] in ("author", "focal")), default=fi)
+        others = sum(max(0, (p.get("stats") or {}).get("replies") or 0) for p in chain) - (len(chain) - 1)
+        res["replies_from_others_approx"] = max(others, 0)
+        if opts.replies:
+            reps = fetch_replies(tid, opts.replies, {str(p.get("id")) for p in posts}, opts)
+            res["replies"] = reps
+            # fxtwitter hands back a bottom cursor even when nothing is left, so compare counts.
+            if len(reps) < ((focal.get("stats") or {}).get("replies") or 0) - (1 if last_author > fi else 0):
+                more.append(f"more replies to the focal post exist: --replies {opts.replies * 3}")
+        elif others > 0:
+            more.append(f"~{others} replies from other people not fetched: --replies 10 (top replies to the focal post, by likes)")
+    res["notes"], res["more"] = notes, more
+    return res
+
+
+# ---------- text rendering ----------
+
+def render_post(p, indent=""):
+    if p.get("unavailable"):
+        return f"{indent}UNAVAILABLE {p.get('url') or p.get('id')} ({p['unavailable']})"
+    lines = [f"{indent}{p.get('author')} (@{p.get('handle')}) · {p.get('date')} · {p.get('url')}"]
+    lines += [indent + l for l in (p.get("text") or "").splitlines()]
+    if p.get("text_truncated_chars"):
+        lines.append(f"{indent}[… {p['text_truncated_chars']} more chars]")
+    if p.get("article"):
+        lines.append(f"{indent}[X Article] {p['article'].get('title')}: {p['article'].get('preview')}")
+    if p.get("card"):
+        lines.append(f"{indent}[link card] {p['card']}")
+    for m in p.get("media") or []:
+        extra = f" ({m['duration_s']}s, thumb {m['thumbnail']})" if m.get("duration_s") else ""
+        lines.append(f"{indent}[{m['type']}] {m['url']}{extra}" + (f" alt: {m['alt']}" if m.get("alt") else ""))
+    if p.get("community_note"):
+        lines += [indent + l for l in f"[Community note] {p['community_note']}".splitlines()]
+    s = {k: v for k, v in (p.get("stats") or {}).items() if v is not None}
+    if s:
+        lines.append(indent + " · ".join(f"{k} {v}" for k, v in s.items()))
+    if p.get("quote"):
+        lines.append(f"{indent}> quoting:")
+        lines.append(render_post(p["quote"], indent + "> "))
+    elif p.get("quote_stub"):
+        q = p["quote_stub"]
+        lines.append(f"{indent}> quoting @{q.get('handle')}: {q.get('url')} (not expanded)")
+    return "\n".join(lines)
+
+
+def render(r):
+    if "error" in r:
+        return f"[{r['input']}] ERROR: {r['error']}"
+    n, f = r["total_posts"], r["focal_position"]
+    if n == 1:
+        kind = "single post (no parents, no self-replies)" if "/2/thread" in r["source"] else "single post"
+    else:
+        bits = [f"{n} posts", f"focal is {f}/{n}", f"{r['author_posts']} by the focal author"]
+        if r["context_posts"]:
+            bits.append(f"{r['context_posts']} by others above it")
+        kind = "thread: " + ", ".join(bits)
+    root = (f"root @{r['root']['handle']} {r['root']['url']}" if r["root"]
+            else "thread context unknown" if r["source"].startswith("oembed") else "root not reached")
+    out = [f"=== {kind} · {root} · source: {r['source']}"]
+    out += [f"note: {x}" for x in r["notes"]]
+    for p in r["posts"]:
+        if "omitted" in p:
+            out.append(f"\n[… {p['omitted']} post{'s' * (p['omitted'] > 1)} omitted …]")
+            continue
+        tag = {"focal": " ★ focal", "context": " · other author"}.get(p["role"], "")
+        out.append(f"\n[{p['position']}/{n}{tag}]")
+        out.append(render_post(p))
+    if r.get("replies") is not None:
+        out.append(f"\n--- top {len(r['replies'])} replies from others to the focal post ---")
+        for p in r["replies"]:
+            out.append("\n" + render_post(p, "  "))
+    if r["more"]:
+        out.append("\nmore:")
+        out += [f"  - {x}" for x in r["more"]]
+    return "\n".join(out)
+
+
+def main():
+    p = argparse.ArgumentParser(prog="read-tweet", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument("tweets", nargs="+", help="status URLs (x.com, twitter.com, fxtwitter, vxtwitter, xcancel, ...) or numeric IDs")
+    p.add_argument("--json", action="store_true", help="emit JSON instead of text")
+    p.add_argument("--max-posts", type=int, default=30, metavar="N",
+                   help="thread posts to show (root + the ones nearest the focal post); 0 = all (default 30)")
+    p.add_argument("--max-chars", type=int, default=2000, metavar="N",
+                   help="truncate each post's text to N chars, except the focal post; 0 = no limit (default 2000)")
+    p.add_argument("--quote-depth", type=int, default=1, metavar="N",
+                   help="expand quoted posts N levels deep; deeper ones are shown as links (default 1)")
+    p.add_argument("--replies", type=int, default=0, metavar="N",
+                   help="also fetch the top N replies from other people to the focal post (default 0)")
+    p.add_argument("--parents", type=int, help=argparse.SUPPRESS)  # v1 flag; thread context is now automatic
+    opts = p.parse_args()
+
+    results = [read(a, opts) for a in opts.tweets]
+    if opts.json:
+        print(json.dumps(results if len(results) > 1 else results[0], indent=2, ensure_ascii=False))
+    else:
+        print("\n\n".join(render(r) for r in results))
+    sys.exit(1 if any("error" in r for r in results) else 0)
+
+
+if __name__ == "__main__":
+    main()
