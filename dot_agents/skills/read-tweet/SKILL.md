@@ -42,7 +42,7 @@ The script can't search, so "that tweet from @foo about bar" isn't enough. Ask f
 
 ## Limits
 
-- Runs through `uv run --script` (PEP 723), so `uv` must be on PATH. The first run fetches Python 3.12+ and `msgspec` into uv's cache.
+- Runs through `uv run --script` (PEP 723), so `uv` must be on PATH. The first run fetches Python 3.14+ and `msgspec` into uv's cache.
 - Only posts that are visible while logged out. Protected, deleted, and some age-restricted posts fail.
 - Sources: `api.fxtwitter.com` is unofficial and gives threads, media, quotes and stats. If its thread endpoint fails, the script falls back to walking parents only, with nothing below the linked post. The last resort is X's official oEmbed: plain text only, no thread context, and quotes appear as `t.co` links.
 - No search, timelines, profiles or likes. Those need the paid X API. Say so rather than scraping x.com.

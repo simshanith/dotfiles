@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --quiet --script
 # /// script
-# requires-python = ">=3.12"
+# requires-python = ">=3.14"
 # dependencies = ["msgspec>=0.22,<0.23"]
 # ///
 """Read X/Twitter posts, with their thread, from URLs. No login or API key.
@@ -18,8 +18,6 @@ Replies from other people come from api.fxtwitter.com/2/conversation/<id> (--rep
 Payloads are validated as they're decoded: if a source changes shape, it counts as
 failed, the next source is tried, and a note says what changed.
 """
-
-from __future__ import annotations
 
 import argparse
 import html

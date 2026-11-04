@@ -1,7 +1,5 @@
 """Offline tests against API responses recorded 2026-11-04."""
 
-from __future__ import annotations
-
 import json
 from typing import Any
 

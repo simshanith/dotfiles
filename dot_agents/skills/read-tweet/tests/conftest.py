@@ -1,7 +1,5 @@
 """Load the script as a module and serve recorded API responses."""
 
-from __future__ import annotations
-
 import importlib.util
 import sys
 from pathlib import Path
