@@ -6,7 +6,7 @@ ruff = "latest"  # Python lint + format (config: .ruff.toml)
 # Python checks for the skill scripts (PEP 723, run via `uv run --script`). `mise run py` runs all.
 # mypy and pytest run through uvx with the scripts' dependencies, so nothing is installed globally.
 [vars]
-py_src = "dot_agents/skills"
+py_src = "dot_agents/skills claude private_bin/executable_rtk-allowlist-hook"
 
 [tasks."py:fmt"]
 description = "Format Python"
@@ -21,8 +21,11 @@ description = "Type-check Python (mypy --strict, 3.9 target)"
 run = "uvx --python 3.14 --with pytest --with msgspec mypy@2.4 --config-file .mypy.ini {{vars.py_src}}"
 
 [tasks."py:test"]
-description = "Offline tests on the Python the scripts require (3.14)"
-run = "uvx --python 3.14 --with msgspec pytest -q -p no:cacheprovider {{vars.py_src}}"
+description = "Offline tests: everything on 3.14, the claude/ helpers also on 3.9 (system python3)"
+run = [
+  "uvx --python 3.14 --with msgspec pytest -q -p no:cacheprovider dot_agents/skills claude",
+  "uvx --python 3.9 pytest -q -p no:cacheprovider claude",
+]
 
 [tasks.py]
 description = "All Python checks"

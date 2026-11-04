@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run --script --quiet
 # /// script
-# requires-python = ">=3.11"
+# requires-python = ">=3.14"
 # dependencies = []
 # ///
 """Allowlist gate in front of `rtk hook claude` (Claude Code PreToolUse, Bash).
@@ -23,7 +23,7 @@ Fails open everywhere. Any parse error, missing rtk, timeout, or unexpected
 exception prints nothing and exits 0, which Claude Code reads as "no rewrite".
 A hook that breaks must never break the user's command.
 
-Runs via `uv run --script` so the interpreter is guaranteed >= 3.11 (tomllib),
+Runs via `uv run --script` so the interpreter is guaranteed >= 3.14,
 with uv fetching a managed CPython if the system lacks one. If uv itself is
 missing the shebang fails with exit 127 -- Claude Code surfaces a hook error
 but still runs the command unmodified, so even that path fails open.
@@ -36,152 +36,148 @@ import shlex
 import subprocess
 import sys
 import tomllib
+from collections.abc import Mapping
+from pathlib import Path
+from typing import Any
 
-CONFIG_PATH = os.environ.get(
-    "RTK_ALLOWLIST_CONFIG",
-    os.path.expanduser("~/.config/rtk-allowlist.toml"),
-)
+CONFIG_PATH = Path(os.environ.get("RTK_ALLOWLIST_CONFIG", "~/.config/rtk-allowlist.toml"))
 
 # Used when the config is missing or unreadable, so a lost file degrades to the
 # known-good set rather than to rtk's wide-open default.
-DEFAULT_ALLOW = {
-    "cat", "head", "tail", "ls", "gh", "find", "wc", "du", "ps", "vitest", "cargo",
-}
-DEFAULT_SUBCOMMANDS = {"git": {"commit", "fetch"}}
+DEFAULT_ALLOW = frozenset(
+    {"cat", "head", "tail", "ls", "gh", "find", "wc", "du", "ps", "vitest", "cargo"}
+)
+DEFAULT_SUBCOMMANDS: Mapping[str, frozenset[str]] = {"git": frozenset({"commit", "fetch"})}
 
 # Shell syntax that makes this more than one simple command. rtk parses only the
 # leading command, so on a pipeline or list it would rewrite the head and leave
 # the rest -- or mangle the whole string. We decline instead of guessing.
 SHELL_METACHARS = ("&&", "||", ";", "|", "`", "$(", ">", "<", "&", "\n")
 
-RTK_TIMEOUT_SECONDS = 10
-
-
-def load_config(path: str = CONFIG_PATH):
-    """Return (allow_set, subcommand_map), falling back to the built-in defaults."""
-    try:
-        with open(path, "rb") as handle:
-            raw = handle.read()
-    except Exception:
-        return set(DEFAULT_ALLOW), {k: set(v) for k, v in DEFAULT_SUBCOMMANDS.items()}
-
-    try:
-        data = tomllib.loads(raw.decode("utf-8"))
-    except Exception:
-        data = None  # malformed TOML -- prefer the safe defaults over a wrong list
-
-    if not isinstance(data, dict):
-        return set(DEFAULT_ALLOW), {k: set(v) for k, v in DEFAULT_SUBCOMMANDS.items()}
-
-    commands = data.get("commands")
-    allow = (
-        {c for c in commands if isinstance(c, str) and c}
-        if isinstance(commands, list)
-        else set(DEFAULT_ALLOW)
-    )
-
-    subcommands = {}
-    raw_subcommands = data.get("subcommands")
-    if isinstance(raw_subcommands, dict):
-        for name, values in raw_subcommands.items():
-            if isinstance(values, list):
-                subcommands[name] = {v for v in values if isinstance(v, str) and v}
-
-    return allow, subcommands
-
-
-ALLOW, SUBCOMMANDS = load_config()
-
 # Global flags that consume the next token, so the subcommand scan skips past
 # their value instead of mistaking it for the subcommand.
 VALUE_FLAGS = ("-C", "-c", "--git-dir", "--work-tree", "--namespace")
 
+RTK_TIMEOUT_SECONDS = 10
+
+type Config = tuple[frozenset[str], Mapping[str, frozenset[str]]]
+
+
+def _strings(values: object) -> frozenset[str]:
+    """The non-empty strings in a TOML array; empty for anything else."""
+    if not isinstance(values, list):
+        return frozenset()
+    return frozenset(v for v in values if isinstance(v, str) and v)
+
+
+def parse_config(data: object) -> Config:
+    """(allow, subcommands) from parsed TOML, defaulting what's missing or malformed."""
+    if not isinstance(data, dict):
+        return DEFAULT_ALLOW, DEFAULT_SUBCOMMANDS
+    commands = data.get("commands")
+    allow = _strings(commands) if isinstance(commands, list) else DEFAULT_ALLOW
+    raw_subcommands = data.get("subcommands")
+    subcommands = {
+        name: _strings(values)
+        for name, values in (raw_subcommands.items() if isinstance(raw_subcommands, dict) else ())
+        if isinstance(values, list)
+    }
+    return allow, subcommands
+
+
+def load_config(path: Path = CONFIG_PATH) -> Config:
+    """The allowlist from path; the built-in defaults if it's missing or malformed."""
+    try:
+        data: Any = tomllib.loads(path.expanduser().read_bytes().decode("utf-8"))
+    except Exception:
+        data = None  # missing, unreadable or malformed -- prefer the safe defaults
+    return parse_config(data)
+
+
+ALLOW, SUBCOMMANDS = load_config()
+
+
+def _strip_env_prefix(tokens: list[str]) -> list[str]:
+    """Drop leading VAR=value assignments, so `FOO=1 ls` resolves to `ls`."""
+    while tokens and "=" in tokens[0] and not tokens[0].startswith("-"):
+        name = tokens[0].split("=", 1)[0]
+        if not (name and name.replace("_", "").isalnum()):
+            break
+        tokens = tokens[1:]
+    return tokens
+
+
+def _subcommand(args: list[str]) -> str | None:
+    """The first non-flag argument, skipping the values of VALUE_FLAGS.
+
+    So `git -C /tmp commit` resolves to `commit`, not to the path.
+    """
+    index = 0
+    while index < len(args):
+        token = args[index]
+        if not token.startswith("-"):
+            return token
+        index += 2 if token in VALUE_FLAGS else 1
+    return None
+
+
+def _tokens(command: str) -> list[str]:
+    """The command's words after any VAR=value prefix; empty if it doesn't parse."""
+    try:
+        return _strip_env_prefix(shlex.split(command))
+    except ValueError:
+        return []  # unbalanced quotes -- not ours to interpret
+
 
 def is_allowed(command: str) -> bool:
     """True only if `command` is a single simple command named in the allowlist."""
-    if not command or not command.strip():
-        return False
-
     if any(tok in command for tok in SHELL_METACHARS):
         return False
-
-    try:
-        tokens = shlex.split(command)
-    except ValueError:
-        return False  # unbalanced quotes -- not ours to interpret
-
-    if not tokens:
+    tokens = _tokens(command)
+    if not tokens:  # also blank commands
         return False
-
-    # Strip a leading `env`-style VAR=value prefix so `FOO=1 ls` still resolves.
-    while tokens and "=" in tokens[0] and not tokens[0].startswith("-"):
-        name = tokens[0].split("=", 1)[0]
-        if name and name.replace("_", "").isalnum():
-            tokens = tokens[1:]
-        else:
-            break
-
-    if not tokens:
-        return False
-
-    head = os.path.basename(tokens[0])
-
+    head = Path(tokens[0]).name
     if head in SUBCOMMANDS:
-        # First non-flag token after the command is the subcommand. Value-taking
-        # global flags are skipped, so `git -C /tmp commit` resolves to `commit`
-        # rather than reading the path as the subcommand.
-        allowed = SUBCOMMANDS[head]
-        rest, index = tokens[1:], 0
-        while index < len(rest):
-            token = rest[index]
-            if not token.startswith("-"):
-                return token in allowed
-            index += 2 if token in VALUE_FLAGS else 1
-        return False  # bare `git` with no subcommand
-
+        return _subcommand(tokens[1:]) in SUBCOMMANDS[head]  # bare `git` -> None -> False
     return head in ALLOW
 
 
-def main() -> int:
-    try:
-        raw = sys.stdin.read()
-    except Exception:
-        return 0
-
+def bash_command(raw: str) -> str | None:
+    """The command from a PreToolUse payload, or None if this isn't a Bash call."""
     try:
         payload = json.loads(raw)
-    except Exception:
-        return 0
-
-    if not isinstance(payload, dict):
-        return 0
-    if payload.get("tool_name") != "Bash":
-        return 0
-
+    except ValueError:
+        return None
+    if not isinstance(payload, dict) or payload.get("tool_name") != "Bash":
+        return None
     tool_input = payload.get("tool_input")
-    if not isinstance(tool_input, dict):
-        return 0
+    command = tool_input.get("command") if isinstance(tool_input, dict) else None
+    return command if isinstance(command, str) else None
 
-    command = tool_input.get("command")
-    if not isinstance(command, str) or not is_allowed(command):
-        return 0  # no output == no rewrite
 
-    # Allowed: hand the untouched payload to rtk and relay its verdict verbatim.
+def rtk_rewrite(raw: str) -> str:
+    """The rewrite rtk returns for the untouched payload; empty (no rewrite) on any failure."""
     try:
         result = subprocess.run(
-            ["rtk", "hook", "claude"],
+            ["rtk", "hook", "claude"],  # noqa: S607 (rtk is found on PATH by design)
             input=raw,
             capture_output=True,
             text=True,
             timeout=RTK_TIMEOUT_SECONDS,
+            check=False,
         )
     except Exception:
-        return 0  # rtk missing, not on PATH, or hung -- fall through to no rewrite
+        return ""  # rtk missing, not on PATH, or hung
+    return result.stdout if result.returncode == 0 and result.stdout.strip() else ""
 
-    if result.returncode == 0 and result.stdout.strip():
-        sys.stdout.write(result.stdout)
 
-    return 0
+def main() -> int:
+    """Relay rtk's rewrite for allowlisted Bash commands; print nothing otherwise."""
+    raw = sys.stdin.read()
+    command = bash_command(raw)
+    if command is not None and is_allowed(command):
+        sys.stdout.write(rtk_rewrite(raw))
+    return 0  # no output == no rewrite
 
 
 if __name__ == "__main__":
