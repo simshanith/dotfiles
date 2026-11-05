@@ -4,12 +4,14 @@
   Hourly prune of macOS wallpaper-agent BMP renders (policy + rationale in
   macos/wallpaper-cache-prune.swift). Runs a dedicated helper, not find: TCC
   blocks launchd jobs from other apps' containers without Full Disk Access.
-  Built + loaded by run_onchange_after_30-wallpaper-cache-prune.sh.tmpl.
+  Rendered into ~/Library/LaunchAgents/<label>.plist and loaded by
+  run_onchange_after_30-wallpaper-cache-prune.sh.tmpl (the script writes it, not
+  chezmoi, because the filename carries the configurable label).
 -->
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.simshanith.wallpaper-cache-prune</string>
+    <string>{{ get . "launchd_prefix" | default "local.dotfiles" }}.wallpaper-cache-prune</string>
     <key>ProgramArguments</key>
     <array>
         <string>{{ .chezmoi.homeDir }}/Library/Application Support/wallpaper-cache-prune/wallpaper-cache-prune</string>

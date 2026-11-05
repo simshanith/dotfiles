@@ -24,6 +24,10 @@
 {{- if $githubUser -}}
 {{-   $personalSshKey = promptStringOnce . "personal_ssh_key" "SSH key for that account" "~/.ssh/id_ed25519" -}}
 {{- end -}}
+{{- /* Reverse-DNS namespace for launchd agent labels/filenames
+       (<prefix>.wallpaper-cache-prune). Use a domain you own, or keep the
+       neutral default. Changing it later retires the old-label agent. */ -}}
+{{- $launchdPrefix := promptStringOnce . "launchd_prefix" "Reverse-DNS prefix for launchd agent labels (e.g. com.example)" "local.dotfiles" -}}
 
 sourceDir = "{{ .chezmoi.sourceDir }}"
 mode = "symlink"
@@ -36,3 +40,4 @@ mode = "symlink"
     home = {{ $home }}
     github_user = {{ $githubUser | quote }}
     personal_ssh_key = {{ $personalSshKey | quote }}
+    launchd_prefix = {{ $launchdPrefix | quote }}
