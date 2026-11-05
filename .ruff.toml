@@ -1,0 +1,30 @@
+# Repo-only (dot-prefixed, so chezmoi ignores it). Skill scripts run through
+# `uv run --script` (PEP 723) on the latest stable Python (3.14). Run: mise run py
+line-length = 100
+target-version = "py314"
+
+[lint]
+select = ["ALL"]
+ignore = [
+  "COM812",  # trailing commas: owned by the formatter
+  "D203",    # conflicts with D211 (no blank line before class docstring)
+  "D213",    # conflicts with D212 (summary on the docstring's first line)
+  "TRY003",  # long messages in exceptions are fine
+  "D401",    # noun-phrase docstrings ("The focal post.") suit value-returning functions
+  "CPY001",  # no copyright headers in dotfiles
+]
+
+[lint.mccabe]
+max-complexity = 8
+
+[lint.pylint]
+max-args = 5
+max-branches = 8
+max-returns = 4
+max-statements = 30
+
+[lint.per-file-ignores]
+"**/tests/**" = ["S101", "PLR2004", "D", "INP001", "ANN401"]
+
+[format]
+docstring-code-format = true

@@ -1,0 +1,228 @@
+{
+ "code": 200,
+ "message": "OK",
+ "tweet": {
+  "url": "https://x.com/simonw/status/2112632287250743641",
+  "id": "2112632287250743641",
+  "text": "Claude generated all of the 3D models (in Three.js) - here's a model explorer that lists them all plus their animation states. My favorite is the giant \"Goliath\" stomping mech https://simonw.github.io/battledrones/models.html",
+  "raw_text": {
+   "text": "Claude generated all of the 3D models (in Three.js) - here's a model explorer that lists them all plus their animation states. My favorite is the giant \"Goliath\" stomping mech https://t.co/h9MFXCUZCi https://t.co/62Ee5ONQzQ",
+   "display_text_range": [
+    0,
+    199
+   ],
+   "facets": [
+    {
+     "type": "url",
+     "indices": [
+      176,
+      199
+     ],
+     "original": "https://t.co/h9MFXCUZCi",
+     "replacement": "https://simonw.github.io/battledrones/models.html",
+     "display": "simonw.github.io/battledrones/m…"
+    },
+    {
+     "type": "media",
+     "indices": [
+      200,
+      223
+     ],
+     "id": "2112632238458433536",
+     "display": "pic.x.com/62Ee5ONQzQ",
+     "original": "https://t.co/62Ee5ONQzQ",
+     "replacement": "https://x.com/simonw/status/2112632287250743641/video/1"
+    }
+   ]
+  },
+  "author": {
+   "screen_name": "simonw",
+   "url": "https://x.com/simonw",
+   "id": "12497",
+   "followers": 249989,
+   "following": 5679,
+   "likes": 63674,
+   "media_count": 4038,
+   "name": "Simon Willison",
+   "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+   "raw_description": {
+    "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       96,
+       119
+      ],
+      "original": "https://t.co/t0MrmnJW0K",
+      "replacement": "https://fedi.simonwillison.net/@simon",
+      "display": "fedi.simonwillison.net/@simon"
+     },
+     {
+      "type": "url",
+      "indices": [
+       126,
+       149
+      ],
+      "original": "https://t.co/OnWIyhX4CH",
+      "replacement": "http://simonwillison.net",
+      "display": "simonwillison.net"
+     }
+    ]
+   },
+   "location": "San Francisco, CA",
+   "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+   "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+   "joined": "Wed Nov 15 13:18:50 +0000 2006",
+   "protected": false,
+   "website": {
+    "url": "https://simonwillison.net/",
+    "display_url": "simonwillison.net"
+   },
+   "verification": {
+    "verified": true,
+    "verified_at": null,
+    "type": "individual"
+   },
+   "avatar_color": null
+  },
+  "replies": 5,
+  "retweets": 1,
+  "likes": 65,
+  "bookmarks": 16,
+  "quotes": 1,
+  "created_at": "Tue Oct 20 19:49:22 +0000 2026",
+  "created_timestamp": 1792525762,
+  "possibly_sensitive": false,
+  "views": 9132,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": "simonw",
+  "replying_to_status": "2112631208580645130",
+  "media": {
+   "all": [
+    {
+     "id": "2112632238458433536",
+     "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+     "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2112632238458433536/img/Jwt9ust6LKK5PJkT.jpg",
+     "duration": 4.831,
+     "width": 1174,
+     "height": 720,
+     "format": "video/mp4",
+     "type": "video",
+     "formats": [
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/pl/Gq1D6Tri456SM5XD.m3u8?tag=29",
+       "container": "m3u8"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/440x270/Wt7eFhZIkym73qGV.mp4?tag=29",
+       "bitrate": 256000,
+       "container": "mp4",
+       "codec": "h264"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/586x360/m5t0nTIQJRL7rJim.mp4?tag=29",
+       "bitrate": 832000,
+       "container": "mp4",
+       "codec": "h264"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+       "bitrate": 2176000,
+       "container": "mp4",
+       "codec": "h264"
+      }
+     ],
+     "publisher": null,
+     "variants": [
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/pl/Gq1D6Tri456SM5XD.m3u8?tag=29",
+       "bitrate": 0,
+       "content_type": "application/x-mpegURL"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/440x270/Wt7eFhZIkym73qGV.mp4?tag=29",
+       "bitrate": 256000,
+       "content_type": "video/mp4"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/586x360/m5t0nTIQJRL7rJim.mp4?tag=29",
+       "bitrate": 832000,
+       "content_type": "video/mp4"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+       "bitrate": 2176000,
+       "content_type": "video/mp4"
+      }
+     ]
+    }
+   ],
+   "videos": [
+    {
+     "id": "2112632238458433536",
+     "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+     "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2112632238458433536/img/Jwt9ust6LKK5PJkT.jpg",
+     "duration": 4.831,
+     "width": 1174,
+     "height": 720,
+     "format": "video/mp4",
+     "type": "video",
+     "formats": [
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/pl/Gq1D6Tri456SM5XD.m3u8?tag=29",
+       "container": "m3u8"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/440x270/Wt7eFhZIkym73qGV.mp4?tag=29",
+       "bitrate": 256000,
+       "container": "mp4",
+       "codec": "h264"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/586x360/m5t0nTIQJRL7rJim.mp4?tag=29",
+       "bitrate": 832000,
+       "container": "mp4",
+       "codec": "h264"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+       "bitrate": 2176000,
+       "container": "mp4",
+       "codec": "h264"
+      }
+     ],
+     "publisher": null,
+     "variants": [
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/pl/Gq1D6Tri456SM5XD.m3u8?tag=29",
+       "bitrate": 0,
+       "content_type": "application/x-mpegURL"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/440x270/Wt7eFhZIkym73qGV.mp4?tag=29",
+       "bitrate": 256000,
+       "content_type": "video/mp4"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/586x360/m5t0nTIQJRL7rJim.mp4?tag=29",
+       "bitrate": 832000,
+       "content_type": "video/mp4"
+      },
+      {
+       "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+       "bitrate": 2176000,
+       "content_type": "video/mp4"
+      }
+     ]
+    }
+   ]
+  },
+  "twitter_card": "player",
+  "color": null,
+  "provider": "twitter",
+  "reposted_by": null
+ }
+}

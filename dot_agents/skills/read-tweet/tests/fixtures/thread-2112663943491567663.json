@@ -1,0 +1,775 @@
+{
+ "status": {
+  "type": "status",
+  "url": "https://x.com/cipri_tom/status/2112663943491567663",
+  "id": "2112663943491567663",
+  "text": "@simonw Can’t it use inaudible range? \n\n(You obviously considered it, but why didn’t it work)",
+  "raw_text": {
+   "text": "@simonw Can’t it use inaudible range? \n\n(You obviously considered it, but why didn’t it work)",
+   "display_text_range": [
+    8,
+    93
+   ],
+   "facets": [
+    {
+     "type": "mention",
+     "indices": [
+      0,
+      7
+     ],
+     "original": "simonw",
+     "id": "12497"
+    }
+   ]
+  },
+  "author": {
+   "screen_name": "cipri_tom",
+   "url": "https://x.com/cipri_tom",
+   "id": "616203093",
+   "followers": 361,
+   "following": 810,
+   "likes": 15304,
+   "media_count": 407,
+   "statuses": 3354,
+   "name": "Ciprian Tomoiagă",
+   "description": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+   "raw_description": {
+    "text": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+    "facets": []
+   },
+   "location": "Lausanne, the real one",
+   "banner_url": "https://pbs.twimg.com/profile_banners/616203093/1637595653",
+   "avatar_url": "https://pbs.twimg.com/profile_images/1244194024086528001/6f_NJXiY_200x200.png",
+   "joined": "Sat Jun 23 13:44:27 +0000 2012",
+   "protected": false,
+   "website": null,
+   "verification": {
+    "verified": false,
+    "verified_at": null,
+    "type": null
+   },
+   "type": "profile"
+  },
+  "replies": 1,
+  "reposts": 0,
+  "likes": 4,
+  "bookmarks": 0,
+  "quotes": 0,
+  "embed_card": "tweet",
+  "created_at": "Tue Oct 20 21:55:10 +0000 2026",
+  "created_timestamp": 1792533310,
+  "views": 95,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": {
+   "screen_name": "simonw",
+   "status": "2112657717227843942",
+   "url": "https://x.com/simonw/status/2112657717227843942",
+   "profile_url": "https://x.com/simonw"
+  },
+  "media": {},
+  "provider": "twitter",
+  "reposted_by": null
+ },
+ "thread": [
+  {
+   "type": "status",
+   "url": "https://x.com/simonw/status/2112630778068881543",
+   "id": "2112630778068881543",
+   "text": "I built a Command & Conquer style RTS called Battle Drones, mainly using Claude Opus 5.5, which runs in the browser and includes device-to-device multiplayer over an audio link https://simonwillison.net/2026/Oct/20/battledrones/",
+   "raw_text": {
+    "text": "I built a Command &amp; Conquer style RTS called Battle Drones, mainly using Claude Opus 5.5, which runs in the browser and includes device-to-device multiplayer over an audio link https://t.co/OUGfRDk7DU https://t.co/q7NKaPJ9Pd",
+    "display_text_range": [
+     0,
+     204
+    ],
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       181,
+       204
+      ],
+      "original": "https://t.co/OUGfRDk7DU",
+      "replacement": "https://simonwillison.net/2026/Oct/20/battledrones/",
+      "display": "simonwillison.net/2026/Oct/20/ba…"
+     },
+     {
+      "type": "media",
+      "indices": [
+       205,
+       228
+      ],
+      "id": "2112630135119814656",
+      "display": "pic.x.com/q7NKaPJ9Pd",
+      "original": "https://t.co/q7NKaPJ9Pd",
+      "replacement": "https://x.com/simonw/status/2112630778068881543/photo/1"
+     },
+     {
+      "type": "media",
+      "indices": [
+       205,
+       228
+      ],
+      "id": "2112630724704813056",
+      "display": "pic.x.com/q7NKaPJ9Pd",
+      "original": "https://t.co/q7NKaPJ9Pd",
+      "replacement": "https://x.com/simonw/status/2112630778068881543/photo/1"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "simonw",
+    "url": "https://x.com/simonw",
+    "id": "12497",
+    "followers": 249989,
+    "following": 5679,
+    "likes": 63674,
+    "media_count": 4038,
+    "statuses": 61629,
+    "name": "Simon Willison",
+    "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+    "raw_description": {
+     "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        8,
+        22
+       ],
+       "original": "datasetteproj",
+       "id": ""
+      },
+      {
+       "type": "mention",
+       "indices": [
+        69,
+        76
+       ],
+       "original": "natbat",
+       "id": ""
+      },
+      {
+       "type": "url",
+       "indices": [
+        96,
+        119
+       ],
+       "original": "https://t.co/t0MrmnJW0K",
+       "replacement": "https://fedi.simonwillison.net/@simon",
+       "display": "fedi.simonwillison.net/@simon"
+      },
+      {
+       "type": "url",
+       "indices": [
+        126,
+        149
+       ],
+       "original": "https://t.co/OnWIyhX4CH",
+       "replacement": "http://simonwillison.net",
+       "display": "simonwillison.net"
+      }
+     ]
+    },
+    "location": "San Francisco, CA",
+    "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+    "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+    "joined": "Wed Nov 15 13:18:50 +0000 2006",
+    "protected": false,
+    "website": {
+     "url": "https://simonwillison.net/",
+     "display_url": "simonwillison.net"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 192,
+   "reposts": 41,
+   "likes": 789,
+   "bookmarks": 267,
+   "quotes": 30,
+   "embed_card": "summary_large_image",
+   "created_at": "Tue Oct 20 19:43:22 +0000 2026",
+   "created_timestamp": 1792525402,
+   "possibly_sensitive": false,
+   "views": 57223,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": null,
+   "media": {
+    "all": [
+     {
+      "type": "photo",
+      "id": "2112630135119814656",
+      "url": "https://pbs.twimg.com/media/HVGR6imaIAA62ik.jpg?name=orig",
+      "width": 1728,
+      "height": 1117,
+      "altText": "Screenshot of a 3D isometric real-time strategy game in progress. HUD at top reads \"1:49\", \"4×\", \"Ironclad · Industry\" (blue dot), \"Boom · Industry\" (red dot), resource icons and \"0:56\", with a blue-versus-red balance bar labeled \"B\" and \"R\". A banner in the center top reads \"DOUBLE KILL\" with \"Blue\" beneath it. The grassy battlefield shows a blue team base in the lower left with a domed command center, a radar dish, two factory buildings and a turret, plus a refinery labeled \"+200\" where blue supply trucks carrying crates gather around ore deposits, with floating \"+45\" labels by the trucks. A gravel road runs diagonally from the base to the upper right, where blue tanks fire a laser at a white enemy unit. Near the base, red enemy tanks under fire show a \"+45\" label, while blue turrets shoot at them. Rocky outcrops sit at the top left and right center, clusters of low-poly trees line the right and bottom edges, and a minimap is in the top right corner. Pause and mute buttons are at the"
+     },
+     {
+      "type": "photo",
+      "id": "2112630724704813056",
+      "url": "https://pbs.twimg.com/media/HVGSc2-bQAA5kzf.jpg?name=orig",
+      "width": 1275,
+      "height": 870,
+      "altText": "Screenshot of the same strategy game, now on a snowy winter map in replay mode. HUD at top reads \"6:27\", \"1×\", \"anthropic/claude-haiku-5-5 · industry\" (blue dot), \"gpt-6-luna · industry\" (red dot), resource icons and \"0:03\", with the balance bar labeled \"B\" and \"R\". A note at top left reads \"Blue: Pushing turrets at the enemy's south-east edge.\" A replay panel below the HUD reads \"Blue anthropic/claude-haiku-5-5 · industry vs Red gpt-6-luna · industry · frostbite seed 42\" with a scrubber at \"6:27 / 7:48\" and buttons \"−30s\", \"+30s\", \"All\", \"Blue's eyes\", \"Red's eyes\" and \"Notes\". A frozen lake of cracked ice plates fills the left side. In the lower center a group of blue tanks advances past a snow-covered pine forest toward a line of red turrets along the lake shore, one of them burning. A dark rocky ridge crosses the middle, and the red base with a refinery, other buildings, tanks and supply trucks sits in the upper right. Minimap at top right, zoom and lightning buttons at bottom left"
+     }
+    ],
+    "photos": [
+     {
+      "type": "photo",
+      "id": "2112630135119814656",
+      "url": "https://pbs.twimg.com/media/HVGR6imaIAA62ik.jpg?name=orig",
+      "width": 1728,
+      "height": 1117,
+      "altText": "Screenshot of a 3D isometric real-time strategy game in progress. HUD at top reads \"1:49\", \"4×\", \"Ironclad · Industry\" (blue dot), \"Boom · Industry\" (red dot), resource icons and \"0:56\", with a blue-versus-red balance bar labeled \"B\" and \"R\". A banner in the center top reads \"DOUBLE KILL\" with \"Blue\" beneath it. The grassy battlefield shows a blue team base in the lower left with a domed command center, a radar dish, two factory buildings and a turret, plus a refinery labeled \"+200\" where blue supply trucks carrying crates gather around ore deposits, with floating \"+45\" labels by the trucks. A gravel road runs diagonally from the base to the upper right, where blue tanks fire a laser at a white enemy unit. Near the base, red enemy tanks under fire show a \"+45\" label, while blue turrets shoot at them. Rocky outcrops sit at the top left and right center, clusters of low-poly trees line the right and bottom edges, and a minimap is in the top right corner. Pause and mute buttons are at the"
+     },
+     {
+      "type": "photo",
+      "id": "2112630724704813056",
+      "url": "https://pbs.twimg.com/media/HVGSc2-bQAA5kzf.jpg?name=orig",
+      "width": 1275,
+      "height": 870,
+      "altText": "Screenshot of the same strategy game, now on a snowy winter map in replay mode. HUD at top reads \"6:27\", \"1×\", \"anthropic/claude-haiku-5-5 · industry\" (blue dot), \"gpt-6-luna · industry\" (red dot), resource icons and \"0:03\", with the balance bar labeled \"B\" and \"R\". A note at top left reads \"Blue: Pushing turrets at the enemy's south-east edge.\" A replay panel below the HUD reads \"Blue anthropic/claude-haiku-5-5 · industry vs Red gpt-6-luna · industry · frostbite seed 42\" with a scrubber at \"6:27 / 7:48\" and buttons \"−30s\", \"+30s\", \"All\", \"Blue's eyes\", \"Red's eyes\" and \"Notes\". A frozen lake of cracked ice plates fills the left side. In the lower center a group of blue tanks advances past a snow-covered pine forest toward a line of red turrets along the lake shore, one of them burning. A dark rocky ridge crosses the middle, and the red base with a refinery, other buildings, tanks and supply trucks sits in the upper right. Minimap at top right, zoom and lightning buttons at bottom left"
+     }
+    ]
+   },
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/simonw/status/2112631208580645130",
+   "id": "2112631208580645130",
+   "text": "In addition to human-vs-in-game-AI and human-vs-human it supports two LLMs playing against each other! That works by pausing the game every 5s for them to think about the game state and queue up commands\n\nHere's a replay link for Haiku 5.5 vs GPT-6 Luna: https://simonw.github.io/battledrones/v11/?replay=battles/showcase/2026-10-14-frostbite-42-claude-haiku-5.5-vs-gpt-6-luna.json",
+   "raw_text": {
+    "text": "In addition to human-vs-in-game-AI and human-vs-human it supports two LLMs playing against each other! That works by pausing the game every 5s for them to think about the game state and queue up commands\n\nHere's a replay link for Haiku 5.5 vs GPT-6 Luna: https://t.co/NZDkzJCHII",
+    "display_text_range": [
+     0,
+     278
+    ],
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       255,
+       278
+      ],
+      "original": "https://t.co/NZDkzJCHII",
+      "replacement": "https://simonw.github.io/battledrones/v11/?replay=battles/showcase/2026-10-14-frostbite-42-claude-haiku-5.5-vs-gpt-6-luna.json",
+      "display": "simonw.github.io/battledrones/v…"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "simonw",
+    "url": "https://x.com/simonw",
+    "id": "12497",
+    "followers": 249989,
+    "following": 5679,
+    "likes": 63674,
+    "media_count": 4038,
+    "statuses": 61629,
+    "name": "Simon Willison",
+    "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+    "raw_description": {
+     "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        8,
+        22
+       ],
+       "original": "datasetteproj",
+       "id": ""
+      },
+      {
+       "type": "mention",
+       "indices": [
+        69,
+        76
+       ],
+       "original": "natbat",
+       "id": ""
+      },
+      {
+       "type": "url",
+       "indices": [
+        96,
+        119
+       ],
+       "original": "https://t.co/t0MrmnJW0K",
+       "replacement": "https://fedi.simonwillison.net/@simon",
+       "display": "fedi.simonwillison.net/@simon"
+      },
+      {
+       "type": "url",
+       "indices": [
+        126,
+        149
+       ],
+       "original": "https://t.co/OnWIyhX4CH",
+       "replacement": "http://simonwillison.net",
+       "display": "simonwillison.net"
+      }
+     ]
+    },
+    "location": "San Francisco, CA",
+    "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+    "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+    "joined": "Wed Nov 15 13:18:50 +0000 2006",
+    "protected": false,
+    "website": {
+     "url": "https://simonwillison.net/",
+     "display_url": "simonwillison.net"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 31,
+   "reposts": 0,
+   "likes": 53,
+   "bookmarks": 5,
+   "quotes": 1,
+   "embed_card": "tweet",
+   "created_at": "Tue Oct 20 19:45:05 +0000 2026",
+   "created_timestamp": 1792525505,
+   "possibly_sensitive": false,
+   "views": 13119,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "simonw",
+    "status": "2112630778068881543",
+    "url": "https://x.com/simonw/status/2112630778068881543",
+    "profile_url": "https://x.com/simonw"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/simonw/status/2112632287250743641",
+   "id": "2112632287250743641",
+   "text": "Claude generated all of the 3D models (in Three.js) - here's a model explorer that lists them all plus their animation states. My favorite is the giant \"Goliath\" stomping mech https://simonw.github.io/battledrones/models.html",
+   "raw_text": {
+    "text": "Claude generated all of the 3D models (in Three.js) - here's a model explorer that lists them all plus their animation states. My favorite is the giant \"Goliath\" stomping mech https://t.co/h9MFXCUZCi https://t.co/62Ee5ONQzQ",
+    "display_text_range": [
+     0,
+     199
+    ],
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       176,
+       199
+      ],
+      "original": "https://t.co/h9MFXCUZCi",
+      "replacement": "https://simonw.github.io/battledrones/models.html",
+      "display": "simonw.github.io/battledrones/m…"
+     },
+     {
+      "type": "media",
+      "indices": [
+       200,
+       223
+      ],
+      "id": "2112632238458433536",
+      "display": "pic.x.com/62Ee5ONQzQ",
+      "original": "https://t.co/62Ee5ONQzQ",
+      "replacement": "https://x.com/simonw/status/2112632287250743641/video/1"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "simonw",
+    "url": "https://x.com/simonw",
+    "id": "12497",
+    "followers": 249989,
+    "following": 5679,
+    "likes": 63674,
+    "media_count": 4038,
+    "statuses": 61629,
+    "name": "Simon Willison",
+    "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+    "raw_description": {
+     "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        8,
+        22
+       ],
+       "original": "datasetteproj",
+       "id": ""
+      },
+      {
+       "type": "mention",
+       "indices": [
+        69,
+        76
+       ],
+       "original": "natbat",
+       "id": ""
+      },
+      {
+       "type": "url",
+       "indices": [
+        96,
+        119
+       ],
+       "original": "https://t.co/t0MrmnJW0K",
+       "replacement": "https://fedi.simonwillison.net/@simon",
+       "display": "fedi.simonwillison.net/@simon"
+      },
+      {
+       "type": "url",
+       "indices": [
+        126,
+        149
+       ],
+       "original": "https://t.co/OnWIyhX4CH",
+       "replacement": "http://simonwillison.net",
+       "display": "simonwillison.net"
+      }
+     ]
+    },
+    "location": "San Francisco, CA",
+    "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+    "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+    "joined": "Wed Nov 15 13:18:50 +0000 2006",
+    "protected": false,
+    "website": {
+     "url": "https://simonwillison.net/",
+     "display_url": "simonwillison.net"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 5,
+   "reposts": 1,
+   "likes": 65,
+   "bookmarks": 16,
+   "quotes": 1,
+   "embed_card": "player",
+   "created_at": "Tue Oct 20 19:49:22 +0000 2026",
+   "created_timestamp": 1792525762,
+   "possibly_sensitive": false,
+   "views": 9132,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "simonw",
+    "status": "2112631208580645130",
+    "url": "https://x.com/simonw/status/2112631208580645130",
+    "profile_url": "https://x.com/simonw"
+   },
+   "media": {
+    "all": [
+     {
+      "id": "2112632238458433536",
+      "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+      "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2112632238458433536/img/Jwt9ust6LKK5PJkT.jpg",
+      "duration": 4.831,
+      "width": 1174,
+      "height": 720,
+      "format": "video/mp4",
+      "type": "video",
+      "formats": [
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/pl/Gq1D6Tri456SM5XD.m3u8?tag=29",
+        "container": "m3u8"
+       },
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/440x270/Wt7eFhZIkym73qGV.mp4?tag=29",
+        "bitrate": 256000,
+        "container": "mp4",
+        "codec": "h264"
+       },
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/586x360/m5t0nTIQJRL7rJim.mp4?tag=29",
+        "bitrate": 832000,
+        "container": "mp4",
+        "codec": "h264"
+       },
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+        "bitrate": 2176000,
+        "container": "mp4",
+        "codec": "h264"
+       }
+      ],
+      "publisher": null
+     }
+    ],
+    "videos": [
+     {
+      "id": "2112632238458433536",
+      "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+      "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2112632238458433536/img/Jwt9ust6LKK5PJkT.jpg",
+      "duration": 4.831,
+      "width": 1174,
+      "height": 720,
+      "format": "video/mp4",
+      "type": "video",
+      "formats": [
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/pl/Gq1D6Tri456SM5XD.m3u8?tag=29",
+        "container": "m3u8"
+       },
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/440x270/Wt7eFhZIkym73qGV.mp4?tag=29",
+        "bitrate": 256000,
+        "container": "mp4",
+        "codec": "h264"
+       },
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/586x360/m5t0nTIQJRL7rJim.mp4?tag=29",
+        "bitrate": 832000,
+        "container": "mp4",
+        "codec": "h264"
+       },
+       {
+        "url": "https://video.twimg.com/amplify_video/2112632238458433536/vid/avc1/1174x720/zosCnCSMpYC3Rt8G.mp4?tag=29",
+        "bitrate": 2176000,
+        "container": "mp4",
+        "codec": "h264"
+       }
+      ],
+      "publisher": null
+     }
+    ]
+   },
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/simonw/status/2112657717227843942",
+   "id": "2112657717227843942",
+   "text": "Warning if you're going to try this: the audio multiplayer plays a high pitched noise throughout the game - annoying at best, and at worst might give you an actual headache\n\n(Natalie: \"why do my teeth hurt?\")",
+   "raw_text": {
+    "text": "Warning if you're going to try this: the audio multiplayer plays a high pitched noise throughout the game - annoying at best, and at worst might give you an actual headache\n\n(Natalie: \"why do my teeth hurt?\")",
+    "display_text_range": [
+     0,
+     208
+    ],
+    "facets": []
+   },
+   "author": {
+    "screen_name": "simonw",
+    "url": "https://x.com/simonw",
+    "id": "12497",
+    "followers": 249989,
+    "following": 5679,
+    "likes": 63674,
+    "media_count": 4038,
+    "statuses": 61629,
+    "name": "Simon Willison",
+    "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+    "raw_description": {
+     "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+     "facets": [
+      {
+       "type": "mention",
+       "indices": [
+        8,
+        22
+       ],
+       "original": "datasetteproj",
+       "id": ""
+      },
+      {
+       "type": "mention",
+       "indices": [
+        69,
+        76
+       ],
+       "original": "natbat",
+       "id": ""
+      },
+      {
+       "type": "url",
+       "indices": [
+        96,
+        119
+       ],
+       "original": "https://t.co/t0MrmnJW0K",
+       "replacement": "https://fedi.simonwillison.net/@simon",
+       "display": "fedi.simonwillison.net/@simon"
+      },
+      {
+       "type": "url",
+       "indices": [
+        126,
+        149
+       ],
+       "original": "https://t.co/OnWIyhX4CH",
+       "replacement": "http://simonwillison.net",
+       "display": "simonwillison.net"
+      }
+     ]
+    },
+    "location": "San Francisco, CA",
+    "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+    "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+    "joined": "Wed Nov 15 13:18:50 +0000 2006",
+    "protected": false,
+    "website": {
+     "url": "https://simonwillison.net/",
+     "display_url": "simonwillison.net"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 6,
+   "reposts": 1,
+   "likes": 25,
+   "bookmarks": 0,
+   "quotes": 0,
+   "embed_card": "tweet",
+   "created_at": "Tue Oct 20 21:30:25 +0000 2026",
+   "created_timestamp": 1792531825,
+   "views": 8886,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "simonw",
+    "status": "2112632287250743641",
+    "url": "https://x.com/simonw/status/2112632287250743641",
+    "profile_url": "https://x.com/simonw"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  {
+   "type": "status",
+   "url": "https://x.com/cipri_tom/status/2112663943491567663",
+   "id": "2112663943491567663",
+   "text": "@simonw Can’t it use inaudible range? \n\n(You obviously considered it, but why didn’t it work)",
+   "raw_text": {
+    "text": "@simonw Can’t it use inaudible range? \n\n(You obviously considered it, but why didn’t it work)",
+    "display_text_range": [
+     8,
+     93
+    ],
+    "facets": [
+     {
+      "type": "mention",
+      "indices": [
+       0,
+       7
+      ],
+      "original": "simonw",
+      "id": "12497"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "cipri_tom",
+    "url": "https://x.com/cipri_tom",
+    "id": "616203093",
+    "followers": 361,
+    "following": 810,
+    "likes": 15304,
+    "media_count": 407,
+    "statuses": 3354,
+    "name": "Ciprian Tomoiagă",
+    "description": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+    "raw_description": {
+     "text": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+     "facets": []
+    },
+    "location": "Lausanne, the real one",
+    "banner_url": "https://pbs.twimg.com/profile_banners/616203093/1637595653",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1244194024086528001/6f_NJXiY_200x200.png",
+    "joined": "Sat Jun 23 13:44:27 +0000 2012",
+    "protected": false,
+    "website": null,
+    "verification": {
+     "verified": false,
+     "verified_at": null,
+     "type": null
+    },
+    "type": "profile"
+   },
+   "replies": 1,
+   "reposts": 0,
+   "likes": 4,
+   "bookmarks": 0,
+   "quotes": 0,
+   "embed_card": "tweet",
+   "created_at": "Tue Oct 20 21:55:10 +0000 2026",
+   "created_timestamp": 1792533310,
+   "views": 95,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": {
+    "screen_name": "simonw",
+    "status": "2112657717227843942",
+    "url": "https://x.com/simonw/status/2112657717227843942",
+    "profile_url": "https://x.com/simonw"
+   },
+   "media": {},
+   "provider": "twitter",
+   "reposted_by": null
+  }
+ ],
+ "author": {
+  "screen_name": "cipri_tom",
+  "url": "https://x.com/cipri_tom",
+  "id": "616203093",
+  "followers": 361,
+  "following": 810,
+  "likes": 15304,
+  "media_count": 407,
+  "statuses": 3354,
+  "name": "Ciprian Tomoiagă",
+  "description": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+  "raw_description": {
+   "text": "@cipri_tom@sigmoid.social\n\nComputer Vision research for AXA insurance",
+   "facets": []
+  },
+  "location": "Lausanne, the real one",
+  "banner_url": "https://pbs.twimg.com/profile_banners/616203093/1637595653",
+  "avatar_url": "https://pbs.twimg.com/profile_images/1244194024086528001/6f_NJXiY_200x200.png",
+  "joined": "Sat Jun 23 13:44:27 +0000 2012",
+  "protected": false,
+  "website": null,
+  "verification": {
+   "verified": false,
+   "verified_at": null,
+   "type": null
+  },
+  "type": "profile"
+ },
+ "code": 200
+}

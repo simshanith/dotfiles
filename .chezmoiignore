@@ -29,6 +29,10 @@ mise
 macos
 claude
 
+# Dev-only parts of skills (tests, fixtures): checked in, not deployed
+.agents/skills/*/tests
+.agents/skills/*/scripts/__pycache__
+
 # Deliberately unmanaged
 backups
 iterm2-preferences

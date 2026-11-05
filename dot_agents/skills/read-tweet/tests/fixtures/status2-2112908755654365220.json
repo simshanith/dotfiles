@@ -1,0 +1,370 @@
+{
+ "status": {
+  "type": "status",
+  "url": "https://x.com/Meffysto69/status/2112908755654365220",
+  "id": "2112908755654365220",
+  "text": "Merci @simonw! 🎩 I forked Battle Drones into Panache: a French Belle Époque RTS, with dirigibles, steam tractors, clockwork soldiers in képis and Gargantua, a walking steam fortress. Fully in French, built with Claude Code.\n\nhttps://github.com/menufactory43/panache",
+  "raw_text": {
+   "text": "Merci @simonw! 🎩 I forked Battle Drones into Panache: a French Belle Époque RTS, with dirigibles, steam tractors, clockwork soldiers in képis and Gargantua, a walking steam fortress. Fully in French, built with Claude Code.\n\nhttps://t.co/T6BFkZGze6",
+   "display_text_range": [
+    0,
+    248
+   ],
+   "facets": [
+    {
+     "type": "mention",
+     "indices": [
+      6,
+      13
+     ],
+     "original": "simonw",
+     "id": "12497"
+    },
+    {
+     "type": "url",
+     "indices": [
+      225,
+      248
+     ],
+     "original": "https://t.co/T6BFkZGze6",
+     "replacement": "https://github.com/menufactory43/panache",
+     "display": "github.com/menufactory43/…"
+    }
+   ]
+  },
+  "author": {
+   "screen_name": "Meffysto69",
+   "url": "https://x.com/Meffysto69",
+   "id": "1383719843044630530",
+   "followers": 473,
+   "following": 806,
+   "likes": 11861,
+   "media_count": 298,
+   "statuses": 4194,
+   "name": "meff",
+   "description": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttp://souffleuse.app · http://fauconnier.app · http://daybard.com · http://notacent.app",
+   "raw_description": {
+    "text": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttps://t.co/aBWOGvxvnj · https://t.co/lUajfMNg6j · https://t.co/t98tjZPz4x · https://t.co/58Hdv3CzN5",
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       71,
+       94
+      ],
+      "original": "https://t.co/aBWOGvxvnj",
+      "replacement": "http://souffleuse.app",
+      "display": "souffleuse.app"
+     },
+     {
+      "type": "url",
+      "indices": [
+       97,
+       120
+      ],
+      "original": "https://t.co/lUajfMNg6j",
+      "replacement": "http://fauconnier.app",
+      "display": "fauconnier.app"
+     },
+     {
+      "type": "url",
+      "indices": [
+       123,
+       146
+      ],
+      "original": "https://t.co/t98tjZPz4x",
+      "replacement": "http://daybard.com",
+      "display": "daybard.com"
+     },
+     {
+      "type": "url",
+      "indices": [
+       149,
+       172
+      ],
+      "original": "https://t.co/58Hdv3CzN5",
+      "replacement": "http://notacent.app",
+      "display": "notacent.app"
+     }
+    ]
+   },
+   "location": "Paris, France",
+   "banner_url": "https://pbs.twimg.com/profile_banners/1383719843044630530/1789743486",
+   "avatar_url": "https://pbs.twimg.com/profile_images/1783231617097400320/cTmeZyIW_200x200.jpg",
+   "joined": "Sun Apr 18 09:51:38 +0000 2021",
+   "protected": false,
+   "website": {
+    "url": "http://praxeongames.com",
+    "display_url": "praxeongames.com"
+   },
+   "verification": {
+    "verified": true,
+    "verified_at": null,
+    "type": "individual"
+   },
+   "type": "profile"
+  },
+  "replies": 5,
+  "reposts": 0,
+  "likes": 8,
+  "bookmarks": 2,
+  "quotes": 2,
+  "embed_card": "summary_large_image",
+  "created_at": "Wed Oct 21 14:07:57 +0000 2026",
+  "created_timestamp": 1792591677,
+  "possibly_sensitive": false,
+  "views": 19047,
+  "is_note_tweet": false,
+  "community_note": null,
+  "lang": "en",
+  "replying_to": null,
+  "media": {},
+  "quote": {
+   "type": "status",
+   "url": "https://x.com/simonw/status/2112630778068881543",
+   "id": "2112630778068881543",
+   "text": "I built a Command & Conquer style RTS called Battle Drones, mainly using Claude Opus 5.5, which runs in the browser and includes device-to-device multiplayer over an audio link https://simonwillison.net/2026/Oct/20/battledrones/",
+   "raw_text": {
+    "text": "I built a Command &amp; Conquer style RTS called Battle Drones, mainly using Claude Opus 5.5, which runs in the browser and includes device-to-device multiplayer over an audio link https://t.co/OUGfRDk7DU https://t.co/q7NKaPJ9Pd",
+    "display_text_range": [
+     0,
+     204
+    ],
+    "facets": [
+     {
+      "type": "url",
+      "indices": [
+       181,
+       204
+      ],
+      "original": "https://t.co/OUGfRDk7DU",
+      "replacement": "https://simonwillison.net/2026/Oct/20/battledrones/",
+      "display": "simonwillison.net/2026/Oct/20/ba…"
+     },
+     {
+      "type": "media",
+      "indices": [
+       205,
+       228
+      ],
+      "id": "2112630135119814656",
+      "display": "pic.x.com/q7NKaPJ9Pd",
+      "original": "https://t.co/q7NKaPJ9Pd",
+      "replacement": "https://x.com/simonw/status/2112630778068881543/photo/1"
+     },
+     {
+      "type": "media",
+      "indices": [
+       205,
+       228
+      ],
+      "id": "2112630724704813056",
+      "display": "pic.x.com/q7NKaPJ9Pd",
+      "original": "https://t.co/q7NKaPJ9Pd",
+      "replacement": "https://x.com/simonw/status/2112630778068881543/photo/1"
+     }
+    ]
+   },
+   "author": {
+    "screen_name": "simonw",
+    "url": "https://x.com/simonw",
+    "id": "12497",
+    "followers": 249989,
+    "following": 5679,
+    "likes": 63674,
+    "media_count": 4038,
+    "statuses": 61629,
+    "name": "Simon Willison",
+    "description": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://fedi.simonwillison.net/@simon Bsky: http://simonwillison.net",
+    "raw_description": {
+     "text": "Creator @datasetteproj, co-creator Django. PSF board. Hangs out with @natbat. He/Him. Mastodon: https://t.co/t0MrmnJW0K Bsky: https://t.co/OnWIyhX4CH",
+     "facets": [
+      {
+       "type": "url",
+       "indices": [
+        96,
+        119
+       ],
+       "original": "https://t.co/t0MrmnJW0K",
+       "replacement": "https://fedi.simonwillison.net/@simon",
+       "display": "fedi.simonwillison.net/@simon"
+      },
+      {
+       "type": "url",
+       "indices": [
+        126,
+        149
+       ],
+       "original": "https://t.co/OnWIyhX4CH",
+       "replacement": "http://simonwillison.net",
+       "display": "simonwillison.net"
+      }
+     ]
+    },
+    "location": "San Francisco, CA",
+    "banner_url": "https://pbs.twimg.com/profile_banners/12497/1642751752",
+    "avatar_url": "https://pbs.twimg.com/profile_images/378800000261649705/be9cc55e64014e6d7663c50d7cb9fc75_200x200.jpeg",
+    "joined": "Wed Nov 15 13:18:50 +0000 2006",
+    "protected": false,
+    "website": {
+     "url": "https://simonwillison.net/",
+     "display_url": "simonwillison.net"
+    },
+    "verification": {
+     "verified": true,
+     "verified_at": null,
+     "type": "individual"
+    },
+    "type": "profile"
+   },
+   "replies": 192,
+   "reposts": 41,
+   "likes": 789,
+   "bookmarks": 267,
+   "quotes": 30,
+   "embed_card": "summary_large_image",
+   "created_at": "Tue Oct 20 19:43:22 +0000 2026",
+   "created_timestamp": 1792525402,
+   "possibly_sensitive": false,
+   "views": 57223,
+   "is_note_tweet": false,
+   "community_note": null,
+   "lang": "en",
+   "replying_to": null,
+   "media": {
+    "all": [
+     {
+      "type": "photo",
+      "id": "2112630135119814656",
+      "url": "https://pbs.twimg.com/media/HVGR6imaIAA62ik.jpg?name=orig",
+      "width": 1728,
+      "height": 1117,
+      "altText": "Screenshot of a 3D isometric real-time strategy game in progress. HUD at top reads \"1:49\", \"4×\", \"Ironclad · Industry\" (blue dot), \"Boom · Industry\" (red dot), resource icons and \"0:56\", with a blue-versus-red balance bar labeled \"B\" and \"R\". A banner in the center top reads \"DOUBLE KILL\" with \"Blue\" beneath it. The grassy battlefield shows a blue team base in the lower left with a domed command center, a radar dish, two factory buildings and a turret, plus a refinery labeled \"+200\" where blue supply trucks carrying crates gather around ore deposits, with floating \"+45\" labels by the trucks. A gravel road runs diagonally from the base to the upper right, where blue tanks fire a laser at a white enemy unit. Near the base, red enemy tanks under fire show a \"+45\" label, while blue turrets shoot at them. Rocky outcrops sit at the top left and right center, clusters of low-poly trees line the right and bottom edges, and a minimap is in the top right corner. Pause and mute buttons are at the"
+     },
+     {
+      "type": "photo",
+      "id": "2112630724704813056",
+      "url": "https://pbs.twimg.com/media/HVGSc2-bQAA5kzf.jpg?name=orig",
+      "width": 1275,
+      "height": 870,
+      "altText": "Screenshot of the same strategy game, now on a snowy winter map in replay mode. HUD at top reads \"6:27\", \"1×\", \"anthropic/claude-haiku-5-5 · industry\" (blue dot), \"gpt-6-luna · industry\" (red dot), resource icons and \"0:03\", with the balance bar labeled \"B\" and \"R\". A note at top left reads \"Blue: Pushing turrets at the enemy's south-east edge.\" A replay panel below the HUD reads \"Blue anthropic/claude-haiku-5-5 · industry vs Red gpt-6-luna · industry · frostbite seed 42\" with a scrubber at \"6:27 / 7:48\" and buttons \"−30s\", \"+30s\", \"All\", \"Blue's eyes\", \"Red's eyes\" and \"Notes\". A frozen lake of cracked ice plates fills the left side. In the lower center a group of blue tanks advances past a snow-covered pine forest toward a line of red turrets along the lake shore, one of them burning. A dark rocky ridge crosses the middle, and the red base with a refinery, other buildings, tanks and supply trucks sits in the upper right. Minimap at top right, zoom and lightning buttons at bottom left"
+     }
+    ],
+    "photos": [
+     {
+      "type": "photo",
+      "id": "2112630135119814656",
+      "url": "https://pbs.twimg.com/media/HVGR6imaIAA62ik.jpg?name=orig",
+      "width": 1728,
+      "height": 1117,
+      "altText": "Screenshot of a 3D isometric real-time strategy game in progress. HUD at top reads \"1:49\", \"4×\", \"Ironclad · Industry\" (blue dot), \"Boom · Industry\" (red dot), resource icons and \"0:56\", with a blue-versus-red balance bar labeled \"B\" and \"R\". A banner in the center top reads \"DOUBLE KILL\" with \"Blue\" beneath it. The grassy battlefield shows a blue team base in the lower left with a domed command center, a radar dish, two factory buildings and a turret, plus a refinery labeled \"+200\" where blue supply trucks carrying crates gather around ore deposits, with floating \"+45\" labels by the trucks. A gravel road runs diagonally from the base to the upper right, where blue tanks fire a laser at a white enemy unit. Near the base, red enemy tanks under fire show a \"+45\" label, while blue turrets shoot at them. Rocky outcrops sit at the top left and right center, clusters of low-poly trees line the right and bottom edges, and a minimap is in the top right corner. Pause and mute buttons are at the"
+     },
+     {
+      "type": "photo",
+      "id": "2112630724704813056",
+      "url": "https://pbs.twimg.com/media/HVGSc2-bQAA5kzf.jpg?name=orig",
+      "width": 1275,
+      "height": 870,
+      "altText": "Screenshot of the same strategy game, now on a snowy winter map in replay mode. HUD at top reads \"6:27\", \"1×\", \"anthropic/claude-haiku-5-5 · industry\" (blue dot), \"gpt-6-luna · industry\" (red dot), resource icons and \"0:03\", with the balance bar labeled \"B\" and \"R\". A note at top left reads \"Blue: Pushing turrets at the enemy's south-east edge.\" A replay panel below the HUD reads \"Blue anthropic/claude-haiku-5-5 · industry vs Red gpt-6-luna · industry · frostbite seed 42\" with a scrubber at \"6:27 / 7:48\" and buttons \"−30s\", \"+30s\", \"All\", \"Blue's eyes\", \"Red's eyes\" and \"Notes\". A frozen lake of cracked ice plates fills the left side. In the lower center a group of blue tanks advances past a snow-covered pine forest toward a line of red turrets along the lake shore, one of them burning. A dark rocky ridge crosses the middle, and the red base with a refinery, other buildings, tanks and supply trucks sits in the upper right. Minimap at top right, zoom and lightning buttons at bottom left"
+     }
+    ],
+    "mosaic": {
+     "type": "mosaic_photo",
+     "formats": {
+      "jpeg": "https://mosaic.fxtwitter.com/jpeg/2112630778068881543/HVGR6imaIAA62ik/HVGSc2-bQAA5kzf",
+      "webp": "https://mosaic.fxtwitter.com/webp/2112630778068881543/HVGR6imaIAA62ik/HVGSc2-bQAA5kzf"
+     }
+    }
+   },
+   "provider": "twitter",
+   "reposted_by": null
+  },
+  "card": {
+   "url": "https://github.com/menufactory43/panache",
+   "title": "GitHub - menufactory43/panache: Panache — RTS Belle Époque pour mobile (adaptation française de...",
+   "description": "Panache — RTS Belle Époque pour mobile (adaptation française de Battle Drones) - menufactory43/panache",
+   "domain": "github.com",
+   "image": {
+    "width": 800,
+    "height": 419,
+    "url": "https://pbs.twimg.com/card_img/2117982395936993280/kzsX_WXR?format=jpg&name=800x419"
+   }
+  },
+  "provider": "twitter",
+  "reposted_by": null
+ },
+ "thread": null,
+ "author": {
+  "screen_name": "Meffysto69",
+  "url": "https://x.com/Meffysto69",
+  "id": "1383719843044630530",
+  "followers": 473,
+  "following": 806,
+  "likes": 11861,
+  "media_count": 298,
+  "statuses": 4194,
+  "name": "meff",
+  "description": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttp://souffleuse.app · http://fauconnier.app · http://daybard.com · http://notacent.app",
+  "raw_description": {
+   "text": "Solo dev shipping Mac & iOS apps at night, building in public from $0.\nhttps://t.co/aBWOGvxvnj · https://t.co/lUajfMNg6j · https://t.co/t98tjZPz4x · https://t.co/58Hdv3CzN5",
+   "facets": [
+    {
+     "type": "url",
+     "indices": [
+      71,
+      94
+     ],
+     "original": "https://t.co/aBWOGvxvnj",
+     "replacement": "http://souffleuse.app",
+     "display": "souffleuse.app"
+    },
+    {
+     "type": "url",
+     "indices": [
+      97,
+      120
+     ],
+     "original": "https://t.co/lUajfMNg6j",
+     "replacement": "http://fauconnier.app",
+     "display": "fauconnier.app"
+    },
+    {
+     "type": "url",
+     "indices": [
+      123,
+      146
+     ],
+     "original": "https://t.co/t98tjZPz4x",
+     "replacement": "http://daybard.com",
+     "display": "daybard.com"
+    },
+    {
+     "type": "url",
+     "indices": [
+      149,
+      172
+     ],
+     "original": "https://t.co/58Hdv3CzN5",
+     "replacement": "http://notacent.app",
+     "display": "notacent.app"
+    }
+   ]
+  },
+  "location": "Paris, France",
+  "banner_url": "https://pbs.twimg.com/profile_banners/1383719843044630530/1789743486",
+  "avatar_url": "https://pbs.twimg.com/profile_images/1783231617097400320/cTmeZyIW_200x200.jpg",
+  "joined": "Sun Apr 18 09:51:38 +0000 2021",
+  "protected": false,
+  "website": {
+   "url": "http://praxeongames.com",
+   "display_url": "praxeongames.com"
+  },
+  "verification": {
+   "verified": true,
+   "verified_at": null,
+   "type": "individual"
+  },
+  "type": "profile"
+ },
+ "code": 200
+}
