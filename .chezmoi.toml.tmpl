@@ -16,6 +16,14 @@
        (Brewfile.home). Neutral default false -> work/servers/CI/Coder get none.
        No work knowledge in the base; "not home" is just the unopted default. */ -}}
 {{- $home := promptBoolOnce . "home" "Personal machine? (auto-install desktop casks from Brewfile.home)" false -}}
+{{- /* Optional: route your GitHub repos through an SSH host named for the
+       account (github-<user>) so they always use that account's key, even
+       where the default github.com key is another identity. Blank skips it. */ -}}
+{{- $githubUser := promptStringOnce . "github_user" "GitHub username for personal-key routing (blank to skip)" "" -}}
+{{- $personalSshKey := "" -}}
+{{- if $githubUser -}}
+{{-   $personalSshKey = promptStringOnce . "personal_ssh_key" "SSH key for that account" "~/.ssh/id_ed25519" -}}
+{{- end -}}
 
 sourceDir = "{{ .chezmoi.sourceDir }}"
 mode = "symlink"
@@ -26,3 +34,5 @@ mode = "symlink"
     machine = {{ $machine | quote }}
     signingkey = {{ $signingkey | quote }}
     home = {{ $home }}
+    github_user = {{ $githubUser | quote }}
+    personal_ssh_key = {{ $personalSshKey | quote }}

@@ -1,0 +1,12 @@
+{{- with get . "github_user" -}}
+# SSH host for the github_user account (set at `chezmoi init`). dot_gitconfig.tmpl
+# rewrites github.com/{{ . }}/ remotes to git@github-{{ . }}:..., so this host
+# must exist wherever that rewrite does. IdentitiesOnly keeps ssh-agent from
+# offering a different (e.g. work) key first. Blank github_user renders this
+# empty, so chezmoi doesn't create it.
+Host github-{{ . }}
+    HostName github.com
+    User git
+    IdentityFile {{ get $ "personal_ssh_key" | default "~/.ssh/id_ed25519" }}
+    IdentitiesOnly yes
+{{ end -}}
