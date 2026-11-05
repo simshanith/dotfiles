@@ -33,9 +33,6 @@ brew "tree"
 # tig: ncurses git browser (not in mise's short-name registry)
 brew "tig"
 
-# Runtime management (bootstrap)
-brew "mise"
-
 # Misc
 # thefuck dropped — replaced by pay-respects (mise-managed Rust port)
 brew "fortune"

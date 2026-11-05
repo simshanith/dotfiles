@@ -24,7 +24,7 @@ fi
 echo "=== Dotfiles Installation ==="
 echo "Source: $DOTFILES"
 
-# 1. Homebrew — bootstrap dependency for mise + GUI apps. Its installer also
+# 1. Homebrew — GUI apps, shells, terminfo. Its installer also
 #    pulls in the Xcode Command Line Tools, which is how a truly fresh Mac gets
 #    `git` for the clone step below.
 if ! command -v brew &>/dev/null; then
@@ -46,7 +46,16 @@ fi
 echo "Installing Homebrew packages..."
 brew bundle --file="$DOTFILES/Brewfile" || true
 
-# 4. chezmoi takes over: symlink dotfiles, render templates, run run_once_ scripts.
+# 4. mise — standalone install (https://mise.run) to ~/.local/bin/mise, not
+#    brew, so it self-updates via `mise self-update` and stays off brew's
+#    upgrade cycle. Skipped when already present.
+export PATH="$HOME/.local/bin:$PATH"
+if ! command -v mise &>/dev/null; then
+    echo "Installing mise..."
+    curl -fsSL https://mise.run | sh
+fi
+
+# 5. chezmoi takes over: symlink dotfiles, render templates, run run_once_ scripts.
 #    Bootstrap chicken-and-egg: chezmoi is in the mise baseline, but that baseline
 #    (~/.config/mise/conf.d/fresh.toml) isn't symlinked until chezmoi applies. So
 #    run chezmoi on-demand via `mise exec` for the first apply. First run prompts
@@ -55,7 +64,7 @@ brew bundle --file="$DOTFILES/Brewfile" || true
 eval "$(mise activate bash)"
 mise exec chezmoi@latest -- chezmoi init --source="$DOTFILES" --apply
 
-# 5. Now the mise baseline IS in place — install the full toolchain (node, rust,
+# 6. Now the mise baseline IS in place — install the full toolchain (node, rust,
 #    starship, chezmoi itself, ...). Subsequent updates: `mise install` / `mise up`.
 mise install -y
 
