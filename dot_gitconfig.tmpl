@@ -157,14 +157,16 @@
 # GitHub HTTPS auth via gh, resolved through mise (version- and PATH-agnostic).
 # Gated on gh being resolvable through mise (not just on PATH), so this is a
 # no-op on machines lacking mise or the gh tool, and correct even when mise
-# isn't shell-activated during `chezmoi apply`.
+# isn't shell-activated during `chezmoi apply`. mise is referenced by absolute
+# path because some callers (e.g. Homebrew's git) run with a sanitized PATH.
 {{ if output "sh" "-c" "mise which gh 2>/dev/null || true" | trim -}}
+{{ $mise := lookPath "mise" -}}
 [credential "https://github.com"]
 	helper =
-	helper = !mise exec -- gh auth git-credential
+	helper = !{{ $mise }} exec -- gh auth git-credential
 [credential "https://gist.github.com"]
 	helper =
-	helper = !mise exec -- gh auth git-credential
+	helper = !{{ $mise }} exec -- gh auth git-credential
 {{ end -}}
 
 # Machine-local git overrides (identity, corp URL rewrites, credential helpers,
