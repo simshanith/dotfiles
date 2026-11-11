@@ -22,7 +22,7 @@ brew "ssh-copy-id"
 brew "git"
 
 # Editors
-brew "emacs-plus@30"
+brew "emacs-plus@31"
 
 # Terminal (kept in brew: terminfo + tmux-256color)
 brew "tmux"
@@ -43,6 +43,7 @@ brew "sox"
 # Casks
 cask "1password"
 cask "1password-cli"
+cask "emacs-plus-app"
 cask "ghostty"
 cask "google-chrome"
 cask "iterm2"
