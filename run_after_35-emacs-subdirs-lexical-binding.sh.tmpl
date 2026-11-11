@@ -1,0 +1,17 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+# Add the missing lexical-binding cookie to emacs-plus's site-lisp/subdirs.el.
+# Emacs 31 warns at every startup without it, and the file is regenerated on
+# each formula (re)install, so this runs on every apply (cheap + idempotent).
+set -eu
+command -v brew >/dev/null || exit 0
+f="$(brew --prefix)/share/emacs/site-lisp/subdirs.el"
+[ -f "$f" ] || exit 0
+head -1 "$f" | grep -q 'lexical-binding' && exit 0
+f="$(realpath "$f")"
+tmp=$(mktemp)
+trap 'rm -f "$tmp"' EXIT
+{ printf ';; -*- lexical-binding: t -*-\n'; cat "$f"; } > "$tmp"
+cat "$tmp" > "$f"
+echo "emacs: added lexical-binding cookie to $f"
+{{ end -}}
